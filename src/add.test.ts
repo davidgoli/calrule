@@ -65,6 +65,24 @@ it('rolls over hours to days', () => {
 it('rolls over days to months', () => {
   dt.month = 9
 
+  expect(add(dt, { day: 1 })).toEqual({
+    year: 2013,
+    month: 9,
+    day: 3,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+
+  expect(add(dt, { day: 28 })).toEqual({
+    year: 2013,
+    month: 9,
+    day: 30,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+
   expect(add(dt, { day: 33 })).toEqual({
     year: 2013,
     month: 10,
@@ -75,4 +93,42 @@ it('rolls over days to months', () => {
   })
 })
 
-it('rolls ')
+it('rolls over months correctly based on the number of days that month', () => {
+  dt = {
+    year: 2013,
+    month: 1,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  }
+
+  expect(add(dt, { day: 31 })).toEqual({
+    year: 2013,
+    month: 2,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+
+  dt.month = 2
+  expect(add(dt, { day: 28 })).toEqual({
+    year: 2013,
+    month: 3,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+
+  dt.month = 3
+  expect(add(dt, { day: 31 })).toEqual({
+    year: 2013,
+    month: 4,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+})

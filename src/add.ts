@@ -36,7 +36,9 @@ const divmod = (n: number, base: number = 60) => {
 
 const divmodMonths = (d: number, m: MONTHS) => {
   const monthLength = MONTH_LENGTHS[m]
-  return divmod(d, monthLength)
+  // days are 1-based, unlike hours, minutes, seconds which are 0-based
+  const [monthRemainder, day] = divmod(d - 1, monthLength)
+  return [monthRemainder, day + 1]
 }
 
 const MONTH_LENGTHS = {
