@@ -1,9 +1,9 @@
-import { DateTime } from "./parseISO"
+import { DateTime } from './parseISO'
 
 const zeroPad = (n: number, length: number = 2): string => {
   let s = n.toString()
   while (s.length < length) {
-    s = "0" + s
+    s = '0' + s
   }
 
   return s

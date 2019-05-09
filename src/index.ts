@@ -1,8 +1,8 @@
-import { parseISO } from "./parseISO"
-import { toISO } from "./toISO"
+import { parseISO } from './parseISO'
+import { toISO } from './toISO'
 
 export enum Frequency {
-  DAILY = "DAILY"
+  DAILY = 'DAILY'
 }
 
 export interface RuleOptions {

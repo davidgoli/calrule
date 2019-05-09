@@ -1,4 +1,4 @@
-import { DateTime } from "./parseISO"
+import { DateTime } from './parseISO'
 
 export const add = (base: DateTime, addend: Partial<DateTime>): DateTime => {
   const [minuteRemainder, second] = divmod(base.second + (addend.second || 0))

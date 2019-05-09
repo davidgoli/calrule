@@ -1,13 +1,13 @@
 {
   "extends": ["eslint:recommended", "airbnb", "prettier", "plugin:jest/recommended", "plugin:@typescript-eslint/recommended"],
-  "plugins": ["react", "import", "jsx-a11y", "prettier", "jest", "@typescript-eslint"],
+  "plugins": ["import", "prettier", "jest", "@typescript-eslint"],
   "parser": "@typescript-eslint/parser",
   "settings": {
     "import/resolver": {
       "typescript": {}
     },
     "import/parsers": {
-      "@typescript-eslint/parser": [".ts", ".tsx"]
+      "@typescript-eslint/parser": [".ts"]
     }
   },
   "env": {
@@ -23,12 +23,7 @@
     "import/no-extraneous-dependencies": ["error", {
       "devDependencies": ["**/*.test.*", "src/setupTests.ts"]
     }],
-    "react/jsx-filename-extension": [1, {
-      "extensions": [".jsx", ".tsx"]
-    }],
     "@typescript-eslint/explicit-function-return-type": "off",
-    "react/jsx-one-expression-per-line": "off",
-    "@typescript-eslint/no-object-literal-type-assertion": "off",
-    "react/prop-types": "off"
+    "@typescript-eslint/no-object-literal-type-assertion": "off"
   }
 }

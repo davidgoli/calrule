@@ -1,7 +1,7 @@
-import { parseISO } from "./parseISO"
+import { parseISO } from './parseISO'
 
-it("parses an iso8601 string to components", () => {
-  const result = parseISO("2012-10-06T04:13:00+00:00")
+it('parses an iso8601 string to components', () => {
+  const result = parseISO('2012-10-06T04:13:00+00:00')
 
   expect(result).not.toBeUndefined()
   expect(result!.year).toEqual(2012)
@@ -12,8 +12,8 @@ it("parses an iso8601 string to components", () => {
   expect(result!.second).toEqual(0)
 })
 
-it("parses dates without time", () => {
-  const result = parseISO("2012-10-06")
+it('parses dates without time', () => {
+  const result = parseISO('2012-10-06')
 
   expect(result).not.toBeUndefined()
   expect(result!.year).toEqual(2012)

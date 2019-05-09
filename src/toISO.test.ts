@@ -1,6 +1,6 @@
-import { toISO } from "./toISO"
+import { toISO } from './toISO'
 
-it("stringifies DateTimes", () => {
+it('stringifies DateTimes', () => {
   const result = toISO({
     year: 2013,
     month: 4,
@@ -9,5 +9,5 @@ it("stringifies DateTimes", () => {
     minute: 24,
     second: 44
   })
-  expect(result).toEqual("2013-04-13T03:24:44")
+  expect(result).toEqual('2013-04-13T03:24:44')
 })
