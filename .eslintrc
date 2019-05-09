@@ -1,0 +1,34 @@
+{
+  "extends": ["eslint:recommended", "airbnb", "prettier", "plugin:jest/recommended", "plugin:@typescript-eslint/recommended"],
+  "plugins": ["react", "import", "jsx-a11y", "prettier", "jest", "@typescript-eslint"],
+  "parser": "@typescript-eslint/parser",
+  "settings": {
+    "import/resolver": {
+      "typescript": {}
+    },
+    "import/parsers": {
+      "@typescript-eslint/parser": [".ts", ".tsx"]
+    }
+  },
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "semi": "off",
+    "@typescript-eslint/member-delimiter-style": "off",
+    "indent": "off",
+    "@typescript-eslint/indent": ["error", 2],
+    "import/prefer-default-export": "off",
+    "no-nested-ternary": "off",
+    "import/no-extraneous-dependencies": ["error", {
+      "devDependencies": ["**/*.test.*", "src/setupTests.ts"]
+    }],
+    "react/jsx-filename-extension": [1, {
+      "extensions": [".jsx", ".tsx"]
+    }],
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "@typescript-eslint/no-object-literal-type-assertion": "off",
+    "react/prop-types": "off"
+  }
+}
