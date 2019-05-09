@@ -10,7 +10,7 @@
   "scripts": {
     "build": "npm run lint && tsc",
     "lint": "eslint --fix **/*.ts",
-    "test": "TS_NODE_PROJECT=tsconfig.test.json jest"
+    "test": "TS_NODE_PROJECT=tsconfig.test.json jest --watchAll"
   },
   "author": "David Golightly",
   "license": "ISC",

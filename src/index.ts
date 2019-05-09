@@ -1,16 +1,24 @@
-import { parse } from "./parse/parse"
+import { parseISO } from "./parseISO"
 
-enum Frequency {
+export enum Frequency {
   DAILY = "DAILY"
 }
 
-interface RuleOptions {
+export interface RuleOptions {
   freq: Frequency
   dtstart: string
-  until: string
+  count: number
 }
 
-export const rrule = ({ dtstart, freq, until }: RuleOptions) => {
-  const dtstartDate = parse(dtstart)
-  const untilDate = parse(until)
+export const rrule = ({
+  dtstart,
+  freq,
+  count
+}: RuleOptions): string[] | undefined => {
+  const dtstartDate = parseISO(dtstart)
+  if (!dtstartDate) {
+    return undefined
+  }
+
+  return [dtstart]
 }
