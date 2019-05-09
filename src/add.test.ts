@@ -61,3 +61,16 @@ it("rolls over hours to days", () => {
     second: 0
   })
 })
+
+it("rolls over days to months", () => {
+  dt.month = 9
+
+  expect(add(dt, { day: 33 })).toEqual({
+    year: 2013,
+    month: 10,
+    day: 5,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+})
