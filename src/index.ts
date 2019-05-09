@@ -1,4 +1,5 @@
 import { parseISO } from "./parseISO"
+import { toISO } from "./toISO"
 
 export enum Frequency {
   DAILY = "DAILY"
@@ -20,5 +21,11 @@ export const rrule = ({
     return undefined
   }
 
-  return [dtstart]
+  const counter = Object.assign({}, dtstartDate)
+  const output = []
+  while (output.length < count) {
+    output.push(Object.assign({}, counter))
+  }
+
+  return output.map(toISO)
 }
