@@ -10,7 +10,7 @@
   "scripts": {
     "build": "npm run lint && tsc",
     "lint": "eslint --fix **/*.ts",
-    "test": "TS_NODE_PROJECT=tsconfig.test.json jest **/*.test.ts"
+    "test": "TS_NODE_PROJECT=tsconfig.test.json jest"
   },
   "author": "David Golightly",
   "license": "ISC",
@@ -24,8 +24,13 @@
     "eslint": "^5.16.0",
     "husky": "^2.2.0",
     "jest": "^24.8.0",
+    "ts-jest": "^24.0.2",
     "ts-node": "^8.1.0",
     "tslib": "^1.9.3",
     "typescript": "^3.4.5"
+  },
+  "dependencies": {},
+  "jest": {
+    "preset": "ts-jest"
   }
 }
