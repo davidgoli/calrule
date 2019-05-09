@@ -131,4 +131,74 @@ it('rolls over months correctly based on the number of days that month', () => {
     minute: 0,
     second: 0
   })
+
+  dt.month = 4
+  expect(add(dt, { day: 30 })).toEqual({
+    year: 2013,
+    month: 5,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+
+  dt.month = 5
+  expect(add(dt, { day: 31 })).toEqual({
+    year: 2013,
+    month: 6,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+
+  dt.month = 6
+  expect(add(dt, { day: 30 })).toEqual({
+    year: 2013,
+    month: 7,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+
+  dt.month = 7
+  expect(add(dt, { day: 31 })).toEqual({
+    year: 2013,
+    month: 8,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+
+  dt.month = 8
+  expect(add(dt, { day: 31 })).toEqual({
+    year: 2013,
+    month: 9,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+
+  dt.month = 9
+  expect(add(dt, { day: 30 })).toEqual({
+    year: 2013,
+    month: 10,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+
+  dt.month = 10
+  expect(add(dt, { day: 31 })).toEqual({
+    year: 2013,
+    month: 11,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
 })
