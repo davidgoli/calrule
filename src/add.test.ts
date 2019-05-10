@@ -225,3 +225,48 @@ it('rolls over to the next year', () => {
     second: 0
   })
 })
+
+it('handles leap years (not on centuries)', () => {
+  dt.day = 1
+  dt.month = 2
+  dt.year = 2016
+
+  expect(add(dt, { day: 29 })).toEqual({
+    year: 2016,
+    month: 3,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+})
+
+it('handles leap years on centures not divisible by 400', () => {
+  dt.day = 1
+  dt.month = 2
+  dt.year = 1900
+
+  expect(add(dt, { day: 28 })).toEqual({
+    year: 1900,
+    month: 3,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+})
+
+it('handles leap years on centures not divisible by 400', () => {
+  dt.day = 1
+  dt.month = 2
+  dt.year = 2000
+
+  expect(add(dt, { day: 29 })).toEqual({
+    year: 2000,
+    month: 3,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+})

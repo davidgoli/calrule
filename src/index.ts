@@ -12,6 +12,8 @@ export interface RuleOptions {
   count: number
 }
 
+const copy = <T>(o: T): T => Object.assign({}, o)
+
 export const rrule = ({
   dtstart,
   freq,
@@ -22,10 +24,10 @@ export const rrule = ({
     return undefined
   }
 
-  let counter = Object.assign({}, dtstartDate)
+  let counter = copy(dtstartDate)
   const output = []
   while (output.length < count) {
-    output.push(Object.assign({}, counter))
+    output.push(copy(counter))
     counter = add(counter, { day: 1 })
   }
 
