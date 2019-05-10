@@ -13,14 +13,19 @@ export const add = (base: DateTime, addend: Partial<DateTime>): DateTime => {
   )
 
   const [monthRemainder, day] = divmodMonths(
-    base.day + dayRemainder + (addend.day || 0),
+    base.day + dayRemainder + (addend.day || 0) - 1,
     base.month as MONTHS
   )
 
+  const [yearRemainder, month] = divmod(
+    base.month + (addend.month || 0) + monthRemainder - 1,
+    12
+  )
+
   return {
-    year: base.year + (addend.year || 0),
-    month: base.month + (addend.month || 0) + monthRemainder,
-    day,
+    year: base.year + (addend.year || 0) + yearRemainder,
+    month: month + 1,
+    day: day + 1,
     hour,
     minute,
     second
@@ -36,9 +41,7 @@ const divmod = (n: number, base: number = 60) => {
 
 const divmodMonths = (d: number, m: MONTHS) => {
   const monthLength = MONTH_LENGTHS[m]
-  // days are 1-based, unlike hours, minutes, seconds which are 0-based
-  const [monthRemainder, day] = divmod(d - 1, monthLength)
-  return [monthRemainder, day + 1]
+  return divmod(d, monthLength)
 }
 
 const MONTH_LENGTHS = {

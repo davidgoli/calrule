@@ -201,4 +201,27 @@ it('rolls over months correctly based on the number of days that month', () => {
     minute: 0,
     second: 0
   })
+
+  dt.month = 11
+  expect(add(dt, { day: 30 })).toEqual({
+    year: 2013,
+    month: 12,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+})
+
+it('rolls over to the next year', () => {
+  dt.day = 1
+  dt.month = 12
+  expect(add(dt, { day: 31 })).toEqual({
+    year: 2014,
+    month: 1,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
 })
