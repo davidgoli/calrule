@@ -1,10 +1,13 @@
 import { add } from './add'
 import { copy } from './copy'
-import { parseISO } from './parseISO'
+import { DateTime, parseISO } from './parseISO'
 import { toISO } from './toISO'
 
-export enum Frequency {
-  DAILY = 'DAILY'
+type Frequency = 'DAILY' | 'HOURLY'
+
+const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
+  DAILY: 'day',
+  HOURLY: 'hour'
 }
 
 export interface RuleOptions {
@@ -27,7 +30,7 @@ export const rrule = ({
   const output = []
   while (output.length < count) {
     output.push(copy(counter))
-    counter = add(counter, { day: 1 })
+    counter = add(counter, { [FREQUENCY_COUNTER[freq]]: 1 })
   }
 
   return output.map(toISO)

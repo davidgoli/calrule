@@ -12,6 +12,18 @@ it('parses an iso8601 string to components', () => {
   expect(result!.second).toEqual(0)
 })
 
+it('parses an iso8601 string without offset', () => {
+  const result = parseISO('2012-10-06T04:13:00')
+
+  expect(result).not.toBeUndefined()
+  expect(result!.year).toEqual(2012)
+  expect(result!.month).toEqual(10)
+  expect(result!.day).toEqual(6)
+  expect(result!.hour).toEqual(4)
+  expect(result!.minute).toEqual(13)
+  expect(result!.second).toEqual(0)
+})
+
 it('parses dates without time', () => {
   const result = parseISO('2012-10-06')
 
