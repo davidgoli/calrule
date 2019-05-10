@@ -3,10 +3,17 @@ import { copy } from './copy'
 import { DateTime, parseISO } from './parseISO'
 import { toISO } from './toISO'
 
-type Frequency = 'YEARLY' | 'DAILY' | 'HOURLY' | 'MINUTELY' | 'SECONDLY'
+type Frequency =
+  | 'YEARLY'
+  | 'WEEKLY'
+  | 'DAILY'
+  | 'HOURLY'
+  | 'MINUTELY'
+  | 'SECONDLY'
 
-const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
+const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime | 'week' } = {
   YEARLY: 'year',
+  WEEKLY: 'day',
   DAILY: 'day',
   HOURLY: 'hour',
   MINUTELY: 'minute',
@@ -35,7 +42,9 @@ export const rrule = ({
   const output = []
   while (output.length < count) {
     output.push(copy(counter))
-    counter = add(counter, { [FREQUENCY_COUNTER[freq]]: interval })
+    counter = add(counter, {
+      [FREQUENCY_COUNTER[freq]]: interval * (freq === 'WEEKLY' ? 7 : 1)
+    })
   }
 
   return output.map(toISO)
