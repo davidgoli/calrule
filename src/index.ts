@@ -1,4 +1,5 @@
 import { add } from './add'
+import { copy } from './copy'
 import { parseISO } from './parseISO'
 import { toISO } from './toISO'
 
@@ -11,8 +12,6 @@ export interface RuleOptions {
   dtstart: string
   count: number
 }
-
-const copy = <T>(o: T): T => Object.assign({}, o)
 
 export const rrule = ({
   dtstart,
