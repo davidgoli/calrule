@@ -12,5 +12,6 @@
 | -------- | ---------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | freq     | YEARLY<br/>MONTHLY <br/>WEEKLY<br/>DAILY<br/>HOURLY<br/>MINUTELY<br/>SECONDLY<br/> | Repeat frequency (required)                                              |
 | count    | number                                                                             | Number of instances to return                                            |
-| interval | number                                                                             | Interval of occurrences (eg. "2" with freq=DAILY yields every other day) |
-| dtstart  | ISO string                                                                         | First occurrence                                                         |
+| interval | number                                                                             | Interval of recurrences (eg. "2" with freq=DAILY yields every other day) |
+| dtstart  | ISO string                                                                         | First recurrence (required)                                              |
+| until    | ISO string                                                                         | No recurrences will be generated beyond this date, inclusive             |

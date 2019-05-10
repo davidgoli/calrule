@@ -52,3 +52,33 @@ it('supports interval', () => {
     '2016-04-06T07:25:34'
   ])
 })
+
+it('supports until', () => {
+  const result = rrule({
+    dtstart: '2016-04-05T13:25:34',
+    until: '2016-04-05T16:26:34',
+    freq: 'HOURLY'
+  })
+
+  expect(result).toEqual([
+    '2016-04-05T13:25:34',
+    '2016-04-05T14:25:34',
+    '2016-04-05T15:25:34',
+    '2016-04-05T16:25:34'
+  ])
+})
+
+it('includes the last occurrence with until if it matches dtstart', () => {
+  const result = rrule({
+    dtstart: '2016-04-05T13:25:34',
+    until: '2016-04-05T16:25:34',
+    freq: 'HOURLY'
+  })
+
+  expect(result).toEqual([
+    '2016-04-05T13:25:34',
+    '2016-04-05T14:25:34',
+    '2016-04-05T15:25:34',
+    '2016-04-05T16:25:34'
+  ])
+})

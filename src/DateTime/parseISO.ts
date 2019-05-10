@@ -1,15 +1,12 @@
-export interface DateTime {
-  year: number
-  month: number
-  day: number
-  hour: number
-  minute: number
-  second: number
-}
+import { DateTime } from './index'
 
 const iso8601Regex = /(\d{4})-(\d{2})-(\d{2})(?:T(\d{2})\:(\d{2})\:(\d{2})(?:[+-](\d{2})\:(\d{2}))?)?/
 
-export const parseISO = (iso8601: string): DateTime | undefined => {
+export const parseISO = (iso8601: string | undefined): DateTime | undefined => {
+  if (!iso8601) {
+    return undefined
+  }
+
   const parsed = iso8601Regex.exec(iso8601)
   if (!parsed) {
     return undefined

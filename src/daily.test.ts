@@ -94,3 +94,17 @@ it('supports interval', () => {
     '2017-01-12T00:00:00'
   ])
 })
+
+it('supports until', () => {
+  const result = rrule({
+    dtstart: '2016-12-25',
+    freq: 'DAILY',
+    until: '2016-12-27'
+  })
+
+  expect(result).toEqual([
+    '2016-12-25T00:00:00',
+    '2016-12-26T00:00:00',
+    '2016-12-27T00:00:00'
+  ])
+})
