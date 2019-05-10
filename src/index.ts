@@ -1,3 +1,4 @@
+import { add } from './add'
 import { parseISO } from './parseISO'
 import { toISO } from './toISO'
 
@@ -21,10 +22,11 @@ export const rrule = ({
     return undefined
   }
 
-  const counter = Object.assign({}, dtstartDate)
+  let counter = Object.assign({}, dtstartDate)
   const output = []
   while (output.length < count) {
     output.push(Object.assign({}, counter))
+    counter = add(counter, { day: 1 })
   }
 
   return output.map(toISO)
