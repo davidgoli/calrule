@@ -23,8 +23,10 @@ export const add = (base: DateTime, addend: Partial<DateTime>): DateTime => {
     12
   )
 
+  const year = base.year + (addend.year || 0) + yearRemainder
+
   return {
-    year: base.year + (addend.year || 0) + yearRemainder,
+    year,
     month: month + 1,
     day: day + 1,
     hour,
@@ -41,8 +43,18 @@ const divmod = (n: number, base: number = 60) => {
 }
 
 const divmodMonths = (d: number, m: MONTHS, y: number) => {
-  const monthLength = (isLeapYear(y) ? MONTH_LENGTHS_LEAP : MONTH_LENGTHS)[m]
-  return divmod(d, monthLength)
+  let monthLength: number
+  let monthRemainder = 0
+  while (
+    ((monthLength = (isLeapYear(y) ? MONTH_LENGTHS_LEAP : MONTH_LENGTHS)[m]),
+    d >= monthLength)
+  ) {
+    m += 1
+    monthRemainder += 1
+    d -= monthLength
+  }
+
+  return [monthRemainder, d]
 }
 
 const isLeapYear = (y: number) => {
