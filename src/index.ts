@@ -3,12 +3,13 @@ import { copy } from './copy'
 import { DateTime, parseISO } from './parseISO'
 import { toISO } from './toISO'
 
-type Frequency = 'DAILY' | 'HOURLY' | 'MINUTELY'
+type Frequency = 'DAILY' | 'HOURLY' | 'MINUTELY' | 'SECONDLY'
 
 const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
   DAILY: 'day',
   HOURLY: 'hour',
-  MINUTELY: 'minute'
+  MINUTELY: 'minute',
+  SECONDLY: 'second'
 }
 
 export interface RuleOptions {
