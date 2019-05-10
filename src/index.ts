@@ -16,12 +16,14 @@ export interface RuleOptions {
   freq: Frequency
   dtstart: string
   count: number
+  interval?: number
 }
 
 export const rrule = ({
   dtstart,
   freq,
-  count
+  count,
+  interval = 1
 }: RuleOptions): string[] | undefined => {
   const dtstartDate = parseISO(dtstart)
   if (!dtstartDate) {
@@ -32,7 +34,7 @@ export const rrule = ({
   const output = []
   while (output.length < count) {
     output.push(copy(counter))
-    counter = add(counter, { [FREQUENCY_COUNTER[freq]]: 1 })
+    counter = add(counter, { [FREQUENCY_COUNTER[freq]]: interval })
   }
 
   return output.map(toISO)
