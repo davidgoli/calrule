@@ -5,14 +5,16 @@ import { toISO } from './toISO'
 
 type Frequency =
   | 'YEARLY'
+  | 'MONTHLY'
   | 'WEEKLY'
   | 'DAILY'
   | 'HOURLY'
   | 'MINUTELY'
   | 'SECONDLY'
 
-const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime | 'week' } = {
+const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
   YEARLY: 'year',
+  MONTHLY: 'month',
   WEEKLY: 'day',
   DAILY: 'day',
   HOURLY: 'hour',
