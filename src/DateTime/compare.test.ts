@@ -1,5 +1,5 @@
 import { compare } from './compare'
-import { DateTime } from './parseISO'
+import { DateTime } from './index'
 
 // works like Array.prototype.sort's `compareFunction`
 // function compare(a, b) {

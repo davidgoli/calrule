@@ -1,5 +1,5 @@
 import { add } from './add'
-import { DateTime } from './parseISO'
+import { DateTime } from './index'
 
 let dt: DateTime
 

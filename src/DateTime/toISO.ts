@@ -1,4 +1,4 @@
-import { DateTime } from './parseISO'
+import { DateTime } from './index'
 
 const zeroPad = (n: number, length: number = 2): string => {
   let s = n.toString()
