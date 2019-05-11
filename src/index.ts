@@ -5,6 +5,7 @@ import { DateTime } from './DateTime/index'
 import { parseISO } from './DateTime/parseISO'
 import { toISO } from './DateTime/toISO'
 import { RuleOptions, Frequency } from './types'
+import { validate } from './validate'
 
 export const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
   YEARLY: 'year',
@@ -16,13 +17,12 @@ export const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
   SECONDLY: 'second'
 }
 
-export const rrule = ({
-  dtstart,
-  freq,
-  count,
-  until,
-  interval = 1
-}: RuleOptions): string[] | undefined => {
+export const rrule = (options: RuleOptions): string[] | undefined => {
+  if (!validate(options)) {
+    return undefined
+  }
+
+  const { dtstart, freq, count, until, interval = 1 } = options
   const dtstartDate = parseISO(dtstart)
   if (!dtstartDate) {
     return undefined
