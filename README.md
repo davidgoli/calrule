@@ -41,7 +41,7 @@ undefined
 
 [
   false,
-  { error: `Invalid value "undefined" for paramater FREQ` }
+  { errors: [`Invalid value "undefined" for paramater FREQ`] }
 ]
 ```
 

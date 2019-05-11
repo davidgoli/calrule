@@ -14,7 +14,7 @@ export const validate = (options: RuleOptions) => {
   if (FREQValues.indexOf(options.freq) === -1) {
     return [
       false,
-      { error: `Invalid value "${options.freq}" for paramater FREQ` }
+      { errors: [`Invalid value "${options.freq}" for paramater FREQ`] }
     ]
   }
 
