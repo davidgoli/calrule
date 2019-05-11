@@ -1,10 +1,49 @@
 # CalRule
 
-## An (incomplete) TypeScript implementation of RFC 5545
+## An (incomplete) TypeScript implementation of [RFC 5545](https://tools.ietf.org/html/rfc5545)
 
 - Stateless and functional
 - Accepts and returns ISO strings (not JS Date objects)
 - Does not use the JS Date object internally for better consistency with UTC and non-local timezones
+
+# Usage
+
+```ts
+// Any valid ISO 8601 string will work
+> rrule({
+  freq: 'DAILY',
+  dtstart: '2016-04-05T00:00:00',
+  count: 10
+})
+
+[
+  '2016-04-05T00:00:00',
+  '2016-04-06T00:00:00',
+  '2016-04-07T00:00:00',
+  '2016-04-08T00:00:00',
+  '2016-04-09T00:00:00',
+  '2016-04-10T00:00:00',
+  '2016-04-11T00:00:00',
+  '2016-04-12T00:00:00',
+  '2016-04-13T00:00:00',
+  '2016-04-14T00:00:00'
+]
+```
+
+If you get a return value of `undefined`, it's likely your RRULE parameters are invalid. To check this, use the `validate` method:
+
+```ts
+> rrule({})
+
+undefined
+
+> validate({})
+
+[
+  false,
+  { error: `Invalid value "undefined" for paramater FREQ` }
+]
+```
 
 # Supported Properties
 

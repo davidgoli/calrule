@@ -4,17 +4,9 @@ import { compare } from './DateTime/compare'
 import { DateTime } from './DateTime/index'
 import { parseISO } from './DateTime/parseISO'
 import { toISO } from './DateTime/toISO'
+import { RuleOptions, Frequency } from './types'
 
-type Frequency =
-  | 'YEARLY'
-  | 'MONTHLY'
-  | 'WEEKLY'
-  | 'DAILY'
-  | 'HOURLY'
-  | 'MINUTELY'
-  | 'SECONDLY'
-
-const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
+export const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
   YEARLY: 'year',
   MONTHLY: 'month',
   WEEKLY: 'day',
@@ -22,14 +14,6 @@ const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
   HOURLY: 'hour',
   MINUTELY: 'minute',
   SECONDLY: 'second'
-}
-
-export interface RuleOptions {
-  freq: Frequency
-  dtstart: string
-  count?: number
-  until?: string
-  interval?: number
 }
 
 export const rrule = ({
