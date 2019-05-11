@@ -24,6 +24,13 @@ export const validate = (options: RuleOptions) => {
     errors.push(error('DTSTART', options.dtstart))
   }
 
+  if (
+    typeof options.count !== 'undefined' &&
+    typeof options.until !== 'undefined'
+  ) {
+    errors.push('UNTIL and COUNT must not both be present')
+  }
+
   if (errors.length) {
     return [false, { errors }]
   }
