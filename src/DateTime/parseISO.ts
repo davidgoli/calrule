@@ -7,6 +7,10 @@ export const parseISO = (iso8601: string | undefined): DateTime | undefined => {
     return undefined
   }
 
+  if (isNaN(new Date(iso8601).getTime())) {
+    return undefined
+  }
+
   const parsed = iso8601Regex.exec(iso8601)
   if (!parsed) {
     return undefined

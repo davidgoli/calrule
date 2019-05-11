@@ -35,3 +35,8 @@ it('parses dates without time', () => {
   expect(result!.minute).toEqual(0)
   expect(result!.second).toEqual(0)
 })
+
+it('does not parse if hours are out of range', () => {
+  const result = parseISO('2012-10-06T25:00:00')
+  expect(result).toBeUndefined()
+})
