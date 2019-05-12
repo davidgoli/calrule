@@ -38,6 +38,7 @@
   },
   "dependencies": {},
   "jest": {
-    "preset": "ts-jest"
+    "preset": "ts-jest",
+    "coverageDirectory": "./coverage/"
   }
 }

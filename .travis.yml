@@ -5,11 +5,11 @@ node_js:
   - '8'
   - '10'
 script:
-  - npm install -g codecov nyc
+  - npm install -g codecov
   - TZ=America/Vancouver npm run test-ci
   - TZ=America/Los_Angeles npm run test-ci
   - TZ=Africa/Nairobi npm run test-ci
   - TZ=Asia/Tokyo npm run test-ci
 after_success:
-  - nyc report --reporter=json && codecov -f coverage/*.json
+  - codecov
 sudo: false
