@@ -23,23 +23,18 @@ export const rrule = (options: RuleOptions): string[] | undefined => {
     return undefined
   }
 
-  const { dtstart, freq, count, until, interval = 1 } = options
-  const dtstartDate = parseISO(dtstart)
-  if (!dtstartDate) {
+  const { count, until, interval = 1 } = options
+  const complete = iterationTerminator(count, until)
+  const passesFilter = makeFilter(options)
+  const iterator = makeIterator(options)
+  if (!iterator) {
     return undefined
   }
 
-  let counter = copy(dtstartDate)
-  const complete = iterationTerminator(count, until)
-  const passesFilter = makeFilter(options)
-
   const output = []
-  while (!complete(counter, output.length)) {
-    if (passesFilter(counter)) output.push(copy(counter))
-
-    counter = add(counter, {
-      [FREQUENCY_COUNTER[freq]]: interval * (freq === 'WEEKLY' ? 7 : 1)
-    })
+  while (!complete(iterator.current(), output.length)) {
+    if (passesFilter(iterator.current())) output.push(copy(iterator.current()))
+    iterator.next()
   }
 
   return output.map(toISO)
@@ -62,5 +57,36 @@ const makeFilter = ({ byday }: RuleOptions) => {
     }
 
     return true
+  }
+}
+
+const adjustFreq = (options: RuleOptions) => {
+  if (options.byday) {
+    return 'DAILY'
+  }
+
+  return options.freq
+}
+
+const makeIterator = (options: RuleOptions) => {
+  const dtstartDate = parseISO(options.dtstart)
+  if (!dtstartDate) {
+    return undefined
+  }
+
+  let counter = copy(dtstartDate)
+  const freq = adjustFreq(options)
+  const { interval = 1 } = options
+
+  return {
+    next() {
+      counter = add(counter, {
+        [FREQUENCY_COUNTER[freq]]: interval * (freq === 'WEEKLY' ? 7 : 1)
+      })
+    },
+
+    current() {
+      return counter
+    }
   }
 }
