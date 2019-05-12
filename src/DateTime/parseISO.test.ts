@@ -1,4 +1,5 @@
 import { parseISO } from './parseISO'
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 
 it('parses an iso8601 string to components', () => {
   const result = parseISO('2012-10-06T04:13:00+00:00')

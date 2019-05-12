@@ -54,10 +54,8 @@ describe('FREQ=WEEKLY', () => {
       '2017-01-16T00:00:00'
     ])
   })
-})
 
-describe('FREQ=WEEKLY', () => {
-  it('returns only the days given', () => {
+  it('returns only the days given with a single byday', () => {
     const result = rrule({
       dtstart: '2017-01-01',
       freq: 'WEEKLY',

@@ -254,7 +254,7 @@ it('handles leap years (not on centuries)', () => {
   })
 })
 
-it('handles leap years on centures not divisible by 400', () => {
+it('handles leap years on centuries not divisible by 400', () => {
   dt.day = 1
   dt.month = 2
   dt.year = 1900
@@ -269,7 +269,7 @@ it('handles leap years on centures not divisible by 400', () => {
   })
 })
 
-it('handles leap years on centures not divisible by 400', () => {
+it('handles leap years on centuries divisible by 400', () => {
   dt.day = 1
   dt.month = 2
   dt.year = 2000

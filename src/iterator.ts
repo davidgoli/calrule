@@ -15,6 +15,68 @@ export const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
   SECONDLY: 'second'
 }
 
+const skipBy = (
+  current: DateTime,
+  unit: keyof DateTime,
+  nextUnit: keyof DateTime,
+  stops: number[]
+) => {
+  for (let i = 0; i < stops.length; i++) {
+    if (current[unit] <= stops[i]) {
+      current[unit] = stops[i]
+      return current
+    }
+  }
+
+  current = add(current, { [nextUnit]: 1 })
+  current[unit] = stops[0]
+  return current
+}
+
+const nextSecond = (current: DateTime, bysecond: number[]) =>
+  skipBy(current, 'second', 'minute', bysecond)
+
+const nextMinute = (current: DateTime, byminute: number[]) =>
+  skipBy(current, 'minute', 'hour', byminute)
+
+const nextHour = (current: DateTime, byhour: number[]) =>
+  skipBy(current, 'hour', 'day', byhour)
+
+const nextDay = (current: DateTime, byday: Weekday[]) => {
+  const currentDayOfWeekIdx = days.indexOf(dayOfWeek(current))
+
+  for (let i = 0; i < byday.length; i++) {
+    const daydiff = days.indexOf(byday[i]) - currentDayOfWeekIdx
+    if (daydiff >= 0) {
+      current.day += daydiff
+      return current
+    }
+  }
+
+  const day = 7 + days.indexOf(byday[0]) - currentDayOfWeekIdx
+  return add(current, { day })
+}
+
+const skipAhead = (current: DateTime, options: GroomedOptions) => {
+  if (options.bysecond) {
+    return nextSecond(current, options.bysecond)
+  }
+
+  if (options.byminute) {
+    return nextMinute(current, options.byminute)
+  }
+
+  if (options.byhour) {
+    return nextHour(current, options.byhour)
+  }
+
+  if (options.byday) {
+    return nextDay(current, options.byday)
+  }
+
+  return current
+}
+
 export const makeIterator = (options: GroomedOptions) => {
   const { dtstart, count, until, freq, interval = 1 } = options
   let current = skipAhead(dtstart, options)
@@ -39,73 +101,4 @@ export const makeIterator = (options: GroomedOptions) => {
       return current
     }
   }
-}
-
-// if the counter does not meet the filter criteria,
-// set its props to the next BYxxx
-
-const skipAhead = (current: DateTime, options: GroomedOptions) => {
-  if (options.bysecond) {
-    return nextSecond(current, options.bysecond)
-  }
-
-  if (options.byminute) {
-    return nextMinute(current, options.byminute)
-  }
-
-  if (options.byhour) {
-    return nextHour(current, options.byhour)
-  }
-
-  if (options.byday) {
-    return nextDay(current, options.byday)
-  }
-
-  return current
-}
-
-const nextSecond = (current: DateTime, bysecond: number[]) =>
-  skipBy(current, 'second', 'minute', bysecond)
-
-const skipBy = (
-  current: DateTime,
-  unit: keyof DateTime,
-  nextUnit: keyof DateTime,
-  stops: number[]
-) => {
-  for (let i = 0; i < stops.length; i++) {
-    if (current[unit] <= stops[i]) {
-      current[unit] = stops[i]
-      return current
-    }
-  }
-
-  current = add(current, { [nextUnit]: 1 })
-  current[unit] = stops[0]
-  return current
-}
-
-const nextMinute = (current: DateTime, byminute: number[]) =>
-  skipBy(current, 'minute', 'hour', byminute)
-
-const nextHour = (current: DateTime, byhour: number[]) =>
-  skipBy(current, 'hour', 'day', byhour)
-
-const nextDay = (current: DateTime, byday: Weekday[]) => {
-  const currentDayOfWeekIdx = days.indexOf(dayOfWeek(current))
-
-  for (let i = 0; i < byday.length; i++) {
-    const daydiff = days.indexOf(byday[i]) - currentDayOfWeekIdx
-    if (daydiff === 0) {
-      return current
-    }
-
-    if (daydiff > 0) {
-      current.day += daydiff
-      return current
-    }
-  }
-
-  const day = 7 + days.indexOf(byday[0]) - currentDayOfWeekIdx
-  return add(current, { day })
 }

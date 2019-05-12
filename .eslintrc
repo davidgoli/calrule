@@ -1,27 +1,22 @@
 {
-  "extends": ["eslint:recommended", "airbnb", "prettier", "plugin:jest/recommended", "plugin:@typescript-eslint/recommended"],
+  "extends": ["eslint:recommended", "prettier", "plugin:@typescript-eslint/recommended", "plugin:jest/recommended"],
   "plugins": ["import", "prettier", "jest", "@typescript-eslint"],
   "parser": "@typescript-eslint/parser",
   "settings": {
-    "import/resolver": {
-      "typescript": {}
-    },
     "import/parsers": {
       "@typescript-eslint/parser": [".ts"]
     }
   },
-  "env": {
-    "browser": true
-  },
   "rules": {
     "semi": "off",
     "@typescript-eslint/member-delimiter-style": "off",
-    "indent": "off",
     "@typescript-eslint/indent": ["error", 2],
     "import/prefer-default-export": "off",
-    "no-nested-ternary": "off",
     "import/no-extraneous-dependencies": ["error", {
       "devDependencies": ["**/*.test.*", "src/setupTests.ts"]
+    }],
+    "@typescript-eslint/no-unused-vars": ["error", {
+      "varsIgnorePattern": "^_"
     }],
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-object-literal-type-assertion": "off"

@@ -19,6 +19,18 @@ export interface GroomedOptions {
 const maxFreq = (limit: Frequency, current: Frequency) =>
   FREQValues[Math.max(FREQValues.indexOf(limit), FREQValues.indexOf(current))]
 
+const normalizeByUnit = <T>(
+  unit: T[] | undefined,
+  compareFn: (a: T, b: T) => number = (a, b) =>
+    ((a as unknown) as number) - ((b as unknown) as number)
+) => {
+  if (!unit || unit.length === 0) {
+    return undefined
+  }
+
+  return unit.filter(i => typeof i !== 'undefined').sort(compareFn)
+}
+
 // Per the RFC:
 //
 // "BYxxx rule parts for a period of time less than the frequency generally
@@ -37,8 +49,8 @@ const adjustFreq = ({
   bysecond,
   freq
 }: Pick<
-  RuleOptions,
-  'byday' | 'byhour' | 'byminute' | 'bysecond' | 'freq'
+RuleOptions,
+'byday' | 'byhour' | 'byminute' | 'bysecond' | 'freq'
 >) => {
   if (byday) {
     return maxFreq('DAILY', freq)
@@ -106,16 +118,4 @@ export const groomOptions = (
     dtstart: dtstartDate,
     freq: frequency
   }
-}
-
-const normalizeByUnit = <T>(
-  unit: T[] | undefined,
-  compareFn: (a: T, b: T) => number = (a, b) =>
-    ((a as unknown) as number) - ((b as unknown) as number)
-) => {
-  if (!unit || unit.length === 0) {
-    return undefined
-  }
-
-  return unit.filter(i => typeof i !== 'undefined').sort(compareFn)
 }

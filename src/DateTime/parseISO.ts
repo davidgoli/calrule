@@ -1,6 +1,6 @@
 import { DateTime } from './index'
 
-const iso8601Regex = /(\d{4})-(\d{2})-(\d{2})(?:T(\d{2})\:(\d{2})\:(\d{2})(?:[+-](\d{2})\:(\d{2}))?)?/
+const iso8601Regex = /(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}):(\d{2})(?:[+-](\d{2}):(\d{2}))?)?/
 
 export const parseISO = (iso8601: string | undefined): DateTime | undefined => {
   if (!iso8601) {
