@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/davidgoli/calrule.svg?branch=master)](https://travis-ci.org/davidgoli/calrule)
-[![codecov](https://codecov.io/gh/davidgoli/calrule/branch/master/graph/badge.svg)](https://codecov.io/gh/davidgoli/calrule)
+[![codecov](https://codecov.io/gh/davidgoli/calrule/branch/master/graph/badge.svg)](https://codecov.io/gh/davidgoli/calrule) [![Greenkeeper badge](https://badges.greenkeeper.io/davidgoli/calrule.svg)](https://greenkeeper.io/)
 
 # CalRule
 
