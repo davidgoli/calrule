@@ -36,9 +36,15 @@ export const validate = (options: RuleOptions) => {
   }
 
   if (
+    typeof options.interval !== 'undefined' &&
+    !isPositiveNumber(options.interval)
+  ) {
+    errors.push(error('INTERVAL', options.interval))
+  }
+
+  if (
     typeof options.count !== 'undefined' &&
-    (isNaN(parseInt(options.count.toString(), 10)) ||
-      parseInt(options.count.toString(), 10) < 0)
+    !isPositiveNumber(options.count)
   ) {
     errors.push(error('COUNT', options.count))
   }
@@ -49,3 +55,5 @@ export const validate = (options: RuleOptions) => {
 
   return [true, {}]
 }
+
+const isPositiveNumber = (value: Object) => parseInt(value.toString(), 10) > 0

@@ -68,3 +68,23 @@ it('is valid with valid UNTIL', () => {
     validate({ freq: 'DAILY', dtstart: '2017-04-15', until: '2018-12-20' })
   ).toEqual([true, {}])
 })
+
+it('is not valid if INTERVAL is not a number', () => {
+  expect(
+    // @ts-ignore
+    validate({ freq: 'DAILY', dtstart: '2017-04-15', interval: 'abc' })
+  ).toEqual([false, { errors: ['Invalid value "abc" for parameter INTERVAL'] }])
+})
+
+it('is not valid if INTERVAL is negative', () => {
+  expect(
+    // @ts-ignore
+    validate({ freq: 'DAILY', dtstart: '2017-04-15', interval: -1 })
+  ).toEqual([false, { errors: ['Invalid value "-1" for parameter INTERVAL'] }])
+})
+
+it('is valid with valid INTERVAL', () => {
+  expect(
+    validate({ freq: 'DAILY', dtstart: '2017-04-15', interval: 2 })
+  ).toEqual([true, {}])
+})
