@@ -54,3 +54,4 @@ undefined
 | interval | number                                                                             | Interval of recurrences (eg. "2" with freq=DAILY yields every other day) |
 | dtstart  | ISO string                                                                         | First recurrence (required)                                              |
 | until    | ISO string                                                                         | No recurrences will be generated beyond this date, inclusive             |
+| byday    | Array of [ 'SU' \| 'MO' \| 'TU' \| 'WE' \| 'TH' \| 'FR' \| 'SA' ]                  | Recurrences only appear on the provided weekdays                         |

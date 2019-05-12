@@ -32,6 +32,7 @@ export const makeIterator = ({
     },
 
     next() {
+      // TODO: "skip ahead" if BYxxx props are present
       current = add(current, {
         [FREQUENCY_COUNTER[freq]]: interval * (freq === 'WEEKLY' ? 7 : 1)
       })
