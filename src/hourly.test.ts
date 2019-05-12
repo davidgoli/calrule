@@ -53,6 +53,28 @@ it('supports interval', () => {
   ])
 })
 
+it('supports interval with no time given', () => {
+  const result = rrule({
+    dtstart: '2016-04-05',
+    count: 10,
+    freq: 'HOURLY',
+    interval: 12
+  })
+
+  expect(result).toEqual([
+    '2016-04-05T00:00:00',
+    '2016-04-05T12:00:00',
+    '2016-04-06T00:00:00',
+    '2016-04-06T12:00:00',
+    '2016-04-07T00:00:00',
+    '2016-04-07T12:00:00',
+    '2016-04-08T00:00:00',
+    '2016-04-08T12:00:00',
+    '2016-04-09T00:00:00',
+    '2016-04-09T12:00:00'
+  ])
+})
+
 it('supports until', () => {
   const result = rrule({
     dtstart: '2016-04-05T13:25:34',

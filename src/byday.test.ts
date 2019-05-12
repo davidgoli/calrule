@@ -47,12 +47,31 @@ describe('FREQ=WEEKLY', () => {
     })
 
     expect(result).toEqual([
-      // 2017-01-01 is a Sunday
       '2017-01-02T00:00:00',
       '2017-01-04T00:00:00',
       '2017-01-09T00:00:00',
       '2017-01-11T00:00:00',
       '2017-01-16T00:00:00'
+    ])
+  })
+})
+
+describe('FREQ=HOURLY', () => {
+  it('returns only the days given', () => {
+    const result = rrule({
+      dtstart: '2017-01-01',
+      freq: 'HOURLY',
+      count: 5,
+      byday: ['MO', 'WE'],
+      interval: 12
+    })
+
+    expect(result).toEqual([
+      '2017-01-02T00:00:00',
+      '2017-01-02T12:00:00',
+      '2017-01-04T00:00:00',
+      '2017-01-04T12:00:00',
+      '2017-01-09T00:00:00'
     ])
   })
 })

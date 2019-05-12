@@ -1,7 +1,7 @@
 import { RuleOptions, Frequency } from './types'
 import { parseISO } from './DateTime/parseISO'
 
-const FREQValues: Frequency[] = [
+export const FREQValues: Frequency[] = [
   'YEARLY',
   'MONTHLY',
   'WEEKLY',
