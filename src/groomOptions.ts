@@ -5,12 +5,16 @@ import { parseISO } from './DateTime/parseISO'
 
 export interface GroomedOptions {
   byday?: Weekday[]
+  byhour?: number[]
   interval?: number
   freq: Frequency
   count?: number
   dtstart: DateTime
   until?: DateTime
 }
+
+const maxFreq = (limit: Frequency, current: Frequency) =>
+  FREQValues[Math.max(FREQValues.indexOf(limit), FREQValues.indexOf(current))]
 
 // Per the RFC:
 //
@@ -23,11 +27,17 @@ export interface GroomedOptions {
 // This has no functional difference from FREQ=MONTHLY;BYMONTH=1,2,
 // so for freq periods greater than the BYxxx, we just set
 // freq=xxx
-const adjustFreq = ({ byday, freq }: Pick<RuleOptions, 'byday' | 'freq'>) => {
+const adjustFreq = ({
+  byday,
+  byhour,
+  freq
+}: Pick<RuleOptions, 'byday' | 'byhour' | 'freq'>) => {
   if (byday) {
-    return FREQValues[
-      Math.max(FREQValues.indexOf('DAILY'), FREQValues.indexOf(freq))
-    ]
+    return maxFreq('DAILY', freq)
+  }
+
+  if (byhour) {
+    return maxFreq('HOURLY', freq)
   }
 
   return freq
@@ -40,7 +50,7 @@ export const groomOptions = (
     return undefined
   }
 
-  const frequency = adjustFreq({ byday: options.byday, freq: options.freq })
+  const frequency = adjustFreq(options)
   const dtstartDate = parseISO(options.dtstart)
   if (!dtstartDate) {
     return undefined
