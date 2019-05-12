@@ -7,6 +7,7 @@ export interface GroomedOptions {
   byday?: Weekday[]
   byhour?: number[]
   byminute?: number[]
+  bysecond?: number[]
   interval?: number
   freq: Frequency
   count?: number
@@ -32,8 +33,12 @@ const adjustFreq = ({
   byday,
   byhour,
   byminute,
+  bysecond,
   freq
-}: Pick<RuleOptions, 'byday' | 'byhour' | 'byminute' | 'freq'>) => {
+}: Pick<
+  RuleOptions,
+  'byday' | 'byhour' | 'byminute' | 'bysecond' | 'freq'
+>) => {
   if (byday) {
     return maxFreq('DAILY', freq)
   }
@@ -44,6 +49,10 @@ const adjustFreq = ({
 
   if (byminute) {
     return maxFreq('MINUTELY', freq)
+  }
+
+  if (bysecond) {
+    return maxFreq('SECONDLY', freq)
   }
 
   return freq
