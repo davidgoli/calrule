@@ -34,6 +34,40 @@ describe('FREQ=HOURLY', () => {
       '2017-01-03T02:00:00'
     ])
   })
+
+  it('removes byhour if empty', () => {
+    const result = rrule({
+      dtstart: '2017-01-01',
+      freq: 'HOURLY',
+      count: 5,
+      byhour: []
+    })
+
+    expect(result).toEqual([
+      '2017-01-01T00:00:00',
+      '2017-01-01T01:00:00',
+      '2017-01-01T02:00:00',
+      '2017-01-01T03:00:00',
+      '2017-01-01T04:00:00'
+    ])
+  })
+
+  it('sorts the hours', () => {
+    const result = rrule({
+      dtstart: '2017-01-01',
+      freq: 'HOURLY',
+      count: 5,
+      byhour: [13, 2]
+    })
+
+    expect(result).toEqual([
+      '2017-01-01T02:00:00',
+      '2017-01-01T13:00:00',
+      '2017-01-02T02:00:00',
+      '2017-01-02T13:00:00',
+      '2017-01-03T02:00:00'
+    ])
+  })
 })
 
 describe('FREQ=DAILY', () => {

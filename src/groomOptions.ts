@@ -2,6 +2,7 @@ import { Weekday, Frequency, RuleOptions } from './types'
 import { DateTime } from './DateTime/index'
 import { validate, FREQValues } from './validate'
 import { parseISO } from './DateTime/parseISO'
+import { days } from './DateTime/dayOfWeek'
 
 export interface GroomedOptions {
   byday?: Weekday[]
@@ -72,14 +73,49 @@ export const groomOptions = (
   }
 
   const untilDate = parseISO(options.until)
+  const groomedOptions: Partial<GroomedOptions> = {
+    interval: options.interval || 1
+  }
 
-  // TODO: standardize BYxxx
-  // 1. sort them
-  // 2. don't return the keys if arrays are empty
+  if (options.count) {
+    groomedOptions.count = options.count
+  }
+
+  ;(['byhour', 'byminute', 'bysecond'] as (
+    | 'byhour'
+    | 'byminute'
+    | 'bysecond')[]).forEach(unit => {
+    const normalized = normalizeByUnit(options[unit])
+    if (normalized) {
+      groomedOptions[unit] = normalized
+    }
+  })
+
+  const byday = normalizeByUnit(
+    options.byday,
+    (a, b) => days.indexOf(a) - days.indexOf(b)
+  )
+
+  if (byday) {
+    groomedOptions.byday = byday
+  }
+
   return {
-    ...options,
+    ...groomedOptions,
     until: untilDate,
     dtstart: dtstartDate,
     freq: frequency
   }
+}
+
+const normalizeByUnit = <T>(
+  unit: T[] | undefined,
+  compareFn: (a: T, b: T) => number = (a, b) =>
+    ((a as unknown) as number) - ((b as unknown) as number)
+) => {
+  if (!unit || unit.length === 0) {
+    return undefined
+  }
+
+  return unit.filter(i => typeof i !== 'undefined').sort(compareFn)
 }

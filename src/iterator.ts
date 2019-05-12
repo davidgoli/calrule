@@ -31,7 +31,7 @@ export const makeIterator = (options: GroomedOptions) => {
       current = add(current, {
         [FREQUENCY_COUNTER[freq]]: interval * (freq === 'WEEKLY' ? 7 : 1)
       })
-      // TODO: "skip ahead" if BYxxx props are present
+
       current = skipAhead(current, options)
     },
 

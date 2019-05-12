@@ -34,6 +34,40 @@ describe('FREQ=MINUTELY', () => {
       '2017-01-01T02:02:00'
     ])
   })
+
+  it('removes byminute if empty', () => {
+    const result = rrule({
+      dtstart: '2017-01-01',
+      freq: 'MINUTELY',
+      count: 5,
+      byminute: []
+    })
+
+    expect(result).toEqual([
+      '2017-01-01T00:00:00',
+      '2017-01-01T00:01:00',
+      '2017-01-01T00:02:00',
+      '2017-01-01T00:03:00',
+      '2017-01-01T00:04:00'
+    ])
+  })
+
+  it('sorts the minutes', () => {
+    const result = rrule({
+      dtstart: '2017-01-01',
+      freq: 'MINUTELY',
+      count: 5,
+      byminute: [13, 2]
+    })
+
+    expect(result).toEqual([
+      '2017-01-01T00:02:00',
+      '2017-01-01T00:13:00',
+      '2017-01-01T01:02:00',
+      '2017-01-01T01:13:00',
+      '2017-01-01T02:02:00'
+    ])
+  })
 })
 
 describe('FREQ=HOURLY', () => {
