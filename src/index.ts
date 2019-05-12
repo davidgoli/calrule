@@ -23,8 +23,6 @@ export const rrule = (options: RuleOptions): string[] | undefined => {
     return undefined
   }
 
-  const { count, until, interval = 1 } = options
-  const complete = iterationTerminator(count, until)
   const passesFilter = makeFilter(options)
   const iterator = makeIterator(options)
   if (!iterator) {
@@ -32,22 +30,12 @@ export const rrule = (options: RuleOptions): string[] | undefined => {
   }
 
   const output = []
-  while (!complete(iterator.current(), output.length)) {
+  while (iterator.hasNext(output.length)) {
     if (passesFilter(iterator.current())) output.push(copy(iterator.current()))
     iterator.next()
   }
 
   return output.map(toISO)
-}
-
-const iterationTerminator = (count?: number, until?: string) => {
-  const untilDate = parseISO(until)
-  return (current: DateTime, length: number) => {
-    return (
-      (typeof count === 'number' && length >= count) ||
-      (typeof untilDate !== 'undefined' && compare(untilDate, current) < 0)
-    )
-  }
 }
 
 const makeFilter = ({ byday }: RuleOptions) => {
@@ -60,28 +48,43 @@ const makeFilter = ({ byday }: RuleOptions) => {
   }
 }
 
-const adjustFreq = (options: RuleOptions) => {
-  if (options.byday) {
+const adjustFreq = ({ byday, freq }: Pick<RuleOptions, 'byday' | 'freq'>) => {
+  if (byday) {
     return 'DAILY'
   }
 
-  return options.freq
+  return freq
 }
 
-const makeIterator = (options: RuleOptions) => {
-  const dtstartDate = parseISO(options.dtstart)
+const makeIterator = ({
+  dtstart,
+  freq,
+  count,
+  until,
+  byday,
+  interval = 1
+}: RuleOptions) => {
+  const dtstartDate = parseISO(dtstart)
   if (!dtstartDate) {
     return undefined
   }
 
+  const untilDate = parseISO(until)
   let counter = copy(dtstartDate)
-  const freq = adjustFreq(options)
-  const { interval = 1 } = options
+  const frequency = adjustFreq({ byday, freq })
 
   return {
+    hasNext(length: number) {
+      return (
+        (typeof count === 'number' && length < count) ||
+        (typeof untilDate !== 'undefined' && compare(untilDate, counter) >= 0)
+      )
+    },
+
     next() {
       counter = add(counter, {
-        [FREQUENCY_COUNTER[freq]]: interval * (freq === 'WEEKLY' ? 7 : 1)
+        [FREQUENCY_COUNTER[frequency]]:
+          interval * (frequency === 'WEEKLY' ? 7 : 1)
       })
     },
 
