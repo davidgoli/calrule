@@ -56,6 +56,25 @@ describe('FREQ=WEEKLY', () => {
   })
 })
 
+describe('FREQ=WEEKLY', () => {
+  it('returns only the days given', () => {
+    const result = rrule({
+      dtstart: '2017-01-01',
+      freq: 'WEEKLY',
+      count: 5,
+      byday: ['MO']
+    })
+
+    expect(result).toEqual([
+      '2017-01-02T00:00:00',
+      '2017-01-09T00:00:00',
+      '2017-01-16T00:00:00',
+      '2017-01-23T00:00:00',
+      '2017-01-30T00:00:00'
+    ])
+  })
+})
+
 describe('FREQ=HOURLY', () => {
   it('returns only the days given', () => {
     const result = rrule({

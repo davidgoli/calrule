@@ -3,8 +3,6 @@ import { Frequency, Weekday } from './types'
 import { DateTime } from './DateTime/index'
 import { compare } from './DateTime/compare'
 import { add } from './DateTime/add'
-import { makeFilter } from './filter'
-import { copy } from './copy'
 import { dayOfWeek, days } from './DateTime/dayOfWeek'
 
 export const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
@@ -59,9 +57,9 @@ const skipAhead = (current: DateTime, options: GroomedOptions) => {
     return nextHour(current, options.byhour)
   }
 
-  // if (options.byday) {
-  //   return nextDay(current, options.byday)
-  // }
+  if (options.byday) {
+    return nextDay(current, options.byday)
+  }
 
   return current
 }
@@ -94,15 +92,20 @@ const nextHour = (current: DateTime, byhour: number[]) =>
   skipBy(current, 'hour', 'day', byhour)
 
 const nextDay = (current: DateTime, byday: Weekday[]) => {
+  const currentDayOfWeekIdx = days.indexOf(dayOfWeek(current))
+
   for (let i = 0; i < byday.length; i++) {
-    if (days.indexOf(dayOfWeek(current)) <= days.indexOf(byday[i])) {
-      return {
-        day: days.indexOf(byday[i])
-      }
+    const daydiff = days.indexOf(byday[i]) - currentDayOfWeekIdx
+    if (daydiff === 0) {
+      return current
+    }
+
+    if (daydiff > 0) {
+      current.day += daydiff
+      return current
     }
   }
 
-  return {
-    day: days.indexOf(byday[0]) + 7
-  }
+  const day = 7 + days.indexOf(byday[0]) - currentDayOfWeekIdx
+  return add(current, { day })
 }
