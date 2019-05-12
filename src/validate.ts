@@ -1,5 +1,5 @@
 import { RuleOptions, Frequency } from './types'
-import { parseISO } from './DateTime/parseISO'
+import { isValidDate } from './DateTime/isValidDate'
 
 export const FREQValues: Frequency[] = [
   'YEARLY',
@@ -20,7 +20,7 @@ export const validate = (options: RuleOptions) => {
     errors.push(error('FREQ', options.freq))
   }
 
-  if (!parseISO(options.dtstart)) {
+  if (!isValidDate(options.dtstart)) {
     errors.push(error('DTSTART', options.dtstart))
   }
 
@@ -31,7 +31,7 @@ export const validate = (options: RuleOptions) => {
     errors.push('UNTIL and COUNT must not both be present')
   }
 
-  if (typeof options.until !== 'undefined' && !parseISO(options.until)) {
+  if (typeof options.until !== 'undefined' && !isValidDate(options.until)) {
     errors.push(error('UNTIL', options.until))
   }
 

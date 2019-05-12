@@ -1,13 +1,10 @@
 import { DateTime } from './index'
+import { isValidDate } from './isValidDate'
 
 const iso8601Regex = /(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}):(\d{2})(?:[+-](\d{2}):(\d{2}))?)?/
 
 export const parseISO = (iso8601: string | undefined): DateTime | undefined => {
-  if (!iso8601) {
-    return undefined
-  }
-
-  if (isNaN(new Date(iso8601).getTime())) {
+  if (!isValidDate(iso8601)) {
     return undefined
   }
 
