@@ -73,6 +73,9 @@ export const groomOptions = (
 
   const untilDate = parseISO(options.until)
 
+  // TODO: standardize BYxxx
+  // 1. sort them
+  // 2. don't return the keys if arrays are empty
   return {
     ...options,
     until: untilDate,
