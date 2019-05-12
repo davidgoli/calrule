@@ -40,3 +40,8 @@ it('does not parse if hours are out of range', () => {
   const result = parseISO('2012-10-06T25:00:00')
   expect(result).toBeUndefined()
 })
+
+it('does not parse if minutes are out of range', () => {
+  const result = parseISO('2012-10-06T23:60:00')
+  expect(result).toBeUndefined()
+})

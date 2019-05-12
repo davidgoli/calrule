@@ -6,6 +6,7 @@ import { parseISO } from './DateTime/parseISO'
 import { toISO } from './DateTime/toISO'
 import { RuleOptions, Frequency } from './types'
 import { validate } from './validate'
+import { dayOfWeek } from './DateTime/dayOfWeek'
 
 export const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
   YEARLY: 'year',
@@ -30,10 +31,12 @@ export const rrule = (options: RuleOptions): string[] | undefined => {
 
   let counter = copy(dtstartDate)
   const complete = iterationTerminator(count, until)
+  const passesFilter = makeFilter(options)
 
   const output = []
   while (!complete(counter, output.length)) {
-    output.push(copy(counter))
+    if (passesFilter(counter)) output.push(copy(counter))
+
     counter = add(counter, {
       [FREQUENCY_COUNTER[freq]]: interval * (freq === 'WEEKLY' ? 7 : 1)
     })
@@ -49,5 +52,15 @@ const iterationTerminator = (count?: number, until?: string) => {
       (typeof count === 'number' && length >= count) ||
       (typeof untilDate !== 'undefined' && compare(untilDate, current) < 0)
     )
+  }
+}
+
+const makeFilter = ({ byday }: RuleOptions) => {
+  return (current: DateTime) => {
+    if (byday) {
+      return byday.indexOf(dayOfWeek(current)) !== -1
+    }
+
+    return true
   }
 }

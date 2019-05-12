@@ -7,7 +7,7 @@ export type Frequency =
   | 'MINUTELY'
   | 'SECONDLY'
 
-export type BYDAY = 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA' | 'SU'
+export type Weekday = 'SU' | 'MO' | 'TU' | 'WE' | 'TH' | 'FR' | 'SA'
 
 export interface RuleOptions {
   freq: Frequency
@@ -15,4 +15,5 @@ export interface RuleOptions {
   count?: number
   until?: string
   interval?: number
+  byday?: Weekday[]
 }
