@@ -6,6 +6,7 @@ import { parseISO } from './DateTime/parseISO'
 export interface GroomedOptions {
   byday?: Weekday[]
   byhour?: number[]
+  byminute?: number[]
   interval?: number
   freq: Frequency
   count?: number
@@ -30,14 +31,19 @@ const maxFreq = (limit: Frequency, current: Frequency) =>
 const adjustFreq = ({
   byday,
   byhour,
+  byminute,
   freq
-}: Pick<RuleOptions, 'byday' | 'byhour' | 'freq'>) => {
+}: Pick<RuleOptions, 'byday' | 'byhour' | 'byminute' | 'freq'>) => {
   if (byday) {
     return maxFreq('DAILY', freq)
   }
 
   if (byhour) {
     return maxFreq('HOURLY', freq)
+  }
+
+  if (byminute) {
+    return maxFreq('MINUTELY', freq)
   }
 
   return freq
