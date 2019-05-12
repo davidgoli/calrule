@@ -1,12 +1,10 @@
-import { copy } from './copy'
 import { add } from './DateTime/add'
 import { compare } from './DateTime/compare'
 import { DateTime } from './DateTime/index'
-import { parseISO } from './DateTime/parseISO'
 import { toISO } from './DateTime/toISO'
 import { RuleOptions, Frequency } from './types'
-import { validate } from './validate'
 import { dayOfWeek } from './DateTime/dayOfWeek'
+import { GroomedOptions, groomOptions } from './groomOptions'
 
 export const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
   YEARLY: 'year',
@@ -19,21 +17,18 @@ export const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
 }
 
 export const rrule = (options: RuleOptions): string[] | undefined => {
-  if (!validate(options)) {
+  const groomedOptions = groomOptions(options)
+  if (!groomedOptions) {
     return undefined
   }
 
-  const iterator = makeIterator(options)
-  if (!iterator) {
-    return undefined
-  }
-
-  const passesFilter = makeFilter(options)
+  const iterator = makeIterator(groomedOptions)
+  const passesFilter = makeFilter(groomedOptions)
 
   const output = []
   while (iterator.hasNext(output.length)) {
-    if (passesFilter(iterator.current())) {
-      output.push(toISO(iterator.current()))
+    if (passesFilter(iterator.current)) {
+      output.push(toISO(iterator.current))
     }
     iterator.next()
   }
@@ -41,7 +36,7 @@ export const rrule = (options: RuleOptions): string[] | undefined => {
   return output
 }
 
-const makeFilter = ({ byday }: RuleOptions) => {
+const makeFilter = ({ byday }: GroomedOptions) => {
   return (current: DateTime) => {
     if (byday) {
       return byday.indexOf(dayOfWeek(current)) !== -1
@@ -51,48 +46,31 @@ const makeFilter = ({ byday }: RuleOptions) => {
   }
 }
 
-const adjustFreq = ({ byday, freq }: Pick<RuleOptions, 'byday' | 'freq'>) => {
-  if (byday) {
-    return 'DAILY'
-  }
-
-  return freq
-}
-
 const makeIterator = ({
   dtstart,
   freq,
   count,
   until,
-  byday,
   interval = 1
-}: RuleOptions) => {
-  const dtstartDate = parseISO(dtstart)
-  if (!dtstartDate) {
-    return undefined
-  }
-
-  const untilDate = parseISO(until)
-  let counter = copy(dtstartDate)
-  const frequency = adjustFreq({ byday, freq })
+}: GroomedOptions) => {
+  let current = dtstart
 
   return {
     hasNext(length: number) {
       return (
         (typeof count === 'number' && length < count) ||
-        (typeof untilDate !== 'undefined' && compare(untilDate, counter) >= 0)
+        (typeof until !== 'undefined' && compare(until, current) >= 0)
       )
     },
 
     next() {
-      counter = add(counter, {
-        [FREQUENCY_COUNTER[frequency]]:
-          interval * (frequency === 'WEEKLY' ? 7 : 1)
+      current = add(current, {
+        [FREQUENCY_COUNTER[freq]]: interval * (freq === 'WEEKLY' ? 7 : 1)
       })
     },
 
-    current() {
-      return counter
+    get current() {
+      return current
     }
   }
 }
