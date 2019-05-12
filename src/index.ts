@@ -23,19 +23,22 @@ export const rrule = (options: RuleOptions): string[] | undefined => {
     return undefined
   }
 
-  const passesFilter = makeFilter(options)
   const iterator = makeIterator(options)
   if (!iterator) {
     return undefined
   }
 
+  const passesFilter = makeFilter(options)
+
   const output = []
   while (iterator.hasNext(output.length)) {
-    if (passesFilter(iterator.current())) output.push(copy(iterator.current()))
+    if (passesFilter(iterator.current())) {
+      output.push(toISO(iterator.current()))
+    }
     iterator.next()
   }
 
-  return output.map(toISO)
+  return output
 }
 
 const makeFilter = ({ byday }: RuleOptions) => {
