@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/davidgoli/calrule.svg?branch=master)](https://travis-ci.org/davidgoli/calrule)
+[![codecov](https://codecov.io/gh/davidgoli/calrule/branch/master/graph/badge.svg)](https://codecov.io/gh/davidgoli/calrule)
+
 # CalRule
 
 ## An (incomplete) TypeScript implementation of [RFC 5545](https://tools.ietf.org/html/rfc5545)
