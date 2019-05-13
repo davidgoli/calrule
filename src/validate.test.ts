@@ -190,6 +190,12 @@ it('is not valid with bymonthday greater than 31', () => {
   ])
 })
 
+it('is not valid with bymonthday equal to 0', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', bymonthday: [0] })
+  ).toEqual([false, { errors: ['Invalid value "0" for parameter BYMONTHDAY'] }])
+})
+
 it('is not valid with bymonthday less than -31', () => {
   expect(
     validate({ freq: 'MONTHLY', dtstart: '2017-04-05', bymonthday: [-32] })

@@ -74,7 +74,10 @@ export const validate = (options: RuleOptions) => {
 
   if (
     typeof options.bymonthday !== 'undefined' &&
-    !arrayInRange(options.bymonthday, -31, 31)
+    !(
+      arrayInRange(options.bymonthday, -31, 31) &&
+      options.bymonthday.indexOf(0) === -1
+    )
   ) {
     errors.push(error('BYMONTHDAY', options.bymonthday))
   }
