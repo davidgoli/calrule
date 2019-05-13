@@ -83,6 +83,16 @@ export const validate = (options: RuleOptions) => {
   }
 
   if (
+    typeof options.byyearday !== 'undefined' &&
+    !(
+      arrayInRange(options.byyearday, -366, 366) &&
+      options.byyearday.indexOf(0) === -1
+    )
+  ) {
+    errors.push(error('BYYEARDAY', options.byyearday))
+  }
+
+  if (
     typeof options.bymonth !== 'undefined' &&
     !arrayInRange(options.bymonth, 1, 12)
   ) {

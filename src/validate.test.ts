@@ -210,3 +210,33 @@ it('is valid with valid bymonthday', () => {
     validate({ freq: 'MONTHLY', dtstart: '2017-04-05', bymonthday: [-2, 11] })
   ).toEqual([true, {}])
 })
+
+it('is not valid with byyearday greater than 366', () => {
+  expect(
+    validate({ freq: 'YEARLY', dtstart: '2017-04-05', byyearday: [367] })
+  ).toEqual([
+    false,
+    { errors: ['Invalid value "367" for parameter BYYEARDAY'] }
+  ])
+})
+
+it('is not valid with byyearday equal to 0', () => {
+  expect(
+    validate({ freq: 'YEARLY', dtstart: '2017-04-05', byyearday: [0] })
+  ).toEqual([false, { errors: ['Invalid value "0" for parameter BYYEARDAY'] }])
+})
+
+it('is not valid with byyearday less than -367', () => {
+  expect(
+    validate({ freq: 'YEARLY', dtstart: '2017-04-05', byyearday: [-367] })
+  ).toEqual([
+    false,
+    { errors: ['Invalid value "-367" for parameter BYYEARDAY'] }
+  ])
+})
+
+it('is valid with valid byyearday', () => {
+  expect(
+    validate({ freq: 'YEARLY', dtstart: '2017-04-05', byyearday: [-2, 11] })
+  ).toEqual([true, {}])
+})
