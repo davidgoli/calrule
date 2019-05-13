@@ -42,6 +42,9 @@ const nextMinute = (current: DateTime, byminute: number[]) =>
 const nextHour = (current: DateTime, byhour: number[]) =>
   skipBy(current, 'hour', 'day', byhour)
 
+const nextMonthday = (current: DateTime, bymonthday: number[]) =>
+  skipBy(current, 'day', 'month', bymonthday)
+
 const nextDay = (current: DateTime, byday: Weekday[]) => {
   const currentDayOfWeekIdx = days.indexOf(dayOfWeek(current))
 
@@ -72,6 +75,10 @@ const skipAhead = (current: DateTime, options: GroomedOptions) => {
 
   if (options.byday) {
     return nextDay(current, options.byday)
+  }
+
+  if (options.bymonthday) {
+    return nextMonthday(current, options.bymonthday)
   }
 
   return current

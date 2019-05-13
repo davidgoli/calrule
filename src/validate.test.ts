@@ -88,3 +88,9 @@ it('is valid with valid INTERVAL', () => {
     validate({ freq: 'DAILY', dtstart: '2017-04-15', interval: 2 })
   ).toEqual([true, {}])
 })
+
+it('is not valid if FREQ=WEEKLY and BYMONTHDAY is used', () => {
+  expect(
+    validate({ freq: 'WEEKLY', dtstart: '2017-04-05', bymonthday: [] })
+  ).toEqual([false, { errors: ['BYMONTHDAY cannot be used when FREQ=WEEKLY'] }])
+})

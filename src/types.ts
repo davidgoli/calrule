@@ -15,6 +15,7 @@ export interface RuleOptions {
   count?: number
   until?: string
   interval?: number
+  bymonthday?: number[]
   byday?: Weekday[]
   byhour?: number[]
   byminute?: number[]

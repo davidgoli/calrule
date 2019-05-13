@@ -49,6 +49,10 @@ export const validate = (options: RuleOptions) => {
     errors.push(error('COUNT', options.count))
   }
 
+  if (options.freq === 'WEEKLY' && typeof options.bymonthday !== 'undefined') {
+    errors.push('BYMONTHDAY cannot be used when FREQ=WEEKLY')
+  }
+
   if (errors.length) {
     return [false, { errors }]
   }
