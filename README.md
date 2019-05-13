@@ -58,6 +58,7 @@ undefined
 | dtstart    | ISO string                                                                         | First recurrence (required)                                              |
 | until      | ISO string                                                                         | No recurrences will be generated beyond this date, inclusive             |
 | bymonth    | number[]                                                                           | Recurrences only appear on the provided months                           |
+| byyearday  | number[]                                                                           | Recurrences only appear on the provided days of the year                 |
 | bymonthday | number[]                                                                           | Recurrences only appear on the provided days of the month                |
 | byday      | Array of [ 'SU' \| 'MO' \| 'TU' \| 'WE' \| 'TH' \| 'FR' \| 'SA' ]                  | Recurrences only appear on the provided weekdays                         |
 | byhour     | number[]                                                                           | Recurrences only appear on the provided hours                            |
