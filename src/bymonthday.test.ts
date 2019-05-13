@@ -35,6 +35,23 @@ describe('FREQ=MONTHLY', () => {
       '2017-03-02T00:00:00'
     ])
   })
+
+  it('does not return invalid month days', () => {
+    const result = rrule({
+      dtstart: '2017-01-01',
+      freq: 'MONTHLY',
+      count: 5,
+      bymonthday: [31]
+    })
+
+    expect(result).toEqual([
+      '2017-01-31T00:00:00',
+      '2017-03-31T00:00:00',
+      '2017-05-31T00:00:00',
+      '2017-07-31T00:00:00',
+      '2017-08-31T00:00:00'
+    ])
+  })
 })
 
 describe('FREQ=WEEKLY', () => {

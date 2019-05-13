@@ -4,6 +4,7 @@ import { DateTime } from './DateTime/index'
 import { compare } from './DateTime/compare'
 import { add } from './DateTime/add'
 import { dayOfWeek, days } from './DateTime/dayOfWeek'
+import { isRealDate } from './DateTime/isValidDate'
 
 export const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
   YEARLY: 'year',
@@ -97,11 +98,13 @@ export const makeIterator = (options: GroomedOptions) => {
     },
 
     next() {
-      current = add(current, {
-        [FREQUENCY_COUNTER[freq]]: interval * (freq === 'WEEKLY' ? 7 : 1)
-      })
+      do {
+        current = add(current, {
+          [FREQUENCY_COUNTER[freq]]: interval * (freq === 'WEEKLY' ? 7 : 1)
+        })
 
-      current = skipAhead(current, options)
+        current = skipAhead(current, options)
+      } while (!isRealDate(current))
     },
 
     get current() {

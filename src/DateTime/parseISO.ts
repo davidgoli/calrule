@@ -1,4 +1,4 @@
-import { DateTime } from './index'
+import { DateTime, MONTHS } from './index'
 import { isValidDate } from './isValidDate'
 
 const iso8601Regex = /(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}):(\d{2})(?:[+-](\d{2}):(\d{2}))?)?/
@@ -17,7 +17,7 @@ export const parseISO = (iso8601: string | undefined): DateTime | undefined => {
 
   return {
     year: parseInt(year, 10),
-    month: parseInt(month, 10),
+    month: parseInt(month, 10) as MONTHS,
     day: parseInt(day, 10),
     hour: parseInt(hour, 10) || 0,
     minute: parseInt(minute, 10) || 0,
