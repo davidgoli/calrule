@@ -5,6 +5,7 @@ import { parseISO } from './DateTime/parseISO'
 import { days } from './DateTime/dayOfWeek'
 
 export interface GroomedOptions {
+  bymonth?: number[]
   bymonthday?: number[]
   byday?: Weekday[]
   byhour?: number[]
@@ -44,6 +45,7 @@ const normalizeByUnit = <T>(
 // so for freq periods greater than the BYxxx, we just set
 // freq=xxx
 const adjustFreq = ({
+  bymonth,
   bymonthday,
   byday,
   byhour,
@@ -52,8 +54,18 @@ const adjustFreq = ({
   freq
 }: Pick<
   RuleOptions,
-  'bymonthday' | 'byday' | 'byhour' | 'byminute' | 'bysecond' | 'freq'
+  | 'bymonth'
+  | 'bymonthday'
+  | 'byday'
+  | 'byhour'
+  | 'byminute'
+  | 'bysecond'
+  | 'freq'
 >) => {
+  if (bymonth) {
+    return maxFreq('MONTHLY', freq)
+  }
+
   if (bymonthday) {
     return maxFreq('DAILY', freq)
   }
@@ -99,11 +111,12 @@ export const groomOptions = (
     groomedOptions.count = options.count
   }
 
-  ;(['byhour', 'byminute', 'bysecond', 'bymonthday'] as (
+  ;(['byhour', 'byminute', 'bysecond', 'bymonthday', 'bymonth'] as (
     | 'byhour'
     | 'byminute'
     | 'bysecond'
-    | 'bymonthday')[]).forEach(unit => {
+    | 'bymonthday'
+    | 'bymonth')[]).forEach(unit => {
     const normalized = normalizeByUnit(options[unit])
     if (normalized) {
       groomedOptions[unit] = normalized
