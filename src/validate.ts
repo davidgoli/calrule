@@ -1,5 +1,6 @@
 import { RuleOptions, Frequency } from './types'
 import { isValidDate } from './DateTime/isValidDate'
+import { inRange } from './DateTime/inRange'
 
 export const FREQValues: Frequency[] = [
   'YEARLY',
@@ -49,6 +50,34 @@ export const validate = (options: RuleOptions) => {
     errors.push(error('COUNT', options.count))
   }
 
+  if (
+    typeof options.bysecond !== 'undefined' &&
+    !arrayInRange(options.bysecond, 0, 59)
+  ) {
+    errors.push(error('BYSECOND', options.bysecond))
+  }
+
+  if (
+    typeof options.byminute !== 'undefined' &&
+    !arrayInRange(options.byminute, 0, 59)
+  ) {
+    errors.push(error('BYMINUTE', options.byminute))
+  }
+
+  if (
+    typeof options.byhour !== 'undefined' &&
+    !arrayInRange(options.byhour, 0, 59)
+  ) {
+    errors.push(error('BYHOUR', options.byhour))
+  }
+
+  if (
+    typeof options.bymonth !== 'undefined' &&
+    !arrayInRange(options.bymonth, 1, 12)
+  ) {
+    errors.push(error('BYMONTH', options.bymonth))
+  }
+
   if (options.freq === 'WEEKLY' && typeof options.bymonthday !== 'undefined') {
     errors.push('BYMONTHDAY cannot be used when FREQ=WEEKLY')
   }
@@ -60,4 +89,11 @@ export const validate = (options: RuleOptions) => {
   return [true, {}]
 }
 
-const isPositiveNumber = (value: Object) => parseInt(value.toString(), 10) > 0
+const isPositiveNumber = (value: Object) => parseInt(value.toString(), 10) >= 0
+
+const arrayInRange = (value: unknown, min: number, max: number) => {
+  return (
+    Array.isArray(value) &&
+    typeof value.find(i => !inRange(i, min, max)) === 'undefined'
+  )
+}

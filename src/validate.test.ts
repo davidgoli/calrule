@@ -94,3 +94,75 @@ it('is not valid if FREQ=WEEKLY and BYMONTHDAY is used', () => {
     validate({ freq: 'WEEKLY', dtstart: '2017-04-05', bymonthday: [] })
   ).toEqual([false, { errors: ['BYMONTHDAY cannot be used when FREQ=WEEKLY'] }])
 })
+
+it('is not valid with bymonth greater than 12', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', bymonth: [13] })
+  ).toEqual([false, { errors: ['Invalid value "13" for parameter BYMONTH'] }])
+})
+
+it('is not valid with bymonth less than 1', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', bymonth: [0] })
+  ).toEqual([false, { errors: ['Invalid value "0" for parameter BYMONTH'] }])
+})
+
+it('is valid with valid bymonth', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', bymonth: [2, 11] })
+  ).toEqual([true, {}])
+})
+
+it('is not valid with bysecond greater than 59', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', bysecond: [60] })
+  ).toEqual([false, { errors: ['Invalid value "60" for parameter BYSECOND'] }])
+})
+
+it('is not valid with bysecond less than 0', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', bysecond: [-1] })
+  ).toEqual([false, { errors: ['Invalid value "-1" for parameter BYSECOND'] }])
+})
+
+it('is valid with valid bysecond', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', bysecond: [2, 11] })
+  ).toEqual([true, {}])
+})
+
+it('is not valid with byminute greater than 59', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', byminute: [60] })
+  ).toEqual([false, { errors: ['Invalid value "60" for parameter BYMINUTE'] }])
+})
+
+it('is not valid with byminute less than 0', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', byminute: [-1] })
+  ).toEqual([false, { errors: ['Invalid value "-1" for parameter BYMINUTE'] }])
+})
+
+it('is valid with valid byminute', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', byminute: [2, 11] })
+  ).toEqual([true, {}])
+})
+
+it('is not valid with byhour greater than 59', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', byhour: [60] })
+  ).toEqual([false, { errors: ['Invalid value "60" for parameter BYHOUR'] }])
+})
+
+it('is not valid with byhour less than 0', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', byhour: [-1] })
+  ).toEqual([false, { errors: ['Invalid value "-1" for parameter BYHOUR'] }])
+})
+
+it('is valid with valid byhour', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', byhour: [2, 11] })
+  ).toEqual([true, {}])
+})
