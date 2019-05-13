@@ -6,7 +6,7 @@ export const isValidDate = (iso8601: string | undefined): iso8601 is string =>
 export const isRealDate = (date: DateTime) =>
   inRange(date.second, 0, 59) &&
   inRange(date.minute, 0, 59) &&
-  inRange(date.hour, 0, 24) &&
+  inRange(date.hour, 0, 23) &&
   inRange(date.day, 0, daysInMonth(date.month, date.year)) &&
   inRange(date.month, 1, 12)
 
