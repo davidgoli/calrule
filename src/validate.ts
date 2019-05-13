@@ -1,7 +1,7 @@
-import { RuleOptions, Frequency } from './types'
-import { isValidDate } from './DateTime/isValidDate'
-import { inRange } from './DateTime/inRange'
 import { days } from './DateTime/dayOfWeek'
+import { inRange } from './DateTime/inRange'
+import { isValidDate } from './DateTime/isValidDate'
+import { Frequency, RuleOptions } from './types'
 
 export const FREQValues: Frequency[] = [
   'YEARLY',
@@ -94,6 +94,13 @@ export const validate = (options: RuleOptions) => {
     !arrayContainsValues(options.byday, days)
   ) {
     errors.push(error('BYDAY', options.byday))
+  }
+
+  if (
+    ['DAILY', 'WEEKLY', 'MONTHLY'].indexOf(options.freq) !== -1 &&
+    typeof options.byyearday !== 'undefined'
+  ) {
+    errors.push(`BYYEARDAY cannot be used when FREQ=${options.freq}`)
   }
 
   if (options.freq === 'WEEKLY' && typeof options.bymonthday !== 'undefined') {

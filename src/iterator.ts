@@ -1,10 +1,10 @@
+import { add } from './DateTime/add'
+import { compare } from './DateTime/compare'
+import { dayOfWeek, dayOfYear, days } from './DateTime/dayOfWeek'
+import { DateTime } from './DateTime/index'
+import { isRealDate } from './DateTime/isValidDate'
 import { GroomedOptions } from './groomOptions'
 import { Frequency, Weekday } from './types'
-import { DateTime } from './DateTime/index'
-import { compare } from './DateTime/compare'
-import { add } from './DateTime/add'
-import { dayOfWeek, days } from './DateTime/dayOfWeek'
-import { isRealDate } from './DateTime/isValidDate'
 
 export const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
   YEARLY: 'year',
@@ -16,10 +16,8 @@ export const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
   SECONDLY: 'second'
 }
 
-const skipBy = (
+const skipBy = (unit: keyof DateTime, nextUnit: keyof DateTime) => (
   current: DateTime,
-  unit: keyof DateTime,
-  nextUnit: keyof DateTime,
   stops: number[]
 ) => {
   for (let i = 0; i < stops.length; i++) {
@@ -34,20 +32,11 @@ const skipBy = (
   return current
 }
 
-const nextSecond = (current: DateTime, bysecond: number[]) =>
-  skipBy(current, 'second', 'minute', bysecond)
-
-const nextMinute = (current: DateTime, byminute: number[]) =>
-  skipBy(current, 'minute', 'hour', byminute)
-
-const nextHour = (current: DateTime, byhour: number[]) =>
-  skipBy(current, 'hour', 'day', byhour)
-
-const nextMonthday = (current: DateTime, bymonthday: number[]) =>
-  skipBy(current, 'day', 'month', bymonthday)
-
-const nextMonth = (current: DateTime, bymonth: number[]) =>
-  skipBy(current, 'month', 'year', bymonth)
+const nextSecond = skipBy('second', 'minute')
+const nextMinute = skipBy('minute', 'hour')
+const nextHour = skipBy('hour', 'day')
+const nextMonthday = skipBy('day', 'month')
+const nextMonth = skipBy('month', 'year')
 
 const nextDay = (current: DateTime, byday: Weekday[]) => {
   const currentDayOfWeekIdx = days.indexOf(dayOfWeek(current))
@@ -62,6 +51,23 @@ const nextDay = (current: DateTime, byday: Weekday[]) => {
 
   const day = 7 + days.indexOf(byday[0]) - currentDayOfWeekIdx
   return add(current, { day })
+}
+
+const nextYearday = (current: DateTime, stops: number[]) => {
+  const currentDayOfYear = dayOfYear(current)
+
+  for (let i = 0; i < stops.length; i++) {
+    if (currentDayOfYear <= stops[i]) {
+      current.month = 1
+      current.day = 0
+      return add(current, { day: stops[i] })
+    }
+  }
+
+  current = add(current, { year: 1 })
+  current.month = 1
+  current.day = 0
+  return add(current, { day: stops[0] })
 }
 
 const skipAhead = (current: DateTime, options: GroomedOptions) => {
@@ -87,6 +93,10 @@ const skipAhead = (current: DateTime, options: GroomedOptions) => {
 
   if (options.bymonth) {
     return nextMonth(current, options.bymonth)
+  }
+
+  if (options.byyearday) {
+    return nextYearday(current, options.byyearday)
   }
 
   return current
