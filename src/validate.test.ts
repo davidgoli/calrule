@@ -166,3 +166,10 @@ it('is valid with valid byhour', () => {
     validate({ freq: 'MONTHLY', dtstart: '2017-04-05', byhour: [2, 11] })
   ).toEqual([true, {}])
 })
+
+it('is not valid with invalid weekdays in BYDAY', () => {
+  expect(
+    // @ts-ignore
+    validate({ freq: 'DAILY', dtstart: '2017-04-05', byday: ['foo'] })
+  ).toEqual([false, { errors: ['Invalid value "foo" for parameter BYDAY'] }])
+})
