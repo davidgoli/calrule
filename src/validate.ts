@@ -53,7 +53,7 @@ export const validate = (options: RuleOptions) => {
 
   if (
     typeof options.bysecond !== 'undefined' &&
-    !arrayInRange(options.bysecond, 0, 59)
+    !arrayInRange(options.bysecond, 0, 60)
   ) {
     errors.push(error('BYSECOND', options.bysecond))
   }
@@ -67,9 +67,16 @@ export const validate = (options: RuleOptions) => {
 
   if (
     typeof options.byhour !== 'undefined' &&
-    !arrayInRange(options.byhour, 0, 59)
+    !arrayInRange(options.byhour, 0, 23)
   ) {
     errors.push(error('BYHOUR', options.byhour))
+  }
+
+  if (
+    typeof options.bymonthday !== 'undefined' &&
+    !arrayInRange(options.bymonthday, -31, 31)
+  ) {
+    errors.push(error('BYMONTHDAY', options.bymonthday))
   }
 
   if (

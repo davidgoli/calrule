@@ -113,10 +113,10 @@ it('is valid with valid bymonth', () => {
   ).toEqual([true, {}])
 })
 
-it('is not valid with bysecond greater than 59', () => {
+it('is not valid with bysecond greater than 60', () => {
   expect(
-    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', bysecond: [60] })
-  ).toEqual([false, { errors: ['Invalid value "60" for parameter BYSECOND'] }])
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', bysecond: [61] })
+  ).toEqual([false, { errors: ['Invalid value "61" for parameter BYSECOND'] }])
 })
 
 it('is not valid with bysecond less than 0', () => {
@@ -149,10 +149,10 @@ it('is valid with valid byminute', () => {
   ).toEqual([true, {}])
 })
 
-it('is not valid with byhour greater than 59', () => {
+it('is not valid with byhour greater than 23', () => {
   expect(
-    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', byhour: [60] })
-  ).toEqual([false, { errors: ['Invalid value "60" for parameter BYHOUR'] }])
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', byhour: [24] })
+  ).toEqual([false, { errors: ['Invalid value "24" for parameter BYHOUR'] }])
 })
 
 it('is not valid with byhour less than 0', () => {
@@ -163,7 +163,7 @@ it('is not valid with byhour less than 0', () => {
 
 it('is valid with valid byhour', () => {
   expect(
-    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', byhour: [2, 11] })
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', byhour: [0, 23] })
   ).toEqual([true, {}])
 })
 
@@ -178,5 +178,29 @@ it('is valid with valid weekdays in BYDAY', () => {
   expect(
     // @ts-ignore
     validate({ freq: 'DAILY', dtstart: '2017-04-05', byday: ['FR', 'SA'] })
+  ).toEqual([true, {}])
+})
+
+it('is not valid with bymonthday greater than 31', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', bymonthday: [32] })
+  ).toEqual([
+    false,
+    { errors: ['Invalid value "32" for parameter BYMONTHDAY'] }
+  ])
+})
+
+it('is not valid with bymonthday less than -31', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', bymonthday: [-32] })
+  ).toEqual([
+    false,
+    { errors: ['Invalid value "-32" for parameter BYMONTHDAY'] }
+  ])
+})
+
+it('is valid with valid bymonthday', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', bymonthday: [-2, 11] })
   ).toEqual([true, {}])
 })
