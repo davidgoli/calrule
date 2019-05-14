@@ -177,20 +177,20 @@ export const makeIterator = (options: GroomedOptions) => {
         console.log({ newCurrent, current })
         if (compare(newCurrent, current) === 0) {
           console.log('no change')
-          const freqUnit = FREQUENCY_COUNTER[freq]
-          const freqUnitIdx = FREQUENCY_ORDER.indexOf(freqUnit)
+          const freqUnitIdx = FREQUENCY_ORDER.indexOf(FREQUENCY_COUNTER[freq])
+
           if (byRuleAtFreq(options)) {
             const nextLargerUnitIdx = Math.max(0, freqUnitIdx - 1)
             const nextLargerUnit = FREQUENCY_ORDER[nextLargerUnitIdx]
             current = add(current, {
               [nextLargerUnit]: 1
             })
-            zeroSmallerUnits(nextLargerUnitIdx, current)
+            current = zeroSmallerUnits(current, nextLargerUnitIdx)
           } else {
             current = add(current, {
               [FREQUENCY_COUNTER[freq]]: interval * (freq === 'WEEKLY' ? 7 : 1)
             })
-            zeroSmallerUnits(freqUnitIdx, current)
+            current = zeroSmallerUnits(current, freqUnitIdx)
           }
 
           current = skipAhead(current, options)
@@ -218,8 +218,12 @@ const byRuleAtFreq = (options: GroomedOptions) => {
   }
 }
 
-const zeroSmallerUnits = (refUnitIdx: number, current: DateTime) => {
+const zeroSmallerUnits = (current: DateTime, refUnitIdx: number) => {
+  const newCurrent = copy(current)
+
   FREQUENCY_ORDER.slice(refUnitIdx + 1).forEach(unit => {
-    current[unit] = 0
+    newCurrent[unit] = 0
   })
+
+  return newCurrent
 }
