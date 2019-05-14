@@ -4,9 +4,31 @@ import { toMillis } from './toMillis'
 
 export const days: Weekday[] = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']
 
+export const dayOrdinalOfWeek = (d: DateTime) => {
+  return new Date(Date.UTC(d.year, d.month - 1, d.day)).getUTCDay()
+}
+
 export const dayOfWeek = (d: DateTime) => {
-  const day = new Date(Date.UTC(d.year, d.month - 1, d.day)).getUTCDay()
-  return days[day]
+  return days[dayOrdinalOfWeek(d)]
+}
+
+export const firstWeekdayOfMonth = (d: DateTime, day: Weekday) => {
+  const firstOfMonthOrdinal = dayOrdinalOfWeek({
+    year: d.year,
+    month: d.month,
+    day: d.day,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+
+  const dayOrdinalDesired = days.indexOf(day)
+  let diff = dayOrdinalDesired - firstOfMonthOrdinal
+  while (diff < d.day) {
+    diff += 7
+  }
+
+  return diff
 }
 
 export const dayOfYear = (d: DateTime) =>

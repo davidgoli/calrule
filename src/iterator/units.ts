@@ -30,6 +30,8 @@ export const byRuleForUnit = (
       return options.bymonth
     case 'hour':
       return options.byhour
+    case 'day':
+      return options.byday
     case 'minute':
       return options.byminute
     case 'second':

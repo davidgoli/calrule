@@ -2,7 +2,8 @@ import { byRuleForUnit, FREQUENCY_ORDER } from './units'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
 import { rollOver } from './rollOver'
-import { skipBy } from './skipAhead'
+import { skipBy, nextDay } from './skipAhead'
+import { Weekday } from '../types'
 
 export const tick = (
   d: DateTime,
@@ -24,7 +25,11 @@ export const tickByrule = (
   const byrule = byRuleForUnit(unit, options)
 
   if (byrule && byrule.length) {
-    return skipBy(unit)(d, byrule)
+    if (unit === 'day') {
+      return nextDay(d, byrule as Weekday[])
+    }
+
+    return skipBy(unit)(d, byrule as number[])
   }
 
   return d

@@ -1,20 +1,18 @@
-import { copy } from './copy'
-import { compare } from './DateTime/compare'
-import { DateTime } from './DateTime/index'
-import { isRealDate } from './DateTime/isValidDate'
-import { GroomedOptions } from './groomOptions'
-import { skipAhead, skipBy } from './iter/skipAhead'
+import { copy } from '../copy'
+import { compare } from '../DateTime/compare'
+import { DateTime } from '../DateTime/index'
+import { isRealDate } from '../DateTime/isValidDate'
+import { GroomedOptions } from '../groomOptions'
+import { skipAhead } from './skipAhead'
 import {
   smallestTickUnit,
-  byRuleForUnit,
   FREQUENCY_ORDER,
   FREQUENCY_COUNTER
-} from './iter/units'
-import { rollOver } from './iter/rollOver'
-import { tickByrule, tick } from './iter/tick'
+} from './units'
+import { tickByrule, tick } from './tick'
 
 export const makeIterator = (options: GroomedOptions) => {
-  const { dtstart, count, until, freq, interval = 1 } = options
+  const { dtstart, count, until, freq } = options
   let current = skipAhead(copy(dtstart), options)
 
   return {
