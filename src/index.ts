@@ -1,7 +1,7 @@
 import { toISO } from './DateTime/toISO'
-import { RuleOptions } from './types'
 import { groomOptions } from './groomOptions'
 import { makeIterator } from './iterator'
+import { RuleOptions } from './types'
 
 export const rrule = (options: RuleOptions): string[] | undefined => {
   const groomedOptions = groomOptions(options)

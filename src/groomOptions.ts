@@ -2,7 +2,7 @@ import { days } from './DateTime/dayOfWeek'
 import { DateTime } from './DateTime/index'
 import { parseISO } from './DateTime/parseISO'
 import { Frequency, RuleOptions, Weekday } from './types'
-import { FREQValues, validate } from './validate'
+import { validate } from './validate'
 
 export interface GroomedOptions {
   byyearday?: number[]
@@ -19,81 +19,23 @@ export interface GroomedOptions {
   until?: DateTime
 }
 
-const maxFreq = (limit: Frequency, current: Frequency) =>
-  FREQValues[Math.max(FREQValues.indexOf(limit), FREQValues.indexOf(current))]
+const byProperties: (keyof Pick<
+  RuleOptions,
+  'byhour' | 'byminute' | 'bysecond' | 'bymonthday' | 'bymonth' | 'byyearday'
+>)[] = ['byhour', 'byminute', 'bysecond', 'bymonthday', 'bymonth', 'byyearday']
+
+const compareNumbers = <T>(a: T, b: T) =>
+  ((a as unknown) as number) - ((b as unknown) as number)
 
 const normalizeByUnit = <T>(
   unit: T[] | undefined,
-  compareFn: (a: T, b: T) => number = (a, b) =>
-    ((a as unknown) as number) - ((b as unknown) as number)
+  compareFn: (a: T, b: T) => number = compareNumbers
 ) => {
   if (!unit || unit.length === 0) {
     return undefined
   }
 
   return unit.filter(i => typeof i !== 'undefined').sort(compareFn)
-}
-
-// Per the RFC:
-//
-// "BYxxx rule parts for a period of time less than the frequency generally
-// increase or expand the number of occurrences of the recurrence.
-// For example, "FREQ=YEARLY;BYMONTH=1,2" increases the number of
-// days within the yearly recurrence set from 1 (if BYMONTH rule part
-// is not present) to 2."
-//
-// This has no functional difference from FREQ=MONTHLY;BYMONTH=1,2,
-// so for freq periods greater than the BYxxx, we just set
-// freq=xxx
-const adjustFreq = ({
-  byyearday,
-  bymonth,
-  bymonthday,
-  byday,
-  byhour,
-  byminute,
-  bysecond,
-  freq
-}: Pick<
-  RuleOptions,
-  | 'byyearday'
-  | 'bymonth'
-  | 'bymonthday'
-  | 'byday'
-  | 'byhour'
-  | 'byminute'
-  | 'bysecond'
-  | 'freq'
->) => {
-  if (byyearday) {
-    return maxFreq('DAILY', freq)
-  }
-
-  if (bymonth) {
-    return maxFreq('MONTHLY', freq)
-  }
-
-  if (bymonthday) {
-    return maxFreq('DAILY', freq)
-  }
-
-  if (byday) {
-    return maxFreq('DAILY', freq)
-  }
-
-  if (byhour) {
-    return maxFreq('HOURLY', freq)
-  }
-
-  if (byminute) {
-    return maxFreq('MINUTELY', freq)
-  }
-
-  if (bysecond) {
-    return maxFreq('SECONDLY', freq)
-  }
-
-  return freq
 }
 
 export const groomOptions = (
@@ -103,14 +45,15 @@ export const groomOptions = (
     return undefined
   }
 
-  const frequency = adjustFreq(options)
-  const dtstartDate = parseISO(options.dtstart)
-  if (!dtstartDate) {
+  const { freq } = options
+  const dtstart = parseISO(options.dtstart)
+  if (!dtstart) {
     return undefined
   }
 
-  const untilDate = parseISO(options.until)
-  const groomedOptions: Partial<GroomedOptions> = {
+  const groomedOptions: GroomedOptions = {
+    dtstart,
+    freq,
     interval: options.interval || 1
   }
 
@@ -118,20 +61,7 @@ export const groomOptions = (
     groomedOptions.count = options.count
   }
 
-  ;([
-    'byhour',
-    'byminute',
-    'bysecond',
-    'bymonthday',
-    'bymonth',
-    'byyearday'
-  ] as (
-    | 'byhour'
-    | 'byminute'
-    | 'bysecond'
-    | 'bymonthday'
-    | 'bymonth'
-    | 'byyearday')[]).forEach(unit => {
+  byProperties.forEach(unit => {
     const normalized = normalizeByUnit(options[unit])
     if (normalized) {
       groomedOptions[unit] = normalized
@@ -147,10 +77,11 @@ export const groomOptions = (
     groomedOptions.byday = byday
   }
 
-  return {
-    ...groomedOptions,
-    until: untilDate,
-    dtstart: dtstartDate,
-    freq: frequency
+  const untilDate = parseISO(options.until)
+
+  if (untilDate) {
+    groomedOptions.until = untilDate
   }
+
+  return groomedOptions
 }

@@ -13,6 +13,18 @@ export const FREQValues: Frequency[] = [
   'SECONDLY'
 ]
 
+const isPositiveNumber = (value: unknown) =>
+  // tslint-ignore-next-line
+  parseInt((value as Record<string, unknown>).toString(), 10) >= 0
+
+const arrayInRange = (value: unknown, min: number, max: number) =>
+  Array.isArray(value) &&
+  typeof value.find(i => !inRange(i, min, max)) === 'undefined'
+
+const arrayContainsValues = <T>(value: unknown, values: T[]) =>
+  Array.isArray(value) &&
+  typeof value.find(i => values.indexOf(i) === -1) === 'undefined'
+
 const error = (param: string, value: unknown) =>
   `Invalid value "${value}" for parameter ${param}`
 
@@ -122,20 +134,4 @@ export const validate = (options: RuleOptions) => {
   }
 
   return [true, {}]
-}
-
-const isPositiveNumber = (value: Object) => parseInt(value.toString(), 10) >= 0
-
-const arrayInRange = (value: unknown, min: number, max: number) => {
-  return (
-    Array.isArray(value) &&
-    typeof value.find(i => !inRange(i, min, max)) === 'undefined'
-  )
-}
-
-const arrayContainsValues = <T>(value: unknown, values: T[]) => {
-  return (
-    Array.isArray(value) &&
-    typeof value.find(i => values.indexOf(i) === -1) === 'undefined'
-  )
 }
