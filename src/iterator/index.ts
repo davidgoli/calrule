@@ -4,16 +4,12 @@ import { DateTime } from '../DateTime/index'
 import { isRealDate } from '../DateTime/isValidDate'
 import { GroomedOptions } from '../groomOptions'
 import { skipAhead } from './skipAhead'
-import {
-  smallestTickUnit,
-  FREQUENCY_ORDER,
-  FREQUENCY_COUNTER
-} from './units'
+import { smallestTickUnit, FREQUENCY_ORDER, FREQUENCY_COUNTER } from './units'
 import { tickByrule, tick } from './tick'
 
 export const makeIterator = (options: GroomedOptions) => {
   const { dtstart, count, until, freq } = options
-  let current = skipAhead(copy(dtstart), options)
+  let current = skipAhead(dtstart, options)
 
   return {
     hasNext(length: number) {
@@ -32,10 +28,10 @@ export const makeIterator = (options: GroomedOptions) => {
         let newCurrent: DateTime
         do {
           if (unitIdx > freqIdx) {
-            newCurrent = tickByrule(copy(current), unit, options)
+            newCurrent = tickByrule(current, unit, options)
           } else {
             newCurrent = tick(
-              copy(current),
+              current,
               FREQUENCY_ORDER[Math.max(0, unitIdx)],
               options
             )

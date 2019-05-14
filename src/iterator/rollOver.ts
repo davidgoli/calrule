@@ -19,17 +19,24 @@ export const rollOver = (
     refUnitIdx + 1,
     FREQUENCY_ORDER.indexOf(smallestTickUnit(options)) + 1
   ).forEach(unit => {
-    const byrule = byRuleForUnit(unit, options)
-    if (unit === 'day') {
-      newCurrent[unit] = firstWeekdayOfMonth(
-        newCurrent,
-        (byrule as Weekday[])[0]
-      )
-    } else {
-      newCurrent[unit] = ((byrule as number[]) || [])[0] || 0
-    }
+    newCurrent[unit] = nextValueForUnit(unit, options, newCurrent)
     console.log('newCurrent unit', unit, current[unit], newCurrent[unit])
   })
 
   return newCurrent
+}
+
+const nextValueForUnit = (
+  unit: keyof DateTime,
+  options: GroomedOptions,
+  newCurrent: DateTime
+) => {
+  const byrule = byRuleForUnit(unit, options)
+  if (unit === 'day') {
+    return firstWeekdayOfMonth(newCurrent, (byrule as Weekday[])[0])
+  } else if (byrule) {
+    return (byrule as number[])[0]
+  } else {
+    return 0
+  }
 }

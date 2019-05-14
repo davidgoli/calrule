@@ -5,6 +5,7 @@ import { days, dayOfYear, dayOrdinalOfWeek } from '../DateTime/dayOfWeek'
 import { add } from '../DateTime/add'
 import { GroomedOptions } from '../groomOptions'
 import { compare } from '../DateTime/compare'
+import { copy } from '../copy'
 
 export const skipBy = (unit: keyof DateTime) => (
   current: DateTime,
@@ -31,8 +32,7 @@ export const nextDay = (current: DateTime, stops: Weekday[]) => {
   for (let i = 0; i < stops.length; i++) {
     const daydiff = days.indexOf(stops[i]) - currentDayOfWeekIdx
     if (daydiff > 0) {
-      current.day += daydiff
-      return current
+      return add(current, { day: daydiff })
     }
   }
 
@@ -44,9 +44,10 @@ const nextYearday = (current: DateTime, stops: number[]) => {
 
   for (let i = 0; i < stops.length; i++) {
     if (currentDayOfYear <= stops[i]) {
-      current.month = 1
-      current.day = 0
-      return add(current, { day: stops[i] })
+      const newCurrent = copy(current)
+      newCurrent.month = 1
+      newCurrent.day = 0
+      return add(newCurrent, { day: stops[i] })
     }
   }
 
