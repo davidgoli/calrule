@@ -18,7 +18,7 @@ import { rrule } from './index'
 // BYHOUR, BYMINUTE, BYSECOND and BYSETPOS; then COUNT and UNTIL are
 // evaluated.
 describe('FREQ=MINUTELY', () => {
-  it('returns only the minutes given', () => {
+  it.only('returns only the minutes given', () => {
     const result = rrule({
       dtstart: '2017-01-01',
       freq: 'MINUTELY',

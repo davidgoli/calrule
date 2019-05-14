@@ -173,32 +173,32 @@ export const makeIterator = (options: GroomedOptions) => {
     //   zero out bysteps smaller than freq
     next() {
       do {
-        const newCurrent = skipAhead(copy(current), options)
-        console.log({ newCurrent, current })
-        if (compare(newCurrent, current) === 0) {
-          console.log('no change')
-          const freqUnitIdx = FREQUENCY_ORDER.indexOf(FREQUENCY_COUNTER[freq])
+        let unitIdx = FREQUENCY_ORDER.length - 1
+        let newCurrent: DateTime
+        do {
+          newCurrent = tick(
+            copy(current),
+            FREQUENCY_ORDER[Math.max(0, unitIdx)],
+            options
+          )
 
-          if (byRuleAtFreq(options)) {
-            const nextLargerUnitIdx = Math.max(0, freqUnitIdx - 1)
-            const nextLargerUnit = FREQUENCY_ORDER[nextLargerUnitIdx]
-            current = add(current, {
-              [nextLargerUnit]: 1
-            })
-            current = zeroSmallerUnits(current, nextLargerUnitIdx)
-          } else {
-            current = add(current, {
-              [FREQUENCY_COUNTER[freq]]: interval * (freq === 'WEEKLY' ? 7 : 1)
-            })
-            current = zeroSmallerUnits(current, freqUnitIdx)
-          }
+          console.log(
+            'ticked at',
+            FREQUENCY_ORDER[unitIdx],
+            {
+              newCurrent,
+              current
+            },
+            compare(newCurrent, current)
+          )
 
-          current = skipAhead(current, options)
-          console.log({ current })
-        } else {
-          current = newCurrent
-        }
+          unitIdx -= 1
+        } while (compare(newCurrent, current) === 0 && unitIdx >= 0)
+
+        current = newCurrent
+        console.log('real date', isRealDate(current))
       } while (!isRealDate(current))
+      console.log('NEW CURRENT', current)
     },
 
     get current() {
@@ -207,22 +207,49 @@ export const makeIterator = (options: GroomedOptions) => {
   }
 }
 
-const byRuleAtFreq = (options: GroomedOptions) => {
-  switch (options.freq) {
-    case 'MINUTELY':
-      return !!options.byminute
-    case 'SECONDLY':
-      return !!options.bysecond
+const tick = (d: DateTime, unit: keyof DateTime, options: GroomedOptions) => {
+  const byrule = byRuleForUnit(unit, options)
+
+  if (byrule && byrule.length) {
+    console.log('tick at byrule', unit, byrule)
+    const newDate = skipBy(unit)(d, byrule)
+    console.log({ newDate })
+
+    return newDate
+  }
+
+  console.log('tick at freq', options.freq, d)
+  const rolledOver = rollOver(d, FREQUENCY_ORDER.indexOf(unit), options)
+  console.log({ d, rolledOver })
+  return rolledOver
+}
+
+const byRuleForUnit = (unit: keyof DateTime, options: GroomedOptions) => {
+  switch (unit) {
+    case 'hour':
+      return options.byhour
+    case 'minute':
+      return options.byminute
+    case 'second':
+      return options.bysecond
     default:
-      return false
+      return []
   }
 }
 
-const zeroSmallerUnits = (current: DateTime, refUnitIdx: number) => {
-  const newCurrent = copy(current)
+const rollOver = (
+  current: DateTime,
+  refUnitIdx: number,
+  options: GroomedOptions
+) => {
+  const newCurrent = add(current, {
+    [FREQUENCY_ORDER[refUnitIdx]]:
+      (options.interval || 1) * (options.freq === 'WEEKLY' ? 7 : 1)
+  })
 
   FREQUENCY_ORDER.slice(refUnitIdx + 1).forEach(unit => {
-    newCurrent[unit] = 0
+    newCurrent[unit] = (byRuleForUnit(unit, options) || [])[0] || 0
+    console.log('newCurrent unit', unit, current[unit], newCurrent[unit])
   })
 
   return newCurrent
