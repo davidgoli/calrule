@@ -90,7 +90,7 @@ describe('FREQ=HOURLY', () => {
 })
 
 describe('FREQ=SECONDLY', () => {
-  it('returns only the days given', () => {
+  it('returns only the minutes given', () => {
     const result = rrule({
       dtstart: '2017-01-01T00:02:58',
       freq: 'SECONDLY',

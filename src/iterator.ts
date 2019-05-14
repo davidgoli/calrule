@@ -28,25 +28,26 @@ const FREQUENCY_ORDER: (keyof DateTime)[] = [
 
 const skipBy = (unit: keyof DateTime) => (
   current: DateTime,
-  stops: number[],
-  interval: number
+  stops: number[]
 ) => {
   for (let i = 0; i < stops.length; i++) {
-    console.log(current[unit], stops[i])
+    console.log(unit, current[unit], stops[i])
     if (current[unit] < stops[i]) {
       current[unit] = stops[i]
+      console.log(`returning ${unit} ${stops[i]}`)
       return current
     }
   }
 
-  const currentUnitIndex = FREQUENCY_ORDER.indexOf(unit)
-  const nextUnitIndex = Math.max(currentUnitIndex - 1, 0)
-  const nextUnit = FREQUENCY_ORDER[nextUnitIndex]
+  // const currentUnitIndex = FREQUENCY_ORDER.indexOf(unit)
+  // const nextUnitIndex = Math.max(currentUnitIndex - 1, 0)
+  // const nextUnit = FREQUENCY_ORDER[nextUnitIndex]
 
-  console.log({ unit, nextUnit })
-  current = add(current, { [nextUnit]: interval })
-  current[unit] = stops[0]
+  // console.log({ unit, nextUnit })
+  // current = add(current, { [nextUnit]: interval })
+  // current[unit] = stops[0]
 
+  current[unit] = stops[stops.length - 1]
   return current
 }
 
@@ -61,7 +62,7 @@ const nextDay = (current: DateTime, stops: Weekday[]) => {
 
   for (let i = 0; i < stops.length; i++) {
     const daydiff = days.indexOf(stops[i]) - currentDayOfWeekIdx
-    if (daydiff >= 0) {
+    if (daydiff > 0) {
       current.day += daydiff
       return current
     }
@@ -72,8 +73,9 @@ const nextDay = (current: DateTime, stops: Weekday[]) => {
   // const nextUnitIndex = Math.max(currentUnitIndex - 1, 0)
   // const nextUnit = FREQUENCY_ORDER[nextUnitIndex]
 
-  const day = 7 + days.indexOf(stops[0]) - currentDayOfWeekIdx
-  return add(current, { day })
+  // const day = 7 + days.indexOf(stops[0]) - currentDayOfWeekIdx
+  // return add(current, { day })
+  return current
 }
 
 const nextYearday = (current: DateTime, stops: number[]) => {
@@ -87,23 +89,33 @@ const nextYearday = (current: DateTime, stops: number[]) => {
     }
   }
 
-  current = add(current, { year: 1 })
-  current.month = 1
-  current.day = 0
-  return add(current, { day: stops[0] })
+  // current = add(current, { year: 1 })
+  // current.month = 1
+  // current.day = 0
+  // return add(current, { day: stops[0] })
+  return current
 }
 
 const skipAhead = (current: DateTime, options: GroomedOptions) => {
   if (options.bysecond) {
-    return nextSecond(current, options.bysecond, options.interval)
+    const next = nextSecond(current, options.bysecond)
+    if (compare(next, current) !== 0) {
+      return next
+    }
   }
 
   if (options.byminute) {
-    return nextMinute(current, options.byminute, options.interval)
+    const next = nextMinute(current, options.byminute)
+    if (compare(next, current) !== 0) {
+      return next
+    }
   }
 
   if (options.byhour) {
-    return nextHour(current, options.byhour, options.interval)
+    const next = nextHour(current, options.byhour)
+    if (compare(next, current) !== 0) {
+      return next
+    }
   }
 
   if (options.byday) {
@@ -111,11 +123,11 @@ const skipAhead = (current: DateTime, options: GroomedOptions) => {
   }
 
   if (options.bymonthday) {
-    return nextMonthday(current, options.bymonthday, options.interval)
+    return nextMonthday(current, options.bymonthday)
   }
 
   if (options.bymonth) {
-    return nextMonth(current, options.bymonth, options.interval)
+    return nextMonth(current, options.bymonth)
   }
 
   if (options.byyearday) {
@@ -127,7 +139,7 @@ const skipAhead = (current: DateTime, options: GroomedOptions) => {
 
 export const makeIterator = (options: GroomedOptions) => {
   const { dtstart, count, until, freq, interval = 1 } = options
-  let current = copy(dtstart)
+  let current = skipAhead(copy(dtstart), options)
 
   return {
     hasNext(length: number) {
@@ -142,31 +154,49 @@ export const makeIterator = (options: GroomedOptions) => {
     // dtstart minute: 0, second: 0
     // -> minute: 0, second: 1
     // -> minute: 0, second: 2
-    // if
+    // -> minute: 1, second: 1
+    //
+    // freq = minutely
+    // interval = 2
+    // bysecond 1, 2
+    // dtstart minute: 0, second: 0
+    // -> minute: 0, second: 1
+    // -> minute: 0, second: 2
+    // -> minute: 2, second: 1
+    //
+    // date = dtstart
+    // forever:
+    //   advance to all bysteps larger than freq
+    //   advance to all bysteps smaller than freq
+    //   if bystep at freq, advance to next bystep & advance at larger freq
+    //   else, advance at freq
+    //   zero out bysteps smaller than freq
     next() {
       do {
-        const newCurrent = skipAhead(current, options)
-        console.log({ newCurrent })
+        const newCurrent = skipAhead(copy(current), options)
+        console.log({ newCurrent, current })
         if (compare(newCurrent, current) === 0) {
-          // const nextOrderIdx = Math.max(
-          //   FREQUENCY_ORDER.indexOf(FREQUENCY_COUNTER[freq]),
-          //   0
-          // )
-
-          // const nextOrder = FREQUENCY_ORDER[nextOrderIdx]
-          // current = add(current, {
-          //   [FREQUENCY_COUNTER[freq]]: interval * (freq === 'WEEKLY' ? 7 : 1)
-          // })
-
-          const freqOrder = FREQUENCY_ORDER.indexOf(FREQUENCY_COUNTER[freq])
-          if (freqOrder !== FREQUENCY_ORDER.length - 1) {
-            FREQUENCY_ORDER.slice(freqOrder + 1).forEach(f => {
-              current[f] = 0 //dtstart[f]
+          console.log('no change')
+          const freqUnit = FREQUENCY_COUNTER[freq]
+          const freqUnitIdx = FREQUENCY_ORDER.indexOf(freqUnit)
+          if (byRuleAtFreq(options)) {
+            const nextLargerUnitIdx = Math.max(0, freqUnitIdx - 1)
+            const nextLargerUnit = FREQUENCY_ORDER[nextLargerUnitIdx]
+            current = add(current, {
+              [nextLargerUnit]: 1
             })
+            zeroSmallerUnits(nextLargerUnitIdx, current)
+          } else {
+            current = add(current, {
+              [FREQUENCY_COUNTER[freq]]: interval * (freq === 'WEEKLY' ? 7 : 1)
+            })
+            zeroSmallerUnits(freqUnitIdx, current)
           }
 
           current = skipAhead(current, options)
           console.log({ current })
+        } else {
+          current = newCurrent
         }
       } while (!isRealDate(current))
     },
@@ -175,4 +205,21 @@ export const makeIterator = (options: GroomedOptions) => {
       return current
     }
   }
+}
+
+const byRuleAtFreq = (options: GroomedOptions) => {
+  switch (options.freq) {
+    case 'MINUTELY':
+      return !!options.byminute
+    case 'SECONDLY':
+      return !!options.bysecond
+    default:
+      return false
+  }
+}
+
+const zeroSmallerUnits = (refUnitIdx: number, current: DateTime) => {
+  FREQUENCY_ORDER.slice(refUnitIdx + 1).forEach(unit => {
+    current[unit] = 0
+  })
 }
