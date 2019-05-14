@@ -12,7 +12,7 @@ export interface GroomedOptions {
   byhour?: number[]
   byminute?: number[]
   bysecond?: number[]
-  interval?: number
+  interval: number
   freq: Frequency
   count?: number
   dtstart: DateTime

@@ -1,3 +1,4 @@
+import { copy } from './copy'
 import { add } from './DateTime/add'
 import { compare } from './DateTime/compare'
 import { dayOfWeek, dayOfYear, days } from './DateTime/dayOfWeek'
@@ -16,16 +17,35 @@ export const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
   SECONDLY: 'second'
 }
 
+const FREQUENCY_ORDER: (keyof DateTime)[] = [
+  'year',
+  'month',
+  'day',
+  'hour',
+  'minute',
+  'second'
+]
+
 const skipBy = (unit: keyof DateTime) => (
   current: DateTime,
-  stops: number[]
+  stops: number[],
+  interval: number
 ) => {
   for (let i = 0; i < stops.length; i++) {
-    if (current[unit] <= stops[i]) {
+    console.log(current[unit], stops[i])
+    if (current[unit] < stops[i]) {
       current[unit] = stops[i]
       return current
     }
   }
+
+  const currentUnitIndex = FREQUENCY_ORDER.indexOf(unit)
+  const nextUnitIndex = Math.max(currentUnitIndex - 1, 0)
+  const nextUnit = FREQUENCY_ORDER[nextUnitIndex]
+
+  console.log({ unit, nextUnit })
+  current = add(current, { [nextUnit]: interval })
+  current[unit] = stops[0]
 
   return current
 }
@@ -36,18 +56,24 @@ const nextHour = skipBy('hour')
 const nextMonthday = skipBy('day')
 const nextMonth = skipBy('month')
 
-const nextDay = (current: DateTime, byday: Weekday[]) => {
+const nextDay = (current: DateTime, stops: Weekday[]) => {
   const currentDayOfWeekIdx = days.indexOf(dayOfWeek(current))
 
-  for (let i = 0; i < byday.length; i++) {
-    const daydiff = days.indexOf(byday[i]) - currentDayOfWeekIdx
+  for (let i = 0; i < stops.length; i++) {
+    const daydiff = days.indexOf(stops[i]) - currentDayOfWeekIdx
     if (daydiff >= 0) {
       current.day += daydiff
       return current
     }
   }
 
-  return current
+  // const unit = 'day'
+  // const currentUnitIndex = FREQUENCY_ORDER.indexOf(unit)
+  // const nextUnitIndex = Math.max(currentUnitIndex - 1, 0)
+  // const nextUnit = FREQUENCY_ORDER[nextUnitIndex]
+
+  const day = 7 + days.indexOf(stops[0]) - currentDayOfWeekIdx
+  return add(current, { day })
 }
 
 const nextYearday = (current: DateTime, stops: number[]) => {
@@ -61,20 +87,23 @@ const nextYearday = (current: DateTime, stops: number[]) => {
     }
   }
 
-  return current
+  current = add(current, { year: 1 })
+  current.month = 1
+  current.day = 0
+  return add(current, { day: stops[0] })
 }
 
 const skipAhead = (current: DateTime, options: GroomedOptions) => {
   if (options.bysecond) {
-    return nextSecond(current, options.bysecond)
+    return nextSecond(current, options.bysecond, options.interval)
   }
 
   if (options.byminute) {
-    return nextMinute(current, options.byminute)
+    return nextMinute(current, options.byminute, options.interval)
   }
 
   if (options.byhour) {
-    return nextHour(current, options.byhour)
+    return nextHour(current, options.byhour, options.interval)
   }
 
   if (options.byday) {
@@ -82,11 +111,11 @@ const skipAhead = (current: DateTime, options: GroomedOptions) => {
   }
 
   if (options.bymonthday) {
-    return nextMonthday(current, options.bymonthday)
+    return nextMonthday(current, options.bymonthday, options.interval)
   }
 
   if (options.bymonth) {
-    return nextMonth(current, options.bymonth)
+    return nextMonth(current, options.bymonth, options.interval)
   }
 
   if (options.byyearday) {
@@ -98,44 +127,52 @@ const skipAhead = (current: DateTime, options: GroomedOptions) => {
 
 export const makeIterator = (options: GroomedOptions) => {
   const { dtstart, count, until, freq, interval = 1 } = options
-  let slowHand = skipAhead(dtstart, options)
-  let fastHand = [slowHand]
-  let fastHandIndex = 0
+  let current = copy(dtstart)
 
   return {
     hasNext(length: number) {
       return (
         (typeof count === 'number' && length < count) ||
-        (typeof until !== 'undefined' &&
-          compare(until, fastHand[fastHandIndex]) >= 0)
+        (typeof until !== 'undefined' && compare(until, current) >= 0)
       )
     },
 
+    // freq = secondly
+    // bysecond 1, 2
+    // dtstart minute: 0, second: 0
+    // -> minute: 0, second: 1
+    // -> minute: 0, second: 2
+    // if
     next() {
-      while (fastHand.length) {
-        if (fastHandIndex === fastHand.length) {
-          slowHand = add(slowHand, {
-            [FREQUENCY_COUNTER[freq]]: interval * (freq === 'WEEKLY' ? 7 : 1)
-          })
+      do {
+        const newCurrent = skipAhead(current, options)
+        console.log({ newCurrent })
+        if (compare(newCurrent, current) === 0) {
+          // const nextOrderIdx = Math.max(
+          //   FREQUENCY_ORDER.indexOf(FREQUENCY_COUNTER[freq]),
+          //   0
+          // )
 
-          fastHandIndex = 0
-          fastHand = calculateFastHand(slowHand, options)
-        } else {
-          fastHandIndex += 1
-        }
+          // const nextOrder = FREQUENCY_ORDER[nextOrderIdx]
+          // current = add(current, {
+          //   [FREQUENCY_COUNTER[freq]]: interval * (freq === 'WEEKLY' ? 7 : 1)
+          // })
 
-        if (isRealDate(fastHand[fastHandIndex])) {
-          return fastHand[fastHandIndex]
+          const freqOrder = FREQUENCY_ORDER.indexOf(FREQUENCY_COUNTER[freq])
+          if (freqOrder !== FREQUENCY_ORDER.length - 1) {
+            FREQUENCY_ORDER.slice(freqOrder + 1).forEach(f => {
+              current[f] = 0 //dtstart[f]
+            })
+          }
+
+          current = skipAhead(current, options)
+          console.log({ current })
         }
-      }
+      } while (!isRealDate(current))
     },
 
     get current() {
-      return fastHand[fastHandIndex]
+      return current
     }
   }
-}
-
-const calculateFastHand = (slowHand: DateTime, options: GroomedOptions) => {
-  return [slowHand]
 }
