@@ -10,10 +10,15 @@ export const rollOver = (
   refUnitIdx: number,
   options: GroomedOptions
 ) => {
+  const unit = FREQUENCY_ORDER[refUnitIdx]
   const newCurrent = add(current, {
-    [FREQUENCY_ORDER[refUnitIdx]]:
-      (options.interval || 1) * (options.freq === 'WEEKLY' ? 7 : 1)
+    [unit]: (options.interval || 1) * (options.freq === 'WEEKLY' ? 7 : 1)
   })
+
+  const byrule = byRuleForUnit(unit, options)
+  if (byrule) {
+    newCurrent[unit] = nextValueForUnit(unit, options, newCurrent)
+  }
 
   FREQUENCY_ORDER.slice(
     refUnitIdx + 1,

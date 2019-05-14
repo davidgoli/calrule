@@ -65,6 +65,10 @@ export const smallestTickUnit = ({
     return 'day'
   }
 
+  if (freq === 'WEEKLY') {
+    return 'day'
+  }
+
   if (freq === 'MONTHLY' || bymonth) {
     return 'month'
   }

@@ -1,4 +1,3 @@
-import { copy } from '../copy'
 import { compare } from '../DateTime/compare'
 import { DateTime } from '../DateTime/index'
 import { isRealDate } from '../DateTime/isValidDate'
