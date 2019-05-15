@@ -1,24 +1,33 @@
+import { add } from '../DateTime/add'
+import { compare } from '../DateTime/compare'
+import { days, firstWeekdayOfMonth } from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
-import { FREQUENCY_ORDER, smallestTickUnit, byRuleForUnit } from './units'
-import { add } from '../DateTime/add'
-import { firstWeekdayOfMonth } from '../DateTime/dayOfWeek'
 import { Weekday } from '../types'
-import { tickByrule } from './tickByrule'
-import { compare } from '../DateTime/compare'
 import { syncWithRule } from './syncWithRule'
+import { tickByrule } from './tickByrule'
+import { byRuleForUnit, FREQUENCY_ORDER, smallestTickUnit } from './units'
 
 export const tickFreqStep = (
   current: DateTime,
   unit: keyof DateTime,
   options: GroomedOptions
 ) => {
-  let next = add(current, {
-    [unit]: (options.interval || 1) * (options.freq === 'WEEKLY' ? 7 : 1)
-  })
+  const weeklyByday = options.byday
+    ? days.indexOf(options.byday[options.byday.length - 1])
+    : 0
 
-  console.log({ next })
+  let next: DateTime
+  if (options.freq === 'WEEKLY') {
+    next = advanceToNextWkst(current, options)
+  } else {
+    next = add(current, {
+      [unit]: options.interval || 1
+    })
+  }
+
   next = tickByrule(next, unit, options)
+
   if (compare(next, current) === 0) {
     const higherUnit = FREQUENCY_ORDER[FREQUENCY_ORDER.indexOf(unit) - 1]
     next = tickFreqStep(current, higherUnit, options)
@@ -52,4 +61,12 @@ const initialValueForUnit = (
   } else {
     return 0
   }
+}
+
+const advanceToNextWkst = (d: DateTime, options: GroomedOptions) => {
+  if (options.byday) {
+    return add(d, { day: options.interval })
+  }
+
+  return add(d, { day: options.interval * 7 })
 }
