@@ -1,28 +1,44 @@
-import { nextByruleStep, nextDayStep } from './nextByruleStep'
+import {
+  nextByruleStep,
+  nextDayStep,
+  shouldTickFreqStepForByday
+} from './nextByruleStep'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
-import { dayOfYear } from '../DateTime/dayOfWeek'
+import { dayOfYear, dayOfWeek, days } from '../DateTime/dayOfWeek'
 import { copy } from '../copy'
 import { add } from '../DateTime/add'
-import { FREQUENCY_ORDER, byRuleForUnit } from './units'
+import { FREQUENCY_ORDER, byRuleForUnit, FREQUENCY_COUNTER } from './units'
 import { Weekday } from '../types'
+import { set } from '../DateTime/set'
 
 export const syncWithRule = (current: DateTime, options: GroomedOptions) => {
   let next = copy(current)
   FREQUENCY_ORDER.forEach(unit => {
     const byrule = byRuleForUnit(unit, options)
-    if (byrule) {
-      if (unit === 'day') {
-        if (options.byyearday) {
-          next = nextYearday(next, byrule as number[])
-        } else if (options.bymonthday) {
-          next = nextByruleStep(unit)(next, byrule as number[], false)
-        } else {
-          next = nextDayStep(next, byrule as Weekday[])
-        }
-      } else {
+    if (!byrule) {
+      return
+    }
+
+    if (unit === 'day') {
+      if (options.byyearday) {
+        next = nextYearday(next, byrule as number[])
+      } else if (options.bymonthday) {
         next = nextByruleStep(unit)(next, byrule as number[], false)
+      } else {
+        next = nextDayStep(next, byrule as Weekday[])
+        if (shouldTickFreqStepForByday(next, byrule as Weekday[])) {
+          next = add(next, {
+            day: 7 - days.indexOf(dayOfWeek(next))
+          })
+
+          next = nextDayStep(next, byrule as Weekday[])
+          console.log({ bumpingHigher: next })
+        }
+        console.log({ next })
       }
+    } else {
+      next = nextByruleStep(unit)(next, byrule as number[], false)
     }
   })
 
