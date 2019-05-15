@@ -1,14 +1,16 @@
 import { compare } from '../DateTime/compare'
 import { isRealDate } from '../DateTime/isValidDate'
 import { GroomedOptions } from '../groomOptions'
-import { skipAhead } from './skipAhead'
+import { syncWithRule } from './syncWithRule'
 import { smallestTickUnit } from './units'
 import { findNext } from './findNext'
 
 export const makeIterator = (options: GroomedOptions) => {
   const { dtstart, count, until } = options
   const baseUnit = smallestTickUnit(options)
-  let current = skipAhead(dtstart, options)
+  console.log(baseUnit)
+  let current = syncWithRule(dtstart, options)
+  console.log('STARTING CURRENT', current)
 
   return {
     hasNext(length: number) {

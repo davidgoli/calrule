@@ -6,6 +6,7 @@ import { firstWeekdayOfMonth } from '../DateTime/dayOfWeek'
 import { Weekday } from '../types'
 import { tickByrule } from './tickByrule'
 import { compare } from '../DateTime/compare'
+import { syncWithRule } from './syncWithRule'
 
 export const tickFreqStep = (
   current: DateTime,
@@ -26,6 +27,7 @@ export const tickFreqStep = (
     }
   }
 
+  next = syncWithRule(next, options)
   console.log({ byrule: next[unit] })
 
   const unitIdx = FREQUENCY_ORDER.indexOf(unit)
@@ -33,14 +35,14 @@ export const tickFreqStep = (
     unitIdx + 1,
     FREQUENCY_ORDER.indexOf(smallestTickUnit(options)) + 1
   ).forEach(unit => {
-    next[unit] = nextValueForUnit(unit, options, next)
+    next[unit] = initialValueForUnit(unit, options, next)
     console.log('newCurrent unit', unit, current[unit], next[unit])
   })
 
   return next
 }
 
-const nextValueForUnit = (
+const initialValueForUnit = (
   unit: keyof DateTime,
   options: GroomedOptions,
   newCurrent: DateTime
