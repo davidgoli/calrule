@@ -1,4 +1,4 @@
-import { rrule } from './index'
+import { rrule } from '../index'
 
 // BYxxx rule parts modify the recurrence in some manner.BYxxx rule
 // parts for a period of time that is the same or greater than the
@@ -17,93 +17,93 @@ import { rrule } from './index'
 // following order: BYMONTH, BYWEEKNO, BYYEARDAY, BYMONTHDAY, BYDAY,
 // BYHOUR, BYMINUTE, BYSECOND and BYSETPOS; then COUNT and UNTIL are
 // evaluated.
-describe('FREQ=MINUTELY', () => {
-  it('returns only the minutes given', () => {
+describe('FREQ=MONTHLY', () => {
+  it('returns only the months given', () => {
     const result = rrule({
       dtstart: '2017-01-01',
-      freq: 'MINUTELY',
+      freq: 'MONTHLY',
       count: 5,
-      byminute: [2, 13]
+      bymonth: [2, 11]
     })
 
     expect(result).toEqual([
-      '2017-01-01T00:02:00',
-      '2017-01-01T00:13:00',
-      '2017-01-01T01:02:00',
-      '2017-01-01T01:13:00',
-      '2017-01-01T02:02:00'
+      '2017-02-01T00:00:00',
+      '2017-11-01T00:00:00',
+      '2018-02-01T00:00:00',
+      '2018-11-01T00:00:00',
+      '2019-02-01T00:00:00'
     ])
   })
 
-  it('removes byminute if empty', () => {
+  it('removes bymonth if empty', () => {
     const result = rrule({
       dtstart: '2017-01-01',
-      freq: 'MINUTELY',
+      freq: 'MONTHLY',
       count: 5,
-      byminute: []
+      bymonth: []
     })
 
     expect(result).toEqual([
       '2017-01-01T00:00:00',
-      '2017-01-01T00:01:00',
-      '2017-01-01T00:02:00',
-      '2017-01-01T00:03:00',
-      '2017-01-01T00:04:00'
+      '2017-02-01T00:00:00',
+      '2017-03-01T00:00:00',
+      '2017-04-01T00:00:00',
+      '2017-05-01T00:00:00'
     ])
   })
 
-  it('sorts the minutes', () => {
+  it('sorts the months', () => {
     const result = rrule({
       dtstart: '2017-01-01',
-      freq: 'MINUTELY',
+      freq: 'MONTHLY',
       count: 5,
-      byminute: [13, 2]
+      bymonth: [11, 2]
     })
 
     expect(result).toEqual([
-      '2017-01-01T00:02:00',
-      '2017-01-01T00:13:00',
-      '2017-01-01T01:02:00',
-      '2017-01-01T01:13:00',
-      '2017-01-01T02:02:00'
+      '2017-02-01T00:00:00',
+      '2017-11-01T00:00:00',
+      '2018-02-01T00:00:00',
+      '2018-11-01T00:00:00',
+      '2019-02-01T00:00:00'
     ])
   })
 })
 
-describe('FREQ=HOURLY', () => {
-  it('returns only the minutes given', () => {
+describe('FREQ=DAILY', () => {
+  it('returns only the months given', () => {
     const result = rrule({
-      dtstart: '2017-01-01',
-      freq: 'HOURLY',
+      dtstart: '2017-02-26',
+      freq: 'DAILY',
       count: 5,
-      byminute: [2, 13]
+      bymonth: [2, 11]
     })
 
     expect(result).toEqual([
-      '2017-01-01T00:02:00',
-      '2017-01-01T00:13:00',
-      '2017-01-01T01:02:00',
-      '2017-01-01T01:13:00',
-      '2017-01-01T02:02:00'
+      '2017-02-26T00:00:00',
+      '2017-02-27T00:00:00',
+      '2017-02-28T00:00:00',
+      '2017-11-01T00:00:00',
+      '2017-11-02T00:00:00'
     ])
   })
 })
 
-describe('FREQ=SECONDLY', () => {
-  it('returns only the minutes given', () => {
+describe('FREQ=YEARLY', () => {
+  it('returns only the months given', () => {
     const result = rrule({
-      dtstart: '2017-01-01T00:02:58',
-      freq: 'SECONDLY',
+      dtstart: '2017-01-01T00:00:00',
+      freq: 'YEARLY',
       count: 5,
-      byminute: [2, 13]
+      bymonth: [2, 11]
     })
 
     expect(result).toEqual([
-      '2017-01-01T00:02:58',
-      '2017-01-01T00:02:59',
-      '2017-01-01T00:13:00',
-      '2017-01-01T00:13:01',
-      '2017-01-01T00:13:02'
+      '2017-02-01T00:00:00',
+      '2017-11-01T00:00:00',
+      '2018-02-01T00:00:00',
+      '2018-11-01T00:00:00',
+      '2019-02-01T00:00:00'
     ])
   })
 })

@@ -1,4 +1,4 @@
-import { rrule } from './index'
+import { rrule } from '../index'
 
 // BYxxx rule parts modify the recurrence in some manner.BYxxx rule
 // parts for a period of time that is the same or greater than the
@@ -74,7 +74,7 @@ describe('FREQ=WEEKLY', () => {
 })
 
 describe('FREQ=HOURLY', () => {
-  it('returns only the days given', () => {
+  it.only('returns only the days given', () => {
     const result = rrule({
       dtstart: '2017-01-01',
       freq: 'HOURLY',

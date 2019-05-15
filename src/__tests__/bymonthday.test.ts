@@ -1,4 +1,4 @@
-import { rrule } from './index'
+import { rrule } from '../index'
 
 // BYxxx rule parts modify the recurrence in some manner.BYxxx rule
 // parts for a period of time that is the same or greater than the
@@ -17,36 +17,40 @@ import { rrule } from './index'
 // following order: BYMONTH, BYWEEKNO, BYYEARDAY, BYMONTHDAY, BYDAY,
 // BYHOUR, BYMINUTE, BYSECOND and BYSETPOS; then COUNT and UNTIL are
 // evaluated.
-describe('FREQ=YEARLY', () => {
+describe('FREQ=MONTHLY', () => {
   it('returns only the days given', () => {
     const result = rrule({
       dtstart: '2017-01-01',
-      freq: 'YEARLY',
+      freq: 'MONTHLY',
       count: 5,
-      byyearday: [2, 41]
+      bymonthday: [2, 11]
     })
 
     expect(result).toEqual([
       // 2017-01-01 is a Sunday
       '2017-01-02T00:00:00',
-      '2017-02-10T00:00:00',
-      '2018-01-02T00:00:00',
-      '2018-02-10T00:00:00',
-      '2019-01-02T00:00:00'
+      '2017-01-11T00:00:00',
+      '2017-02-02T00:00:00',
+      '2017-02-11T00:00:00',
+      '2017-03-02T00:00:00'
     ])
   })
-})
 
-describe('FREQ=DAILY', () => {
-  it('returns undefined (is invalid)', () => {
+  it('does not return invalid month days', () => {
     const result = rrule({
       dtstart: '2017-01-01',
-      freq: 'DAILY',
+      freq: 'MONTHLY',
       count: 5,
-      byyearday: [2, 11]
+      bymonthday: [31]
     })
 
-    expect(result).toBeUndefined()
+    expect(result).toEqual([
+      '2017-01-31T00:00:00',
+      '2017-03-31T00:00:00',
+      '2017-05-31T00:00:00',
+      '2017-07-31T00:00:00',
+      '2017-08-31T00:00:00'
+    ])
   })
 })
 
@@ -56,22 +60,29 @@ describe('FREQ=WEEKLY', () => {
       dtstart: '2017-01-01',
       freq: 'WEEKLY',
       count: 5,
-      byyearday: [2, 11]
+      bymonthday: [2, 11]
     })
 
     expect(result).toBeUndefined()
   })
 })
 
-describe('FREQ=MONTHLY', () => {
-  it('returns undefined (is invalid)', () => {
+describe('FREQ=YEARLY', () => {
+  it('returns only the days given', () => {
     const result = rrule({
       dtstart: '2017-01-01',
-      freq: 'MONTHLY',
+      freq: 'YEARLY',
       count: 5,
-      byyearday: [2, 11]
+      bymonthday: [2, 11]
     })
 
-    expect(result).toBeUndefined()
+    expect(result).toEqual([
+      // 2017-01-01 is a Sunday
+      '2017-01-02T00:00:00',
+      '2017-01-11T00:00:00',
+      '2017-02-02T00:00:00',
+      '2017-02-11T00:00:00',
+      '2017-03-02T00:00:00'
+    ])
   })
 })
