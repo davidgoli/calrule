@@ -12,6 +12,14 @@ export const dayOfWeek = (d: DateTime) => {
   return days[dayOrdinalOfWeek(d)]
 }
 
+export const dayOfMonth = (d: DateTime) => {
+  return new Date(Date.UTC(d.year, d.month - 1, d.day)).getUTCDate()
+}
+
+export const lengthOfMonth = (d: DateTime) => {
+  return new Date(Date.UTC(d.year, d.month, 0)).getDate()
+}
+
 export const firstWeekdayOfMonth = (d: DateTime, day: Weekday) => {
   const firstOfMonthOrdinal = dayOrdinalOfWeek({
     year: d.year,

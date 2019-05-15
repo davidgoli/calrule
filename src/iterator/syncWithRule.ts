@@ -1,7 +1,8 @@
 import {
   nextByruleStep,
   nextDayStep,
-  shouldTickFreqStepForByday
+  shouldTickFreqStepForByday,
+  shouldTickFreqStepForBymonthday
 } from './nextByruleStep'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
@@ -24,7 +25,20 @@ export const syncWithRule = (current: DateTime, options: GroomedOptions) => {
       if (options.byyearday) {
         next = nextYearday(next, byrule as number[])
       } else if (options.bymonthday) {
+        console.log('bymonthday')
         next = nextByruleStep(unit)(next, byrule as number[], false)
+        if (shouldTickFreqStepForBymonthday(next, byrule as number[])) {
+          next = add(next, {
+            month: 1
+          })
+
+          next = set(next, 'day', 0)
+
+          next = nextByruleStep(unit)(next, byrule as number[], false)
+          console.log({ bumpingHigher: next })
+        }
+
+        console.log({ next })
       } else {
         next = nextDayStep(next, byrule as Weekday[])
         if (shouldTickFreqStepForByday(next, byrule as Weekday[])) {
