@@ -23,25 +23,7 @@ export const makeIterator = (options: GroomedOptions) => {
       const unit = smallestTickUnit(options)
 
       do {
-        let unitIdx = FREQUENCY_ORDER.indexOf(unit)
-        const freqIdx = FREQUENCY_ORDER.indexOf(FREQUENCY_COUNTER[freq])
-
-        let newCurrent: DateTime
-        do {
-          if (unitIdx > freqIdx) {
-            newCurrent = tickByrule(current, unit, options)
-          } else {
-            newCurrent = rollOver(
-              current,
-              FREQUENCY_ORDER[Math.max(0, unitIdx)],
-              options
-            )
-          }
-
-          unitIdx -= 1
-        } while (compare(newCurrent, current) === 0 && unitIdx > 0)
-
-        current = newCurrent
+        current = findNext(current, unit, options)
       } while (!isRealDate(current))
       console.log('NEW CURRENT', current)
     },
@@ -50,4 +32,28 @@ export const makeIterator = (options: GroomedOptions) => {
       return current
     }
   }
+}
+
+const findNext = (
+  current: DateTime,
+  unit: keyof DateTime,
+  options: GroomedOptions
+) => {
+  let unitIdx = FREQUENCY_ORDER.indexOf(unit)
+  const freqIdx = FREQUENCY_ORDER.indexOf(FREQUENCY_COUNTER[options.freq])
+  let newCurrent: DateTime
+
+  do {
+    if (unitIdx > freqIdx) {
+      newCurrent = tickByrule(current, unit, options)
+    } else {
+      newCurrent = rollOver(
+        current,
+        FREQUENCY_ORDER[Math.max(0, unitIdx)],
+        options
+      )
+    }
+  } while (compare(newCurrent, current) === 0 && unitIdx-- > 0)
+
+  return newCurrent
 }
