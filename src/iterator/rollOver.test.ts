@@ -1,6 +1,5 @@
 import { rollOver } from './rollOver'
 import { GroomedOptions } from '../groomOptions'
-import { FREQUENCY_ORDER } from './units'
 import { DateTime } from '../DateTime/index'
 
 let options: GroomedOptions
@@ -31,9 +30,7 @@ beforeEach(() => {
 })
 
 it('increments a datetime by a second', () => {
-  expect(
-    rollOver(startDate, FREQUENCY_ORDER.indexOf('second'), options)
-  ).toEqual({
+  expect(rollOver(startDate, 'second', options)).toEqual({
     year: 2017,
     month: 3 as 3,
     day: 2,
@@ -46,9 +43,7 @@ it('increments a datetime by a second', () => {
 it('rolls over the date time to the next threshold', () => {
   startDate.second = 59
 
-  expect(
-    rollOver(startDate, FREQUENCY_ORDER.indexOf('second'), options)
-  ).toEqual({
+  expect(rollOver(startDate, 'second', options)).toEqual({
     year: 2017,
     month: 3 as 3,
     day: 3,
@@ -62,30 +57,26 @@ it('rolls over the date time to the next byrule if present', () => {
   startDate.second = 59
   options.byhour = [2]
 
-  expect(rollOver(startDate, FREQUENCY_ORDER.indexOf('hour'), options)).toEqual(
-    {
-      year: 2017,
-      month: 3 as 3,
-      day: 3,
-      hour: 2,
-      minute: 0,
-      second: 0
-    }
-  )
+  expect(rollOver(startDate, 'hour', options)).toEqual({
+    year: 2017,
+    month: 3 as 3,
+    day: 3,
+    hour: 2,
+    minute: 0,
+    second: 0
+  })
 })
 
 it('rolls over the date time to the next smaller byrule if present', () => {
   startDate.second = 59
   options.bysecond = [12]
 
-  expect(rollOver(startDate, FREQUENCY_ORDER.indexOf('hour'), options)).toEqual(
-    {
-      year: 2017,
-      month: 3 as 3,
-      day: 3,
-      hour: 0,
-      minute: 0,
-      second: 12
-    }
-  )
+  expect(rollOver(startDate, 'hour', options)).toEqual({
+    year: 2017,
+    month: 3 as 3,
+    day: 3,
+    hour: 0,
+    minute: 0,
+    second: 12
+  })
 })

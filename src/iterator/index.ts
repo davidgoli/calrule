@@ -4,7 +4,8 @@ import { isRealDate } from '../DateTime/isValidDate'
 import { GroomedOptions } from '../groomOptions'
 import { skipAhead } from './skipAhead'
 import { smallestTickUnit, FREQUENCY_ORDER, FREQUENCY_COUNTER } from './units'
-import { tickByrule, tick } from './tick'
+import { tickByrule } from './tick'
+import { rollOver } from './rollOver'
 
 export const makeIterator = (options: GroomedOptions) => {
   const { dtstart, count, until, freq } = options
@@ -19,8 +20,9 @@ export const makeIterator = (options: GroomedOptions) => {
     },
 
     next() {
+      const unit = smallestTickUnit(options)
+
       do {
-        const unit = smallestTickUnit(options)
         let unitIdx = FREQUENCY_ORDER.indexOf(unit)
         const freqIdx = FREQUENCY_ORDER.indexOf(FREQUENCY_COUNTER[freq])
 
@@ -29,7 +31,7 @@ export const makeIterator = (options: GroomedOptions) => {
           if (unitIdx > freqIdx) {
             newCurrent = tickByrule(current, unit, options)
           } else {
-            newCurrent = tick(
+            newCurrent = rollOver(
               current,
               FREQUENCY_ORDER[Math.max(0, unitIdx)],
               options

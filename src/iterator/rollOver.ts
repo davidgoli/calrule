@@ -7,10 +7,9 @@ import { Weekday } from '../types'
 
 export const rollOver = (
   current: DateTime,
-  refUnitIdx: number,
+  unit: keyof DateTime,
   options: GroomedOptions
 ) => {
-  const unit = FREQUENCY_ORDER[refUnitIdx]
   const newCurrent = add(current, {
     [unit]: (options.interval || 1) * (options.freq === 'WEEKLY' ? 7 : 1)
   })
@@ -20,8 +19,9 @@ export const rollOver = (
     newCurrent[unit] = nextValueForUnit(unit, options, newCurrent)
   }
 
+  const unitIdx = FREQUENCY_ORDER.indexOf(unit)
   FREQUENCY_ORDER.slice(
-    refUnitIdx + 1,
+    unitIdx + 1,
     FREQUENCY_ORDER.indexOf(smallestTickUnit(options)) + 1
   ).forEach(unit => {
     newCurrent[unit] = nextValueForUnit(unit, options, newCurrent)
