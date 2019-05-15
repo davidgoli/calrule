@@ -18,13 +18,10 @@ export const tickFreqStep = (
   })
 
   console.log({ next })
-  const byrule = byRuleForUnit(unit, options)
-  if (byrule) {
-    next = tickByrule(next, unit, options)
-    if (compare(next, current) === 0) {
-      const higherUnit = FREQUENCY_ORDER[FREQUENCY_ORDER.indexOf(unit) - 1]
-      next = tickFreqStep(current, higherUnit, options)
-    }
+  next = tickByrule(next, unit, options)
+  if (compare(next, current) === 0) {
+    const higherUnit = FREQUENCY_ORDER[FREQUENCY_ORDER.indexOf(unit) - 1]
+    next = tickFreqStep(current, higherUnit, options)
   }
 
   next = syncWithRule(next, options)

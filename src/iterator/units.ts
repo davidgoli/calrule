@@ -31,7 +31,7 @@ export const byRuleForUnit = (
     case 'hour':
       return options.byhour
     case 'day':
-      return options.byday
+      return options.byyearday || options.bymonthday || options.byday
     case 'minute':
       return options.byminute
     case 'second':
