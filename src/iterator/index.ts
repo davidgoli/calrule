@@ -1,14 +1,13 @@
 import { compare } from '../DateTime/compare'
-import { DateTime } from '../DateTime/index'
 import { isRealDate } from '../DateTime/isValidDate'
 import { GroomedOptions } from '../groomOptions'
 import { skipAhead } from './skipAhead'
-import { smallestTickUnit, FREQUENCY_ORDER, FREQUENCY_COUNTER } from './units'
-import { tickByrule } from './tick'
-import { rollOver } from './rollOver'
+import { smallestTickUnit } from './units'
+import { findNext } from './findNext'
 
 export const makeIterator = (options: GroomedOptions) => {
-  const { dtstart, count, until, freq } = options
+  const { dtstart, count, until } = options
+  const baseUnit = smallestTickUnit(options)
   let current = skipAhead(dtstart, options)
 
   return {
@@ -20,10 +19,8 @@ export const makeIterator = (options: GroomedOptions) => {
     },
 
     next() {
-      const unit = smallestTickUnit(options)
-
       do {
-        current = findNext(current, unit, options)
+        current = findNext(current, baseUnit, options)
       } while (!isRealDate(current))
       console.log('NEW CURRENT', current)
     },
@@ -32,28 +29,4 @@ export const makeIterator = (options: GroomedOptions) => {
       return current
     }
   }
-}
-
-const findNext = (
-  current: DateTime,
-  unit: keyof DateTime,
-  options: GroomedOptions
-) => {
-  let unitIdx = FREQUENCY_ORDER.indexOf(unit)
-  const freqIdx = FREQUENCY_ORDER.indexOf(FREQUENCY_COUNTER[options.freq])
-  let newCurrent: DateTime
-
-  do {
-    if (unitIdx > freqIdx) {
-      newCurrent = tickByrule(current, unit, options)
-    } else {
-      newCurrent = rollOver(
-        current,
-        FREQUENCY_ORDER[Math.max(0, unitIdx)],
-        options
-      )
-    }
-  } while (compare(newCurrent, current) === 0 && unitIdx-- > 0)
-
-  return newCurrent
 }

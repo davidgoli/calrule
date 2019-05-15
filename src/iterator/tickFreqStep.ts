@@ -5,18 +5,18 @@ import { add } from '../DateTime/add'
 import { firstWeekdayOfMonth } from '../DateTime/dayOfWeek'
 import { Weekday } from '../types'
 
-export const rollOver = (
+export const tickFreqStep = (
   current: DateTime,
   unit: keyof DateTime,
   options: GroomedOptions
 ) => {
-  const newCurrent = add(current, {
+  const next = add(current, {
     [unit]: (options.interval || 1) * (options.freq === 'WEEKLY' ? 7 : 1)
   })
 
   const byrule = byRuleForUnit(unit, options)
   if (byrule) {
-    newCurrent[unit] = nextValueForUnit(unit, options, newCurrent)
+    next[unit] = nextValueForUnit(unit, options, next)
   }
 
   const unitIdx = FREQUENCY_ORDER.indexOf(unit)
@@ -24,11 +24,11 @@ export const rollOver = (
     unitIdx + 1,
     FREQUENCY_ORDER.indexOf(smallestTickUnit(options)) + 1
   ).forEach(unit => {
-    newCurrent[unit] = nextValueForUnit(unit, options, newCurrent)
-    console.log('newCurrent unit', unit, current[unit], newCurrent[unit])
+    next[unit] = nextValueForUnit(unit, options, next)
+    console.log('newCurrent unit', unit, current[unit], next[unit])
   })
 
-  return newCurrent
+  return next
 }
 
 const nextValueForUnit = (

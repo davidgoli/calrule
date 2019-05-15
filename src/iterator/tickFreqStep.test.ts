@@ -1,4 +1,4 @@
-import { rollOver } from './rollOver'
+import { tickFreqStep } from './tickFreqStep'
 import { GroomedOptions } from '../groomOptions'
 import { DateTime } from '../DateTime/index'
 
@@ -30,7 +30,7 @@ beforeEach(() => {
 })
 
 it('increments a datetime by a second', () => {
-  expect(rollOver(startDate, 'second', options)).toEqual({
+  expect(tickFreqStep(startDate, 'second', options)).toEqual({
     year: 2017,
     month: 3 as 3,
     day: 2,
@@ -43,7 +43,7 @@ it('increments a datetime by a second', () => {
 it('rolls over the date time to the next threshold', () => {
   startDate.second = 59
 
-  expect(rollOver(startDate, 'second', options)).toEqual({
+  expect(tickFreqStep(startDate, 'second', options)).toEqual({
     year: 2017,
     month: 3 as 3,
     day: 3,
@@ -57,7 +57,7 @@ it('rolls over the date time to the next byrule if present', () => {
   startDate.second = 59
   options.byhour = [2]
 
-  expect(rollOver(startDate, 'hour', options)).toEqual({
+  expect(tickFreqStep(startDate, 'hour', options)).toEqual({
     year: 2017,
     month: 3 as 3,
     day: 3,
@@ -71,7 +71,7 @@ it('rolls over the date time to the next smaller byrule if present', () => {
   startDate.second = 59
   options.bysecond = [12]
 
-  expect(rollOver(startDate, 'hour', options)).toEqual({
+  expect(tickFreqStep(startDate, 'hour', options)).toEqual({
     year: 2017,
     month: 3 as 3,
     day: 3,
