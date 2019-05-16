@@ -10,16 +10,15 @@ const initialValueForUnit = (
   byrule: number[] | Weekday[] | undefined,
   newCurrent: DateTime
 ) => {
-  if (unit === 'day') {
-    return byrule && typeof byrule[0] === 'string'
-      ? firstWeekdayOfMonth(newCurrent, (byrule as Weekday[])[0])
-      : 1
+  if (unit === 'day' && byrule && typeof byrule[0] === 'string') {
+    return firstWeekdayOfMonth(newCurrent, (byrule as Weekday[])[0])
   }
 
   if (byrule) {
     return (byrule as number[])[0]
   }
-  if (unit === 'month') {
+
+  if (unit === 'month' || unit === 'day') {
     return 1
   }
 
@@ -32,9 +31,9 @@ export const initializeFrom = (
   options: GroomedOptions
 ) => {
   const unitIdx = FREQUENCY_ORDER.indexOf(unit)
-  const smallestUnitIdx = FREQUENCY_ORDER.indexOf(smallestTickUnit(options)) + 1
+  const smallestUnitIdx = FREQUENCY_ORDER.indexOf(smallestTickUnit(options))
 
-  FREQUENCY_ORDER.slice(unitIdx + 1, smallestUnitIdx).forEach(unit => {
+  FREQUENCY_ORDER.slice(unitIdx + 1, smallestUnitIdx + 1).forEach(unit => {
     const value = initialValueForUnit(unit, byRuleForUnit(unit, options), next)
     next = set(next, unit, value)
   })

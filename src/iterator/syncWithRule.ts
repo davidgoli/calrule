@@ -2,8 +2,8 @@ import { add } from '../DateTime/add'
 import { compare } from '../DateTime/compare'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
-import { nextByruleStep } from './nextByruleStep'
 import { nextByday } from './nextByday'
+import { nextByruleStep } from './nextByruleStep'
 import { byRuleForUnit, FREQUENCY_ORDER } from './units'
 
 export const syncWithRule = (current: DateTime, options: GroomedOptions) => {
@@ -16,7 +16,7 @@ export const syncWithRule = (current: DateTime, options: GroomedOptions) => {
 
     let nextUnit: DateTime
     if (unit === 'day') {
-      nextUnit = nextByday(next, byrule, options, false)
+      nextUnit = nextByday(next, { unit, byrule }, false)
     } else {
       nextUnit = nextByruleStep(unit)(next, byrule as number[], false)
     }

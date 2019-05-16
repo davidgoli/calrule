@@ -1,17 +1,17 @@
 import { copy } from '../copy'
 import { add } from '../DateTime/add'
 import {
+  dayOfMonth,
   dayOfWeek,
   dayOfYear,
-  WEEKDAYS,
   dayOrdinalOfWeek,
-  dayOfMonth
+  WEEKDAYS
 } from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
 import { set } from '../DateTime/set'
-import { GroomedOptions } from '../groomOptions'
 import { Weekday } from '../types'
 import { nextByruleStep } from './nextByruleStep'
+import { UnitRule } from './types'
 
 const nextYearday = (current: DateTime, steps: number[], advance: boolean) => {
   const currentDayOfYear = dayOfYear(current)
@@ -80,15 +80,14 @@ const nextWeekday = (next: DateTime, byrule: Weekday[], advance: boolean) => {
 
 export const nextByday = (
   next: DateTime,
-  byrule: number[] | Weekday[],
-  options: GroomedOptions,
+  { unit, byrule }: UnitRule,
   advance = true
 ) => {
-  if (options.byyearday) {
+  if (unit === 'year') {
     return nextYearday(next, byrule as number[], advance)
   }
 
-  if (options.bymonthday) {
+  if (unit === 'month') {
     return nextMonthday(next, byrule as number[], advance)
   }
 
