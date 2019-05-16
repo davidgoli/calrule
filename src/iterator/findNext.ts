@@ -24,7 +24,7 @@ const advanceByruleAtUnit = (d: DateTime, unitRule: UnitRule) => {
     return nextByday(d, unitRule)
   }
 
-  return nextByruleStep(unit)(d, byrule as number[])
+  return nextByruleStep(d, { unit, byrule: byrule as number[] })
 }
 
 const advanceToNextWkst = (d: DateTime, options: GroomedOptions) => {

@@ -32,7 +32,7 @@ const shouldTickFreqStepForBymonthday = (current: DateTime, steps: number[]) =>
   dayOfMonth(current) > steps[steps.length - 1]
 
 const nextMonthday = (next: DateTime, byrule: number[], advance: boolean) => {
-  next = nextByruleStep('day')(next, byrule, advance)
+  next = nextByruleStep(next, { unit: 'day', byrule }, advance)
 
   if (shouldTickFreqStepForBymonthday(next, byrule)) {
     next = add(next, {
@@ -41,7 +41,7 @@ const nextMonthday = (next: DateTime, byrule: number[], advance: boolean) => {
 
     next = set(next, 'day', 0)
 
-    return nextByruleStep('day')(next, byrule, advance)
+    return nextByruleStep(next, { unit: 'day', byrule }, advance)
   }
 
   return next
