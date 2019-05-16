@@ -31,11 +31,16 @@ const normalizeByUnit = <T>(
   unit: T[] | undefined,
   compareFn: (a: T, b: T) => number = compareNumbers
 ) => {
-  if (!unit || unit.length === 0) {
+  if (!unit) {
     return undefined
   }
 
-  return unit.filter(i => typeof i !== 'undefined').sort(compareFn)
+  const filtered = unit.filter(i => typeof i !== 'undefined').sort(compareFn)
+  if (filtered.length === 0) {
+    return undefined
+  }
+
+  return filtered
 }
 
 export const groomOptions = (

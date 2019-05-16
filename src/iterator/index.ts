@@ -1,14 +1,11 @@
 import { compare } from '../DateTime/compare'
 import { isRealDate } from '../DateTime/isValidDate'
 import { GroomedOptions } from '../groomOptions'
-import { syncWithRule } from './syncWithRule'
-import { smallestTickUnit } from './units'
 import { findNext } from './findNext'
+import { syncWithRule } from './syncWithRule'
 
 export const makeIterator = (options: GroomedOptions) => {
   const { dtstart, count, until } = options
-  const baseUnit = smallestTickUnit(options)
-  console.log(baseUnit)
   let current = syncWithRule(dtstart, options)
   console.log('STARTING CURRENT', current)
 
@@ -22,7 +19,7 @@ export const makeIterator = (options: GroomedOptions) => {
 
     next() {
       do {
-        current = findNext(current, baseUnit, options)
+        current = findNext(current, options)
       } while (!isRealDate(current))
       console.log('NEW CURRENT', current)
     },

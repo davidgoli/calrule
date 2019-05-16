@@ -1,6 +1,6 @@
-import { tickFreqStep } from './tickFreqStep'
-import { GroomedOptions } from '../groomOptions'
 import { DateTime } from '../DateTime/index'
+import { GroomedOptions } from '../groomOptions'
+import { findNext } from './findNext'
 
 let options: GroomedOptions
 let startDate: DateTime
@@ -30,7 +30,7 @@ beforeEach(() => {
 })
 
 it('increments a datetime by a second', () => {
-  expect(tickFreqStep(startDate, 'second', options)).toEqual({
+  expect(findNext(startDate, options)).toEqual({
     year: 2017,
     month: 3 as 3,
     day: 2,
@@ -43,7 +43,7 @@ it('increments a datetime by a second', () => {
 it('rolls over the date time to the next threshold', () => {
   startDate.second = 59
 
-  expect(tickFreqStep(startDate, 'second', options)).toEqual({
+  expect(findNext(startDate, options)).toEqual({
     year: 2017,
     month: 3 as 3,
     day: 3,
@@ -57,7 +57,7 @@ it('rolls over the date time to the next byrule if present', () => {
   startDate.second = 59
   options.byhour = [2]
 
-  expect(tickFreqStep(startDate, 'hour', options)).toEqual({
+  expect(findNext(startDate, options)).toEqual({
     year: 2017,
     month: 3 as 3,
     day: 3,
@@ -71,12 +71,44 @@ it('rolls over the date time to the next smaller byrule if present', () => {
   startDate.second = 59
   options.bysecond = [12]
 
-  expect(tickFreqStep(startDate, 'hour', options)).toEqual({
+  expect(findNext(startDate, options)).toEqual({
     year: 2017,
     month: 3 as 3,
     day: 3,
     hour: 0,
     minute: 0,
     second: 12
+  })
+})
+
+it('rolls over hourly with a byday', () => {
+  startDate = {
+    year: 2017,
+    month: 1,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  }
+
+  options.dtstart = {
+    year: 2017,
+    month: 1,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  }
+  options.freq = 'HOURLY'
+  options.interval = 12
+  options.byday = ['MO', 'WE']
+
+  expect(findNext(startDate, options)).toEqual({
+    year: 2017,
+    month: 1,
+    day: 2,
+    hour: 0,
+    minute: 0,
+    second: 0
   })
 })
