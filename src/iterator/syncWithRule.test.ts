@@ -99,3 +99,37 @@ it('does not go backwards', () => {
     second: 0
   })
 })
+
+it('does not move forwards unnecessarily', () => {
+  const options: GroomedOptions = {
+    dtstart: {
+      year: 2016,
+      month: 2 as 2,
+      day: 1,
+      hour: 0,
+      minute: 0,
+      second: 0
+    },
+    freq: 'HOURLY',
+    interval: 12,
+    byday: ['MO', 'WE']
+  }
+
+  const date: DateTime = {
+    year: 2017,
+    month: 1,
+    day: 2,
+    hour: 0,
+    minute: 0,
+    second: 0
+  }
+
+  expect(syncWithRule(date, options)).toEqual({
+    year: 2017,
+    month: 1 as 1,
+    day: 2,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+})

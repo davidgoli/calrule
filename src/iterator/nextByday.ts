@@ -12,11 +12,11 @@ import {
   shouldTickFreqStepForBymonthday
 } from './nextByruleStep'
 
-const nextYearday = (current: DateTime, steps: number[]) => {
+const nextYearday = (current: DateTime, steps: number[], advance: boolean) => {
   const currentDayOfYear = dayOfYear(current)
 
   for (let i = 0; i < steps.length; i++) {
-    if (currentDayOfYear <= steps[i]) {
+    if (advance ? currentDayOfYear <= steps[i] : currentDayOfYear < steps[i]) {
       const newCurrent = copy(current)
       newCurrent.month = 1
       newCurrent.day = 0
@@ -27,7 +27,7 @@ const nextYearday = (current: DateTime, steps: number[]) => {
   return current
 }
 
-const nextMonthday = (next: DateTime, byrule: number[]) => {
+const nextMonthday = (next: DateTime, byrule: number[], advance: boolean) => {
   next = nextByruleStep('day')(next, byrule, false)
 
   if (shouldTickFreqStepForBymonthday(next, byrule)) {
@@ -43,14 +43,14 @@ const nextMonthday = (next: DateTime, byrule: number[]) => {
   return next
 }
 
-const nextWeekday = (next: DateTime, byrule: Weekday[]) => {
-  next = nextDayStep(next, byrule)
+const nextWeekday = (next: DateTime, byrule: Weekday[], advance: boolean) => {
+  next = nextDayStep(next, byrule, advance)
   if (shouldTickFreqStepForByday(next, byrule)) {
     next = add(next, {
       day: 7 - WEEKDAYS.indexOf(dayOfWeek(next))
     })
 
-    return nextDayStep(next, byrule)
+    return nextDayStep(next, byrule, advance)
   }
 
   return next
@@ -59,15 +59,16 @@ const nextWeekday = (next: DateTime, byrule: Weekday[]) => {
 export const nextByday = (
   next: DateTime,
   byrule: number[] | Weekday[],
-  options: GroomedOptions
+  options: GroomedOptions,
+  advance = true
 ) => {
   if (options.byyearday) {
-    return nextYearday(next, byrule as number[])
+    return nextYearday(next, byrule as number[], advance)
   }
 
   if (options.bymonthday) {
-    return nextMonthday(next, byrule as number[])
+    return nextMonthday(next, byrule as number[], advance)
   }
 
-  return nextWeekday(next, byrule as Weekday[])
+  return nextWeekday(next, byrule as Weekday[], advance)
 }

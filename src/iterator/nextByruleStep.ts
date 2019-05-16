@@ -31,14 +31,16 @@ export const shouldTickFreqStepForByday = (
   return WEEKDAYS.indexOf(steps[steps.length - 1]) - currentDayOfWeekIdx < 0
 }
 
-export const nextDayStep = (current: DateTime, steps: Weekday[]) => {
+export const nextDayStep = (
+  current: DateTime,
+  steps: Weekday[],
+  advance = true
+) => {
   const currentDayOfWeekIdx = dayOrdinalOfWeek(current)
 
   for (let i = 0; i < steps.length; i++) {
     const daydiff = WEEKDAYS.indexOf(steps[i]) - currentDayOfWeekIdx
-    console.log({ daydiff })
-    if (daydiff > 0) {
-      console.log('returning', current.day + daydiff)
+    if (advance ? daydiff > 0 : daydiff >= 0) {
       return add(current, { day: daydiff })
     }
   }

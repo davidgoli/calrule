@@ -7,7 +7,6 @@ import { syncWithRule } from './syncWithRule'
 export const makeIterator = (options: GroomedOptions) => {
   const { dtstart, count, until } = options
   let current = syncWithRule(dtstart, options)
-  console.log('STARTING CURRENT', current)
 
   return {
     hasNext(length: number) {
@@ -21,7 +20,6 @@ export const makeIterator = (options: GroomedOptions) => {
       do {
         current = findNext(current, options)
       } while (!isRealDate(current))
-      console.log('NEW CURRENT', current)
     },
 
     get current() {

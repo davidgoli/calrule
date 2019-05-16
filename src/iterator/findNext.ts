@@ -68,7 +68,6 @@ const tickFreqStep = (
   options: GroomedOptions
 ) => {
   let next: DateTime = syncWithRule(current, options)
-  console.log({ current, next, compare: compare(next, current) })
   if (compare(next, current) !== 0) {
     return next
   }
@@ -76,30 +75,23 @@ const tickFreqStep = (
   if (options.freq === 'WEEKLY') {
     next = advanceToNextWkst(current, options)
   } else {
-    console.log({ current })
     next = add(current, {
       [unit]: options.interval || 1
     })
   }
 
-  console.log({ 'after advance': next })
   const byrule = byRuleForUnit(unit, options)
   if (byrule) {
     next = tickByrule(next, unit, byrule)
   }
 
-  console.log({ 'after byrule tick': next })
   if (compare(next, current) === 0) {
     const higherUnit = FREQUENCY_ORDER[FREQUENCY_ORDER.indexOf(unit) - 1]
     next = tickFreqStep(current, higherUnit, options)
   }
 
-  console.log({ 'after recursive freq step': next })
   next = syncWithRule(next, options)
-
-  console.log({ 'after sync with rule': next })
   next = initializeFrom(next, unit, options)
 
-  console.log({ final: next })
   return next
 }

@@ -145,3 +145,35 @@ it('rolls over hourly with a byday', () => {
     second: 0
   })
 })
+
+it.only('rolls over hourly with a synced byday', () => {
+  startDate = {
+    year: 2017,
+    month: 1,
+    day: 2,
+    hour: 0,
+    minute: 0,
+    second: 0
+  }
+
+  options.dtstart = {
+    year: 2017,
+    month: 1,
+    day: 2,
+    hour: 0,
+    minute: 0,
+    second: 0
+  }
+  options.freq = 'HOURLY'
+  options.interval = 12
+  options.byday = ['MO', 'WE']
+
+  expect(findNext(startDate, options)).toEqual({
+    year: 2017,
+    month: 1,
+    day: 2,
+    hour: 12,
+    minute: 0,
+    second: 0
+  })
+})
