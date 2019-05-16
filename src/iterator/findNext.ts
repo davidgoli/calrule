@@ -38,9 +38,24 @@ const advanceToNextWkst = (d: DateTime, options: GroomedOptions) => {
   return add(d, { day: options.interval * 7 })
 }
 
-const tickFreqStep = (
+const advanceFreq = (
   current: DateTime,
   unit: keyof DateTime,
+  options: GroomedOptions
+) => {
+  if (options.freq === 'WEEKLY') {
+    return advanceToNextWkst(current, options)
+  }
+
+  const next = add(current, {
+    [unit]: options.interval || 1
+  })
+  return initializeFrom(next, unit, options)
+}
+
+const tickFreqStep = (
+  current: DateTime,
+  unitIdx: number,
   options: GroomedOptions
 ) => {
   let next: DateTime = syncWithRule(current, options)
@@ -48,24 +63,14 @@ const tickFreqStep = (
     return next
   }
 
-  if (options.freq === 'WEEKLY') {
-    next = advanceToNextWkst(current, options)
-  } else {
-    next = add(current, {
-      [unit]: options.interval || 1
-    })
+  do {
+    const unit = FREQUENCY_ORDER[unitIdx]
+    next = advanceFreq(current, unit, options)
+    next = tickByrule(next, unit, options)
+
+    next = syncWithRule(next, options)
     next = initializeFrom(next, unit, options)
-  }
-
-  next = tickByrule(next, unit, options)
-
-  if (compare(next, current) === 0) {
-    const higherUnit = FREQUENCY_ORDER[FREQUENCY_ORDER.indexOf(unit) - 1]
-    next = tickFreqStep(current, higherUnit, options)
-  }
-
-  next = syncWithRule(next, options)
-  next = initializeFrom(next, unit, options)
+  } while (compare(next, current) === 0 && --unitIdx >= 0)
 
   return next
 }
@@ -81,12 +86,12 @@ export const findNext = (current: DateTime, options: GroomedOptions) => {
   do {
     const currentUnit = FREQUENCY_ORDER[unitIdx]
     if (unitIdx === freqIdx) {
-      next = tickFreqStep(current, currentUnit, options)
+      next = tickFreqStep(current, unitIdx, options)
       continue
     }
 
     next = tickByrule(current, currentUnit, options)
-  } while (compare(next, current) === 0 && unitIdx-- > 0)
+  } while (compare(next, current) === 0 && --unitIdx >= 0)
 
   return next
 }
