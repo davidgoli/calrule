@@ -146,7 +146,7 @@ it('rolls over hourly with a byday', () => {
   })
 })
 
-it.only('rolls over hourly with a synced byday', () => {
+it('rolls over hourly with a synced byday', () => {
   startDate = {
     year: 2017,
     month: 1,

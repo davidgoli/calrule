@@ -28,7 +28,7 @@ const nextYearday = (current: DateTime, steps: number[], advance: boolean) => {
 }
 
 const nextMonthday = (next: DateTime, byrule: number[], advance: boolean) => {
-  next = nextByruleStep('day')(next, byrule, false)
+  next = nextByruleStep('day')(next, byrule, advance)
 
   if (shouldTickFreqStepForBymonthday(next, byrule)) {
     next = add(next, {
@@ -37,7 +37,7 @@ const nextMonthday = (next: DateTime, byrule: number[], advance: boolean) => {
 
     next = set(next, 'day', 0)
 
-    return nextByruleStep('day')(next, byrule, false)
+    return nextByruleStep('day')(next, byrule, advance)
   }
 
   return next
