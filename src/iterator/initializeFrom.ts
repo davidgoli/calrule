@@ -36,7 +36,6 @@ export const initializeFrom = (
 
   FREQUENCY_ORDER.slice(unitIdx + 1, smallestUnitIdx).forEach(unit => {
     const value = initialValueForUnit(unit, byRuleForUnit(unit, options), next)
-    console.log({ unit, value })
     next = set(next, unit, value)
   })
 

@@ -20,8 +20,8 @@ export interface GroomedOptions {
 }
 
 const byProperties: (keyof Pick<
-  RuleOptions,
-  'byhour' | 'byminute' | 'bysecond' | 'bymonthday' | 'bymonth' | 'byyearday'
+RuleOptions,
+'byhour' | 'byminute' | 'bysecond' | 'bymonthday' | 'bymonth' | 'byyearday'
 >)[] = ['byhour', 'byminute', 'bysecond', 'bymonthday', 'bymonth', 'byyearday']
 
 const compareNumbers = <T>(a: T, b: T) =>
