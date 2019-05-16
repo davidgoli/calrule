@@ -1,4 +1,4 @@
-import { days } from './DateTime/dayOfWeek'
+import { WEEKDAYS } from './DateTime/dayOfWeek'
 import { inRange } from './DateTime/inRange'
 import { isValidDate } from './DateTime/isValidDate'
 import { Frequency, RuleOptions } from './types'
@@ -113,7 +113,7 @@ export const validate = (options: RuleOptions) => {
 
   if (
     typeof options.byday !== 'undefined' &&
-    !arrayContainsValues(options.byday, days)
+    !arrayContainsValues(options.byday, WEEKDAYS)
   ) {
     errors.push(error('BYDAY', options.byday))
   }

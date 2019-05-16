@@ -2,14 +2,14 @@ import { Weekday } from '../types'
 import { DateTime } from './index'
 import { toMillis } from './toMillis'
 
-export const days: Weekday[] = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']
+export const WEEKDAYS: Weekday[] = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']
 
 export const dayOrdinalOfWeek = (d: DateTime) => {
   return new Date(Date.UTC(d.year, d.month - 1, d.day)).getUTCDay()
 }
 
 export const dayOfWeek = (d: DateTime) => {
-  return days[dayOrdinalOfWeek(d)]
+  return WEEKDAYS[dayOrdinalOfWeek(d)]
 }
 
 export const dayOfMonth = (d: DateTime) => {
@@ -24,19 +24,19 @@ export const firstWeekdayOfMonth = (d: DateTime, day: Weekday) => {
   const firstOfMonthOrdinal = dayOrdinalOfWeek({
     year: d.year,
     month: d.month,
-    day: d.day,
+    day: 1,
     hour: 0,
     minute: 0,
     second: 0
   })
 
-  const dayOrdinalDesired = days.indexOf(day)
+  const dayOrdinalDesired = WEEKDAYS.indexOf(day)
   let diff = dayOrdinalDesired - firstOfMonthOrdinal
-  while (diff < d.day) {
+  while (diff < d.day - 1) {
     diff += 7
   }
 
-  return diff
+  return diff + 1
 }
 
 export const dayOfYear = (d: DateTime) =>

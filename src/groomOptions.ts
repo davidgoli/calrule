@@ -1,4 +1,4 @@
-import { days } from './DateTime/dayOfWeek'
+import { WEEKDAYS } from './DateTime/dayOfWeek'
 import { DateTime } from './DateTime/index'
 import { parseISO } from './DateTime/parseISO'
 import { Frequency, RuleOptions, Weekday } from './types'
@@ -75,7 +75,7 @@ export const groomOptions = (
 
   const byday = normalizeByUnit(
     options.byday,
-    (a, b) => days.indexOf(a) - days.indexOf(b)
+    (a, b) => WEEKDAYS.indexOf(a) - WEEKDAYS.indexOf(b)
   )
 
   if (byday) {

@@ -1,6 +1,6 @@
 import { copy } from '../copy'
 import { add } from '../DateTime/add'
-import { dayOfWeek, dayOfYear, days } from '../DateTime/dayOfWeek'
+import { dayOfWeek, dayOfYear, WEEKDAYS } from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
 import { set } from '../DateTime/set'
 import { GroomedOptions } from '../groomOptions'
@@ -47,7 +47,7 @@ const nextWeekday = (next: DateTime, byrule: Weekday[]) => {
   next = nextDayStep(next, byrule)
   if (shouldTickFreqStepForByday(next, byrule)) {
     next = add(next, {
-      day: 7 - days.indexOf(dayOfWeek(next))
+      day: 7 - WEEKDAYS.indexOf(dayOfWeek(next))
     })
 
     return nextDayStep(next, byrule)

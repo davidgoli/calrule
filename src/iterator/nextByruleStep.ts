@@ -1,13 +1,8 @@
+import { add } from '../DateTime/add'
+import { dayOfMonth, dayOrdinalOfWeek, WEEKDAYS } from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
 import { set } from '../DateTime/set'
 import { Weekday } from '../types'
-import {
-  days as WEEKDAYS,
-  dayOrdinalOfWeek,
-  dayOfMonth,
-  lengthOfMonth
-} from '../DateTime/dayOfWeek'
-import { add } from '../DateTime/add'
 
 export const nextByruleStep = (unit: keyof DateTime) => (
   current: DateTime,

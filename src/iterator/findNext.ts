@@ -1,9 +1,9 @@
 import { add } from '../DateTime/add'
 import { compare } from '../DateTime/compare'
-import { firstWeekdayOfMonth } from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
 import { Weekday } from '../types'
+import { initializeFrom } from './initializeFrom'
 import { nextByruleStep, nextDayStep } from './nextByruleStep'
 import { syncWithRule } from './syncWithRule'
 import {
@@ -54,7 +54,15 @@ const tickByrule = (
   return d
 }
 
-export const tickFreqStep = (
+const advanceToNextWkst = (d: DateTime, options: GroomedOptions) => {
+  if (options.byday) {
+    return add(d, { day: options.interval })
+  }
+
+  return add(d, { day: options.interval * 7 })
+}
+
+const tickFreqStep = (
   current: DateTime,
   unit: keyof DateTime,
   options: GroomedOptions
@@ -79,37 +87,5 @@ export const tickFreqStep = (
   }
 
   next = syncWithRule(next, options)
-
-  const unitIdx = FREQUENCY_ORDER.indexOf(unit)
-  FREQUENCY_ORDER.slice(
-    unitIdx + 1,
-    FREQUENCY_ORDER.indexOf(smallestTickUnit(options)) + 1
-  ).forEach(unit => {
-    next[unit] = initialValueForUnit(unit, options, next)
-  })
-
-  return next
-}
-
-const initialValueForUnit = (
-  unit: keyof DateTime,
-  options: GroomedOptions,
-  newCurrent: DateTime
-) => {
-  const byrule = byRuleForUnit(unit, options)
-  if (unit === 'day') {
-    return firstWeekdayOfMonth(newCurrent, (byrule as Weekday[])[0])
-  } else if (byrule) {
-    return (byrule as number[])[0]
-  } else {
-    return 0
-  }
-}
-
-const advanceToNextWkst = (d: DateTime, options: GroomedOptions) => {
-  if (options.byday) {
-    return add(d, { day: options.interval })
-  }
-
-  return add(d, { day: options.interval * 7 })
+  return initializeFrom(next, unit, options)
 }
