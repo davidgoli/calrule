@@ -177,3 +177,34 @@ it('rolls over hourly with a synced byday', () => {
     second: 0
   })
 })
+
+it.only('rolls over yearly with a byyearday rule', () => {
+  startDate = {
+    year: 2017,
+    month: 2,
+    day: 10,
+    hour: 0,
+    minute: 0,
+    second: 0
+  }
+
+  options.dtstart = {
+    year: 2017,
+    month: 1,
+    day: 2,
+    hour: 0,
+    minute: 0,
+    second: 0
+  }
+  options.freq = 'YEARLY'
+  options.byyearday = [2, 41]
+
+  expect(findNext(startDate, options)).toEqual({
+    year: 2018,
+    month: 1,
+    day: 2,
+    hour: 0,
+    minute: 0,
+    second: 0
+  })
+})

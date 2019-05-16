@@ -1,16 +1,17 @@
 import { copy } from '../copy'
 import { add } from '../DateTime/add'
-import { dayOfWeek, dayOfYear, WEEKDAYS } from '../DateTime/dayOfWeek'
+import {
+  dayOfWeek,
+  dayOfYear,
+  WEEKDAYS,
+  dayOrdinalOfWeek,
+  dayOfMonth
+} from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
 import { set } from '../DateTime/set'
 import { GroomedOptions } from '../groomOptions'
 import { Weekday } from '../types'
-import {
-  nextByruleStep,
-  nextDayStep,
-  shouldTickFreqStepForByday,
-  shouldTickFreqStepForBymonthday
-} from './nextByruleStep'
+import { nextByruleStep } from './nextByruleStep'
 
 const nextYearday = (current: DateTime, steps: number[], advance: boolean) => {
   const currentDayOfYear = dayOfYear(current)
@@ -19,13 +20,16 @@ const nextYearday = (current: DateTime, steps: number[], advance: boolean) => {
     if (advance ? currentDayOfYear <= steps[i] : currentDayOfYear < steps[i]) {
       const newCurrent = copy(current)
       newCurrent.month = 1
-      newCurrent.day = 0
+      newCurrent.day = 1
       return add(newCurrent, { day: steps[i] })
     }
   }
 
   return current
 }
+
+const shouldTickFreqStepForBymonthday = (current: DateTime, steps: number[]) =>
+  dayOfMonth(current) > steps[steps.length - 1]
 
 const nextMonthday = (next: DateTime, byrule: number[], advance: boolean) => {
   next = nextByruleStep('day')(next, byrule, advance)
@@ -41,6 +45,24 @@ const nextMonthday = (next: DateTime, byrule: number[], advance: boolean) => {
   }
 
   return next
+}
+
+const nextDayStep = (current: DateTime, steps: Weekday[], advance = true) => {
+  const currentDayOfWeekIdx = dayOrdinalOfWeek(current)
+
+  for (let i = 0; i < steps.length; i++) {
+    const daydiff = WEEKDAYS.indexOf(steps[i]) - currentDayOfWeekIdx
+    if (advance ? daydiff > 0 : daydiff >= 0) {
+      return add(current, { day: daydiff })
+    }
+  }
+
+  return current
+}
+
+const shouldTickFreqStepForByday = (current: DateTime, steps: Weekday[]) => {
+  const currentDayOfWeekIdx = dayOrdinalOfWeek(current)
+  return WEEKDAYS.indexOf(steps[steps.length - 1]) - currentDayOfWeekIdx < 0
 }
 
 const nextWeekday = (next: DateTime, byrule: Weekday[], advance: boolean) => {

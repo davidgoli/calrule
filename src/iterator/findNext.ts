@@ -4,7 +4,7 @@ import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
 import { Weekday } from '../types'
 import { initializeFrom } from './initializeFrom'
-import { nextByruleStep, nextDayStep } from './nextByruleStep'
+import { nextByruleStep } from './nextByruleStep'
 import { syncWithRule } from './syncWithRule'
 import {
   byRuleForUnit,
@@ -12,6 +12,7 @@ import {
   FREQUENCY_ORDER,
   smallestTickUnit
 } from './units'
+import { nextByday } from './nextByday'
 
 export const findNext = (current: DateTime, options: GroomedOptions) => {
   const { freq } = options
@@ -29,7 +30,7 @@ export const findNext = (current: DateTime, options: GroomedOptions) => {
     if (unitIdx === freqIdx) {
       next = tickFreqStep(current, currentUnit, options)
     } else if (byrule) {
-      next = tickByrule(current, currentUnit, byrule)
+      next = tickByrule(current, currentUnit, byrule, options)
     } else {
       next = current
     }
@@ -41,11 +42,12 @@ export const findNext = (current: DateTime, options: GroomedOptions) => {
 const tickByrule = (
   d: DateTime,
   unit: keyof DateTime,
-  byrule: number[] | Weekday[]
+  byrule: number[] | Weekday[],
+  options: GroomedOptions
 ) => {
   if (byrule && byrule.length) {
     if (unit === 'day') {
-      return nextDayStep(d, byrule as Weekday[])
+      return nextByday(d, byrule, options)
     }
 
     return nextByruleStep(unit)(d, byrule as number[])
@@ -78,11 +80,13 @@ const tickFreqStep = (
     next = add(current, {
       [unit]: options.interval || 1
     })
+    next = initializeFrom(next, unit, options)
   }
 
+  console.log({ next })
   const byrule = byRuleForUnit(unit, options)
   if (byrule) {
-    next = tickByrule(next, unit, byrule)
+    next = tickByrule(next, unit, byrule, options)
   }
 
   if (compare(next, current) === 0) {

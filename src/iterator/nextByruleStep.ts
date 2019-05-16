@@ -1,4 +1,3 @@
-import { add } from '../DateTime/add'
 import { dayOfMonth, dayOrdinalOfWeek, WEEKDAYS } from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
 import { set } from '../DateTime/set'
@@ -16,34 +15,4 @@ export const nextByruleStep = (unit: keyof DateTime) => (
   }
 
   return set(current, unit, steps[steps.length - 1])
-}
-
-export const shouldTickFreqStepForBymonthday = (
-  current: DateTime,
-  steps: number[]
-) => dayOfMonth(current) > steps[steps.length - 1]
-
-export const shouldTickFreqStepForByday = (
-  current: DateTime,
-  steps: Weekday[]
-) => {
-  const currentDayOfWeekIdx = dayOrdinalOfWeek(current)
-  return WEEKDAYS.indexOf(steps[steps.length - 1]) - currentDayOfWeekIdx < 0
-}
-
-export const nextDayStep = (
-  current: DateTime,
-  steps: Weekday[],
-  advance = true
-) => {
-  const currentDayOfWeekIdx = dayOrdinalOfWeek(current)
-
-  for (let i = 0; i < steps.length; i++) {
-    const daydiff = WEEKDAYS.indexOf(steps[i]) - currentDayOfWeekIdx
-    if (advance ? daydiff > 0 : daydiff >= 0) {
-      return add(current, { day: daydiff })
-    }
-  }
-
-  return current
 }
