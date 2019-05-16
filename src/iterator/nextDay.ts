@@ -56,7 +56,7 @@ const nextWeekday = (next: DateTime, byrule: Weekday[]) => {
   return next
 }
 
-export const nextDay = (
+export const nextByday = (
   next: DateTime,
   byrule: number[] | Weekday[],
   options: GroomedOptions

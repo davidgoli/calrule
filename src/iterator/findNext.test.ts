@@ -55,6 +55,7 @@ it('rolls over the date time to the next threshold', () => {
 
 it('rolls over the date time to the next byrule if present', () => {
   startDate.second = 59
+  startDate.hour = 2
   options.byhour = [2]
 
   expect(findNext(startDate, options)).toEqual({
@@ -78,6 +79,38 @@ it('rolls over the date time to the next smaller byrule if present', () => {
     hour: 0,
     minute: 0,
     second: 12
+  })
+})
+
+it('moves a non-synchronized date to the first synchronized position', () => {
+  startDate = {
+    year: 2017,
+    month: 1,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  }
+
+  options.dtstart = {
+    year: 2017,
+    month: 1,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  }
+  options.freq = 'HOURLY'
+  options.interval = 12
+  options.byday = ['MO', 'WE']
+
+  expect(findNext(startDate, options)).toEqual({
+    year: 2017,
+    month: 1,
+    day: 2,
+    hour: 0,
+    minute: 0,
+    second: 0
   })
 })
 

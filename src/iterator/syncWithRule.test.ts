@@ -65,3 +65,37 @@ it("doesn't go too far", () => {
     second: 19
   })
 })
+
+it('does not go backwards', () => {
+  const options: GroomedOptions = {
+    dtstart: {
+      year: 2016,
+      month: 2 as 2,
+      day: 1,
+      hour: 0,
+      minute: 0,
+      second: 0
+    },
+    freq: 'SECONDLY',
+    interval: 1,
+    byhour: [2]
+  }
+
+  const date: DateTime = {
+    year: 2017,
+    month: 3,
+    day: 2,
+    hour: 3,
+    minute: 0,
+    second: 0
+  }
+
+  expect(syncWithRule(date, options)).toEqual({
+    year: 2017,
+    month: 3 as 3,
+    day: 3,
+    hour: 2,
+    minute: 0,
+    second: 0
+  })
+})
