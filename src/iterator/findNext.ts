@@ -1,5 +1,6 @@
 import { add } from '../DateTime/add'
 import { compare } from '../DateTime/compare'
+import { dayOfMonth } from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
 import { initializeFrom } from './initializeFrom'
@@ -48,12 +49,28 @@ const advanceFreq = (
   unit: keyof DateTime,
   options: GroomedOptions
 ) => {
-  if (options.freq === 'WEEKLY') {
+  const atEnd = compare(advanceByruleAtUnit(current, unit, options), current)
+  console.log({ atEnd })
+
+  let { freq, interval } = options
+  if (freq === 'WEEKLY') {
     return advanceToNextWkst(current, options)
   }
 
+  if (
+    freq === 'YEARLY' &&
+    options.bymonthday &&
+    dayOfMonth(current) === options.bymonthday[options.bymonthday.length - 1]
+  ) {
+    unit = 'month'
+  }
+
+  if (freq === 'MONTHLY' && options.byday) {
+    unit = 'day'
+  }
+
   const next = add(current, {
-    [unit]: options.interval || 1
+    [unit]: interval || 1
   })
 
   return initializeFrom(next, unit, options)

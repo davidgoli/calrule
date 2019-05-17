@@ -210,7 +210,7 @@ it('rolls over yearly with a byyearday rule', () => {
   })
 })
 
-it('does not roll over yearly when it should not', () => {
+it('does not roll over yearly on byyearday when it should not', () => {
   startDate = {
     year: 2017,
     month: 1,
@@ -229,4 +229,55 @@ it('does not roll over yearly when it should not', () => {
 
   const nextResult = findNext(result, options)
   expect(toISO(nextResult)).toEqual('2017-02-10T00:00:00')
+})
+
+it.only('does not roll over yearly on bymonthday when it should not', () => {
+  startDate = {
+    year: 2017,
+    month: 1,
+    day: 2,
+    hour: 0,
+    minute: 0,
+    second: 0
+  }
+
+  options.freq = 'YEARLY'
+  options.bymonthday = [2, 11]
+
+  const result = findNext(startDate, options)
+
+  expect(toISO(result)).toEqual('2017-01-11T00:00:00')
+
+  const nextResult = findNext(result, options)
+  expect(toISO(nextResult)).toEqual('2017-02-02T00:00:00')
+})
+
+it.only('does not roll over monthly on byday when it should not', () => {
+  startDate = {
+    year: 2017,
+    month: 1,
+    day: 2,
+    hour: 0,
+    minute: 0,
+    second: 0
+  }
+
+  options.freq = 'MONTHLY'
+  options.byday = ['WE']
+  options.interval = 2
+
+  let result = findNext(startDate, options)
+  expect(toISO(result)).toEqual('2017-01-04T00:00:00')
+
+  result = findNext(result, options)
+  expect(toISO(result)).toEqual('2017-01-11T00:00:00')
+
+  result = findNext(result, options)
+  expect(toISO(result)).toEqual('2017-01-18T00:00:00')
+
+  result = findNext(result, options)
+  expect(toISO(result)).toEqual('2017-01-25T00:00:00')
+
+  result = findNext(result, options)
+  expect(toISO(result)).toEqual('2017-03-02T00:00:00')
 })
