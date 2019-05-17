@@ -8,6 +8,7 @@
     "noEmitOnError": true,
     "target": "es6",
     "baseUrl": ".",
+    "outDir": "./lib",
     "rootDirs": [
       "./src/",
     ]
@@ -16,6 +17,6 @@
     "./src/**/*",
   ],
   "exclude": [
-    "node_modules",
+    "node_modules", "lib",
   ]
 }

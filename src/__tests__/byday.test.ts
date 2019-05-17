@@ -1,4 +1,4 @@
-import { rrule } from './index'
+import { rrule } from '../index'
 
 // BYxxx rule parts modify the recurrence in some manner.BYxxx rule
 // parts for a period of time that is the same or greater than the
@@ -17,93 +17,78 @@ import { rrule } from './index'
 // following order: BYMONTH, BYWEEKNO, BYYEARDAY, BYMONTHDAY, BYDAY,
 // BYHOUR, BYMINUTE, BYSECOND and BYSETPOS; then COUNT and UNTIL are
 // evaluated.
-describe('FREQ=HOURLY', () => {
-  it('returns only the hours given', () => {
-    const result = rrule({
-      dtstart: '2017-01-01',
-      freq: 'HOURLY',
-      count: 5,
-      byhour: [2, 13]
-    })
-
-    expect(result).toEqual([
-      '2017-01-01T02:00:00',
-      '2017-01-01T13:00:00',
-      '2017-01-02T02:00:00',
-      '2017-01-02T13:00:00',
-      '2017-01-03T02:00:00'
-    ])
-  })
-
-  it('removes byhour if empty', () => {
-    const result = rrule({
-      dtstart: '2017-01-01',
-      freq: 'HOURLY',
-      count: 5,
-      byhour: []
-    })
-
-    expect(result).toEqual([
-      '2017-01-01T00:00:00',
-      '2017-01-01T01:00:00',
-      '2017-01-01T02:00:00',
-      '2017-01-01T03:00:00',
-      '2017-01-01T04:00:00'
-    ])
-  })
-
-  it('sorts the hours', () => {
-    const result = rrule({
-      dtstart: '2017-01-01',
-      freq: 'HOURLY',
-      count: 5,
-      byhour: [13, 2]
-    })
-
-    expect(result).toEqual([
-      '2017-01-01T02:00:00',
-      '2017-01-01T13:00:00',
-      '2017-01-02T02:00:00',
-      '2017-01-02T13:00:00',
-      '2017-01-03T02:00:00'
-    ])
-  })
-})
-
 describe('FREQ=DAILY', () => {
-  it('returns only the hours given', () => {
+  it('returns only the days given', () => {
     const result = rrule({
       dtstart: '2017-01-01',
       freq: 'DAILY',
       count: 5,
-      byhour: [2, 13]
+      byday: ['MO', 'WE']
     })
 
     expect(result).toEqual([
-      '2017-01-01T02:00:00',
-      '2017-01-01T13:00:00',
-      '2017-01-02T02:00:00',
-      '2017-01-02T13:00:00',
-      '2017-01-03T02:00:00'
+      // 2017-01-01 is a Sunday
+      '2017-01-02T00:00:00',
+      '2017-01-04T00:00:00',
+      '2017-01-09T00:00:00',
+      '2017-01-11T00:00:00',
+      '2017-01-16T00:00:00'
     ])
   })
 })
 
-describe('FREQ=MINUTELY', () => {
+describe('FREQ=WEEKLY', () => {
   it('returns only the days given', () => {
     const result = rrule({
-      dtstart: '2017-01-01T02:58:00',
-      freq: 'MINUTELY',
+      dtstart: '2017-01-01',
+      freq: 'WEEKLY',
       count: 5,
-      byhour: [2, 13]
+      byday: ['MO', 'WE']
     })
 
     expect(result).toEqual([
-      '2017-01-01T02:58:00',
-      '2017-01-01T02:59:00',
-      '2017-01-01T13:00:00',
-      '2017-01-01T13:01:00',
-      '2017-01-01T13:02:00'
+      '2017-01-02T00:00:00',
+      '2017-01-04T00:00:00',
+      '2017-01-09T00:00:00',
+      '2017-01-11T00:00:00',
+      '2017-01-16T00:00:00'
+    ])
+  })
+
+  it('returns only the days given with a single byday', () => {
+    const result = rrule({
+      dtstart: '2017-01-01',
+      freq: 'WEEKLY',
+      count: 5,
+      byday: ['MO']
+    })
+
+    expect(result).toEqual([
+      '2017-01-02T00:00:00',
+      '2017-01-09T00:00:00',
+      '2017-01-16T00:00:00',
+      '2017-01-23T00:00:00',
+      '2017-01-30T00:00:00'
+    ])
+  })
+})
+
+describe('FREQ=HOURLY', () => {
+  it('returns only the days given', () => {
+    const result = rrule({
+      dtstart: '2017-01-01',
+      freq: 'HOURLY',
+      count: 5,
+      byday: ['MO', 'WE'],
+      interval: 12
+    })
+
+    expect(result).toEqual([
+      '2017-01-02T00:00:00',
+      '2017-01-02T12:00:00',
+      '2017-01-04T00:00:00',
+      '2017-01-04T12:00:00',
+      '2017-01-09T00:00:00'
     ])
   })
 })

@@ -1,4 +1,4 @@
-import { rrule } from './index'
+import { rrule } from '../index'
 
 it('generates the correct number of occurences', () => {
   const result = rrule({

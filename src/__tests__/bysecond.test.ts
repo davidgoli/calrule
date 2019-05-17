@@ -1,4 +1,4 @@
-import { rrule } from './index'
+import { rrule } from '../index'
 
 // BYxxx rule parts modify the recurrence in some manner.BYxxx rule
 // parts for a period of time that is the same or greater than the
@@ -17,61 +17,74 @@ import { rrule } from './index'
 // following order: BYMONTH, BYWEEKNO, BYYEARDAY, BYMONTHDAY, BYDAY,
 // BYHOUR, BYMINUTE, BYSECOND and BYSETPOS; then COUNT and UNTIL are
 // evaluated.
-describe('FREQ=YEARLY', () => {
-  it('returns only the days given', () => {
+describe('FREQ=SECONDLY', () => {
+  it('returns only the seconds given', () => {
     const result = rrule({
       dtstart: '2017-01-01',
-      freq: 'YEARLY',
+      freq: 'SECONDLY',
       count: 5,
-      byyearday: [2, 41]
+      bysecond: [2, 13]
     })
 
     expect(result).toEqual([
-      // 2017-01-01 is a Sunday
-      '2017-01-02T00:00:00',
-      '2017-02-10T00:00:00',
-      '2018-01-02T00:00:00',
-      '2018-02-10T00:00:00',
-      '2019-01-02T00:00:00'
+      '2017-01-01T00:00:02',
+      '2017-01-01T00:00:13',
+      '2017-01-01T00:01:02',
+      '2017-01-01T00:01:13',
+      '2017-01-01T00:02:02'
+    ])
+  })
+
+  it('removes bysecond if empty', () => {
+    const result = rrule({
+      dtstart: '2017-01-01',
+      freq: 'SECONDLY',
+      count: 5,
+      bysecond: []
+    })
+
+    expect(result).toEqual([
+      '2017-01-01T00:00:00',
+      '2017-01-01T00:00:01',
+      '2017-01-01T00:00:02',
+      '2017-01-01T00:00:03',
+      '2017-01-01T00:00:04'
+    ])
+  })
+
+  it('sorts the seconds', () => {
+    const result = rrule({
+      dtstart: '2017-01-01',
+      freq: 'SECONDLY',
+      count: 5,
+      bysecond: [13, 2]
+    })
+
+    expect(result).toEqual([
+      '2017-01-01T00:00:02',
+      '2017-01-01T00:00:13',
+      '2017-01-01T00:01:02',
+      '2017-01-01T00:01:13',
+      '2017-01-01T00:02:02'
     ])
   })
 })
 
-describe('FREQ=DAILY', () => {
-  it('returns undefined (is invalid)', () => {
+describe('FREQ=MINUTELY', () => {
+  it('returns only the seconds given', () => {
     const result = rrule({
       dtstart: '2017-01-01',
-      freq: 'DAILY',
+      freq: 'MINUTELY',
       count: 5,
-      byyearday: [2, 11]
+      bysecond: [2, 13]
     })
 
-    expect(result).toBeUndefined()
-  })
-})
-
-describe('FREQ=WEEKLY', () => {
-  it('returns undefined (is invalid)', () => {
-    const result = rrule({
-      dtstart: '2017-01-01',
-      freq: 'WEEKLY',
-      count: 5,
-      byyearday: [2, 11]
-    })
-
-    expect(result).toBeUndefined()
-  })
-})
-
-describe('FREQ=MONTHLY', () => {
-  it('returns undefined (is invalid)', () => {
-    const result = rrule({
-      dtstart: '2017-01-01',
-      freq: 'MONTHLY',
-      count: 5,
-      byyearday: [2, 11]
-    })
-
-    expect(result).toBeUndefined()
+    expect(result).toEqual([
+      '2017-01-01T00:00:02',
+      '2017-01-01T00:00:13',
+      '2017-01-01T00:01:02',
+      '2017-01-01T00:01:13',
+      '2017-01-01T00:02:02'
+    ])
   })
 })
