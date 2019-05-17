@@ -49,8 +49,6 @@ const advanceFreq = (
   unit: keyof DateTime,
   options: GroomedOptions
 ) => {
-  const atEnd = compare(advanceByruleAtUnit(current, unit, options), current)
-
   let { freq, interval } = options
   if (freq === 'WEEKLY') {
     return advanceToNextWkst(current, options)

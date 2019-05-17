@@ -22,6 +22,10 @@ export const FREQUENCY_ORDER: (keyof DateTime)[] = [
   'second'
 ]
 
+export const unitRule = <T>(unit: ByProperty, byrule: T[] | undefined) => {
+  return byrule ? { unit, byrule } : undefined
+}
+
 export const byRuleForUnit = (
   unit: keyof DateTime,
   options: GroomedOptions
@@ -58,10 +62,6 @@ export const unitForByrule = (byruleUnit: ByProperty): keyof DateTime => {
     byyearday: 'day'
   }
   return mappings[byruleUnit]
-}
-
-export const unitRule = <T>(unit: ByProperty, byrule: T[] | undefined) => {
-  return byrule ? { unit, byrule } : undefined
 }
 
 export const smallestTickUnit = ({
