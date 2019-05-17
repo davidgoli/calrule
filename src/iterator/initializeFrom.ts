@@ -32,11 +32,14 @@ export const initializeFrom = (
   unit: keyof DateTime,
   options: GroomedOptions
 ) => {
+  console.log('initializeFrom', { unit })
   const unitIdx = FREQUENCY_ORDER.indexOf(unit)
   const smallestUnitIdx = FREQUENCY_ORDER.indexOf(smallestTickUnit(options))
+  console.log({ smallestUnitIdx })
 
   FREQUENCY_ORDER.slice(unitIdx + 1, smallestUnitIdx + 1).forEach(unit => {
     const value = initialValueForUnit(unit, byRuleForUnit(unit, options), next)
+    console.log({ value })
     next = set(next, unit, value)
   })
 

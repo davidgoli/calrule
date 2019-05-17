@@ -16,8 +16,10 @@ import { UnitRule } from './types'
 const nextYearday = (current: DateTime, steps: number[], advance: boolean) => {
   const currentDayOfYear = dayOfYear(current)
 
+  console.log({ currentDayOfYear })
   for (let i = 0; i < steps.length; i++) {
     if (advance ? currentDayOfYear < steps[i] : currentDayOfYear <= steps[i]) {
+      console.log({ step: steps[i] })
       const newCurrent = copy(current)
       newCurrent.month = 1
       newCurrent.day = 1

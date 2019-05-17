@@ -182,7 +182,7 @@ it('rolls over yearly with a byyearday rule', () => {
   startDate = {
     year: 2017,
     month: 2,
-    day: 10,
+    day: 12,
     hour: 0,
     minute: 0,
     second: 0
@@ -190,8 +190,8 @@ it('rolls over yearly with a byyearday rule', () => {
 
   options.dtstart = {
     year: 2017,
-    month: 1,
-    day: 2,
+    month: 2,
+    day: 10,
     hour: 0,
     minute: 0,
     second: 0

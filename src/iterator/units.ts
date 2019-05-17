@@ -71,7 +71,9 @@ export const smallestTickUnit = ({
   byminute,
   byhour,
   byday,
-  bymonth
+  bymonth,
+  bymonthday,
+  byyearday
 }: GroomedOptions): keyof DateTime => {
   if (freq === 'SECONDLY' || bysecond) {
     return 'second'
@@ -85,11 +87,13 @@ export const smallestTickUnit = ({
     return 'hour'
   }
 
-  if (freq === 'DAILY' || byday) {
-    return 'day'
-  }
-
-  if (freq === 'WEEKLY') {
+  if (
+    freq === 'DAILY' ||
+    freq === 'WEEKLY' ||
+    byday ||
+    byyearday ||
+    bymonthday
+  ) {
     return 'day'
   }
 
