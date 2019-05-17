@@ -1,6 +1,5 @@
 import { add } from '../DateTime/add'
 import { compare } from '../DateTime/compare'
-import { dayOfMonth } from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
 import { initializeFrom } from './initializeFrom'
@@ -54,20 +53,8 @@ const advanceFreq = (
     return advanceToNextWkst(current, options)
   }
 
-  if (
-    freq === 'YEARLY' &&
-    options.bymonthday &&
-    dayOfMonth(current) === options.bymonthday[options.bymonthday.length - 1]
-  ) {
-    unit = 'month'
-  }
-
-  if (freq === 'MONTHLY' && options.byday) {
-    unit = 'day'
-  }
-
-  const next = add(current, {
-    [unit]: interval || 1
+  let next = add(current, {
+    [unit]: 1
   })
 
   return initializeFrom(next, unit, options)
@@ -85,23 +72,31 @@ const minFreqUnit = (options: GroomedOptions) => {
   return FREQUENCY_COUNTER[options.freq]
 }
 
-const advanceFreqUnit = (current: DateTime, options: GroomedOptions) => {
+const advanceFreqUnit = (initial: DateTime, options: GroomedOptions) => {
   let unitIdx = FREQUENCY_ORDER.indexOf(minFreqUnit(options))
 
-  let next: DateTime = syncWithRule(current, options)
-  if (compare(next, current) !== 0) {
+  let next: DateTime = syncWithRule(initial, options)
+  if (compare(next, initial) !== 0) {
     return next
   }
 
   do {
     const unit = FREQUENCY_ORDER[unitIdx]
 
-    next = advanceFreq(current, unit, options)
+    next = advanceFreq(initial, unit, options)
     next = advanceByruleAtUnit(next, unit, options)
-
     next = syncWithRule(next, options)
     next = initializeFrom(next, unit, options)
-  } while (compare(next, current) === 0 && --unitIdx >= 0)
+
+    const freqSkipDistance =
+      next[FREQUENCY_COUNTER[options.freq]] -
+      initial[FREQUENCY_COUNTER[options.freq]]
+
+    console.log({ freqSkipDistance })
+    if (freqSkipDistance != options.interval) {
+      next = add(next, { [FREQUENCY_COUNTER[options.freq]]: freqSkipDistance })
+    }
+  } while (compare(next, initial) === 0 && --unitIdx >= 0)
 
   return next
 }

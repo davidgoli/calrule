@@ -4,7 +4,12 @@ import { set } from '../DateTime/set'
 import { GroomedOptions } from '../groomOptions'
 import { Weekday } from '../types'
 import { UnitRule } from './types'
-import { byRuleForUnit, FREQUENCY_ORDER, smallestTickUnit } from './units'
+import {
+  byRuleForUnit,
+  FREQUENCY_ORDER,
+  smallestTickUnit,
+  FREQUENCY_COUNTER
+} from './units'
 
 const initialValueForUnit = (
   unit: keyof DateTime,
@@ -28,13 +33,14 @@ const initialValueForUnit = (
 }
 
 export const initializeFrom = (
-  next: DateTime,
+  initial: DateTime,
   unit: keyof DateTime,
   options: GroomedOptions
 ) => {
   const unitIdx = FREQUENCY_ORDER.indexOf(unit)
   const smallestUnitIdx = FREQUENCY_ORDER.indexOf(smallestTickUnit(options))
 
+  let next = initial
   FREQUENCY_ORDER.slice(unitIdx + 1, smallestUnitIdx + 1).forEach(unit => {
     const value = initialValueForUnit(unit, byRuleForUnit(unit, options), next)
     next = set(next, unit, value)
