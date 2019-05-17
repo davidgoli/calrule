@@ -3,13 +3,15 @@ import { DateTime } from '../DateTime/index'
 import { set } from '../DateTime/set'
 import { GroomedOptions } from '../groomOptions'
 import { Weekday } from '../types'
+import { UnitRule } from './types'
 import { byRuleForUnit, FREQUENCY_ORDER, smallestTickUnit } from './units'
 
 const initialValueForUnit = (
   unit: keyof DateTime,
-  byrule: number[] | Weekday[] | undefined,
+  unitRule: UnitRule | undefined,
   newCurrent: DateTime
 ) => {
+  const byrule = unitRule ? unitRule.byrule : undefined
   if (unit === 'day' && byrule && typeof byrule[0] === 'string') {
     return firstWeekdayOfMonth(newCurrent, (byrule as Weekday[])[0])
   }

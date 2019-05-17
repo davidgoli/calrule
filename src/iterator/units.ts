@@ -1,6 +1,7 @@
 import { DateTime } from '../DateTime/index'
-import { GroomedOptions } from '../groomOptions'
+import { ByProperty, GroomedOptions } from '../groomOptions'
 import { Frequency } from '../types'
+import { UnitRule } from './types'
 
 export const FREQUENCY_COUNTER: { [k in Frequency]: keyof DateTime } = {
   YEARLY: 'year',
@@ -24,21 +25,44 @@ export const FREQUENCY_ORDER: (keyof DateTime)[] = [
 export const byRuleForUnit = (
   unit: keyof DateTime,
   options: GroomedOptions
-) => {
+): UnitRule | undefined => {
+  console.log('byRuleForUnit', unit)
   switch (unit) {
     case 'month':
-      return options.bymonth
-    case 'hour':
-      return options.byhour
+      return unitRule('bymonth', options.bymonth)
+
     case 'day':
-      return options.byyearday || options.bymonthday || options.byday
+      return (
+        unitRule('byyearday', options.byyearday) ||
+        unitRule('bymonthday', options.bymonthday) ||
+        unitRule('byday', options.byday)
+      )
+    case 'hour':
+      return unitRule('byhour', options.byhour)
     case 'minute':
-      return options.byminute
+      return unitRule('byminute', options.byminute)
     case 'second':
-      return options.bysecond
+      return unitRule('bysecond', options.bysecond)
     default:
       return undefined
   }
+}
+
+export const unitForByrule = (byruleUnit: ByProperty): keyof DateTime => {
+  const mappings: { [K in ByProperty]: keyof DateTime } = {
+    bysecond: 'second',
+    byminute: 'minute',
+    byhour: 'hour',
+    byday: 'day',
+    bymonth: 'month',
+    bymonthday: 'day',
+    byyearday: 'day'
+  }
+  return mappings[byruleUnit]
+}
+
+export const unitRule = <T>(unit: ByProperty, byrule: T[] | undefined) => {
+  return byrule ? { unit, byrule } : undefined
 }
 
 export const smallestTickUnit = ({

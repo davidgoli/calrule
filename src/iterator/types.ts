@@ -1,7 +1,7 @@
-import { DateTime } from '../DateTime/index'
+import { ByProperty } from '../groomOptions'
 import { Weekday } from '../types'
 
 export interface UnitRule {
-  unit: keyof DateTime
+  unit: ByProperty
   byrule: number[] | Weekday[] | undefined
 }

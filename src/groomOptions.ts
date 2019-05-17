@@ -19,10 +19,26 @@ export interface GroomedOptions {
   until?: DateTime
 }
 
-const byProperties: (keyof Pick<
-RuleOptions,
-'byhour' | 'byminute' | 'bysecond' | 'bymonthday' | 'bymonth' | 'byyearday'
->)[] = ['byhour', 'byminute', 'bysecond', 'bymonthday', 'bymonth', 'byyearday']
+export type ByProperty = keyof Pick<
+  RuleOptions,
+  | 'byhour'
+  | 'byminute'
+  | 'bysecond'
+  | 'byday'
+  | 'bymonthday'
+  | 'bymonth'
+  | 'byyearday'
+>
+
+const byProperties: ByProperty[] = [
+  'byhour',
+  'byminute',
+  'bysecond',
+  'byday',
+  'bymonthday',
+  'bymonth',
+  'byyearday'
+]
 
 const compareNumbers = <T>(a: T, b: T) =>
   ((a as unknown) as number) - ((b as unknown) as number)
@@ -66,12 +82,14 @@ export const groomOptions = (
     groomedOptions.count = options.count
   }
 
-  byProperties.forEach(unit => {
-    const normalized = normalizeByUnit(options[unit])
-    if (normalized) {
-      groomedOptions[unit] = normalized
-    }
-  })
+  byProperties
+    .filter(p => p !== 'byday')
+    .forEach(unit => {
+      const normalized = normalizeByUnit(options[unit] as number[])
+      if (normalized) {
+        groomedOptions[unit] = normalized
+      }
+    })
 
   const byday = normalizeByUnit(
     options.byday,

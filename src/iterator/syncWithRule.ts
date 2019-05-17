@@ -16,13 +16,9 @@ export const syncWithRule = (current: DateTime, options: GroomedOptions) => {
 
     let nextUnit: DateTime
     if (unit === 'day') {
-      nextUnit = nextByday(next, { unit, byrule }, false)
+      nextUnit = nextByday(next, byrule, false)
     } else {
-      nextUnit = nextByruleStep(
-        next,
-        { unit, byrule: byrule as number[] },
-        false
-      )
+      nextUnit = nextByruleStep(next, byrule, false)
     }
 
     if (compare(nextUnit, next) < 0) {

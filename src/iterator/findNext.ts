@@ -20,7 +20,7 @@ const advanceByruleAtUnit = (d: DateTime, unitRule: UnitRule) => {
     return d
   }
 
-  if (unit === 'day') {
+  if (unit === 'byday' || unit === 'byyearday' || unit === 'bymonthday') {
     return nextByday(d, unitRule)
   }
 
@@ -61,13 +61,13 @@ const advanceFreqUnit = (current: DateTime, options: GroomedOptions) => {
 
   do {
     const unit = FREQUENCY_ORDER[unitIdx]
-    const unitRule: UnitRule = {
-      unit,
-      byrule: byRuleForUnit(unit, options)
-    }
 
     next = advanceFreq(current, unit, options)
-    next = advanceByruleAtUnit(next, unitRule)
+
+    const unitRule = byRuleForUnit(unit, options)
+    if (unitRule) {
+      next = advanceByruleAtUnit(next, unitRule)
+    }
 
     next = syncWithRule(next, options)
     next = initializeFrom(next, unit, options)
@@ -90,10 +90,10 @@ export const findNext = (current: DateTime, options: GroomedOptions) => {
     }
 
     const unit = FREQUENCY_ORDER[unitIdx]
-    next = advanceByruleAtUnit(current, {
-      unit,
-      byrule: byRuleForUnit(unit, options)
-    })
+    const unitRule = byRuleForUnit(unit, options)
+    if (unitRule) {
+      next = advanceByruleAtUnit(current, unitRule)
+    }
   } while (compare(next, current) === 0 && --unitIdx >= 0)
 
   return next
