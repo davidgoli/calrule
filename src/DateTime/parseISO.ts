@@ -13,7 +13,7 @@ export const parseISO = (iso8601: string | undefined): DateTime | undefined => {
     return undefined
   }
 
-  const [_, year, month, day, hour, minute, second] = parsed
+  const [, year, month, day, hour, minute, second] = parsed
 
   return {
     year: parseInt(year, 10),

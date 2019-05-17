@@ -11,8 +11,8 @@
     "build": "npm run lint && tsc",
     "lint": "eslint --fix '**/*.ts'",
     "prettier": "prettier --write '**/*.ts'",
-    "test": "TS_NODE_PROJECT=tsconfig.test.json jest --watchAll",
-    "test-ci": "TS_NODE_PROJECT=tsconfig.test.json jest --coverage"
+    "test": "jest --watchAll",
+    "test-ci": "jest --coverage"
   },
   "author": "David Golightly",
   "license": "ISC",
@@ -39,6 +39,11 @@
   "dependencies": {},
   "jest": {
     "preset": "ts-jest",
-    "coverageDirectory": "./coverage/"
+    "coverageDirectory": "./coverage/",
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.test.json"
+      }
+    }
   }
 }
