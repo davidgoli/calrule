@@ -95,8 +95,6 @@ export const findNext = (current: DateTime, options: GroomedOptions) => {
 
     const unit = FREQUENCY_ORDER[unitIdx]
     next = advanceByruleAtUnit(current, unit, options)
-
-    console.log({ next })
   } while (compare(next, current) === 0 && --unitIdx >= 0)
 
   return next

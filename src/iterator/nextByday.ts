@@ -8,9 +8,7 @@ import {
   WEEKDAYS
 } from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
-import { set } from '../DateTime/set'
 import { Weekday } from '../types'
-import { nextByruleStep } from './nextByruleStep'
 import { UnitRule } from './types'
 
 const nextYearday = (current: DateTime, steps: number[], advance: boolean) => {
@@ -28,25 +26,16 @@ const nextYearday = (current: DateTime, steps: number[], advance: boolean) => {
   return current
 }
 
-const shouldTickFreqStepForBymonthday = (
-  current: DateTime,
-  { byrule }: UnitRule
-) => byrule && dayOfMonth(current) > byrule[byrule.length - 1]
-
-const nextMonthday = (next: DateTime, unitRule: UnitRule, advance: boolean) => {
-  next = nextByruleStep(next, unitRule, advance)
-
-  if (shouldTickFreqStepForBymonthday(next, unitRule)) {
-    next = add(next, {
-      month: 1
-    })
-
-    next = set(next, 'day', 1)
-
-    return nextByruleStep(next, unitRule, advance)
+const nextMonthday = (current: DateTime, steps: number[], advance = true) => {
+  const currentMonthday = dayOfMonth(current)
+  for (let i = 0; i < steps.length; i++) {
+    const daydiff = steps[i] - currentMonthday
+    if (advance ? daydiff > 0 : daydiff >= 0) {
+      return add(current, { day: daydiff })
+    }
   }
 
-  return next
+  return current
 }
 
 const nextDayStep = (current: DateTime, steps: Weekday[], advance = true) => {
@@ -90,7 +79,7 @@ export const nextByday = (
   }
 
   if (unit === 'bymonthday') {
-    return nextMonthday(next, { unit, byrule }, advance)
+    return nextMonthday(next, byrule as number[], advance)
   }
 
   return nextWeekday(next, byrule as Weekday[], advance)

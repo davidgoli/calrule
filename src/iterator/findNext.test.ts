@@ -210,7 +210,7 @@ it('rolls over yearly with a byyearday rule', () => {
   })
 })
 
-it.only('does not roll over yearly when it should not', () => {
+it('does not roll over yearly when it should not', () => {
   startDate = {
     year: 2017,
     month: 1,
