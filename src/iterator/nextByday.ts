@@ -16,14 +16,12 @@ import { UnitRule } from './types'
 const nextYearday = (current: DateTime, steps: number[], advance: boolean) => {
   const currentDayOfYear = dayOfYear(current)
 
-  console.log({ currentDayOfYear })
   for (let i = 0; i < steps.length; i++) {
     if (advance ? currentDayOfYear < steps[i] : currentDayOfYear <= steps[i]) {
-      console.log({ step: steps[i] })
       const newCurrent = copy(current)
       newCurrent.month = 1
       newCurrent.day = 1
-      return add(newCurrent, { day: steps[i] })
+      return add(newCurrent, { day: steps[i] - 1 })
     }
   }
 
@@ -43,7 +41,7 @@ const nextMonthday = (next: DateTime, unitRule: UnitRule, advance: boolean) => {
       month: 1
     })
 
-    next = set(next, 'day', 0)
+    next = set(next, 'day', 1)
 
     return nextByruleStep(next, unitRule, advance)
   }
@@ -87,7 +85,6 @@ export const nextByday = (
   { unit, byrule }: UnitRule,
   advance = true
 ) => {
-  console.log('nextByday', unit, byrule)
   if (unit === 'byyearday') {
     return nextYearday(next, byrule as number[], advance)
   }

@@ -26,7 +26,6 @@ export const byRuleForUnit = (
   unit: keyof DateTime,
   options: GroomedOptions
 ): UnitRule | undefined => {
-  console.log('byRuleForUnit', unit)
   switch (unit) {
     case 'month':
       return unitRule('bymonth', options.bymonth)

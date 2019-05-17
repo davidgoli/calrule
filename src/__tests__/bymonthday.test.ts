@@ -36,7 +36,7 @@ describe('FREQ=MONTHLY', () => {
     ])
   })
 
-  it('does not return invalid month days', () => {
+  it.only('does not return invalid month days', () => {
     const result = rrule({
       dtstart: '2017-01-01',
       freq: 'MONTHLY',

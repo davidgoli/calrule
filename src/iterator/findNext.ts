@@ -6,7 +6,6 @@ import { initializeFrom } from './initializeFrom'
 import { nextByday } from './nextByday'
 import { nextByruleStep } from './nextByruleStep'
 import { syncWithRule } from './syncWithRule'
-import { UnitRule } from './types'
 import {
   byRuleForUnit,
   FREQUENCY_COUNTER,
@@ -14,7 +13,16 @@ import {
   smallestTickUnit
 } from './units'
 
-const advanceByruleAtUnit = (d: DateTime, unitRule: UnitRule) => {
+const advanceByruleAtUnit = (
+  d: DateTime,
+  dtunit: keyof DateTime,
+  options: GroomedOptions
+) => {
+  const unitRule = byRuleForUnit(dtunit, options)
+  if (!unitRule) {
+    return d
+  }
+
   const { unit, byrule } = unitRule
   if (!(byrule && byrule.length)) {
     return d
@@ -24,7 +32,7 @@ const advanceByruleAtUnit = (d: DateTime, unitRule: UnitRule) => {
     return nextByday(d, unitRule)
   }
 
-  return nextByruleStep(d, { unit, byrule: byrule as number[] })
+  return nextByruleStep(d, unitRule)
 }
 
 const advanceToNextWkst = (d: DateTime, options: GroomedOptions) => {
@@ -63,11 +71,7 @@ const advanceFreqUnit = (current: DateTime, options: GroomedOptions) => {
     const unit = FREQUENCY_ORDER[unitIdx]
 
     next = advanceFreq(current, unit, options)
-
-    const unitRule = byRuleForUnit(unit, options)
-    if (unitRule) {
-      next = advanceByruleAtUnit(next, unitRule)
-    }
+    next = advanceByruleAtUnit(next, unit, options)
 
     next = syncWithRule(next, options)
     next = initializeFrom(next, unit, options)
@@ -90,10 +94,9 @@ export const findNext = (current: DateTime, options: GroomedOptions) => {
     }
 
     const unit = FREQUENCY_ORDER[unitIdx]
-    const unitRule = byRuleForUnit(unit, options)
-    if (unitRule) {
-      next = advanceByruleAtUnit(current, unitRule)
-    }
+    next = advanceByruleAtUnit(current, unit, options)
+
+    console.log({ next })
   } while (compare(next, current) === 0 && --unitIdx >= 0)
 
   return next
