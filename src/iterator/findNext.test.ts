@@ -231,7 +231,7 @@ it('does not roll over yearly on byyearday when it should not', () => {
   expect(toISO(nextResult)).toEqual('2017-02-10T00:00:00')
 })
 
-it.only('does not roll over yearly on bymonthday when it should not', () => {
+it('does not roll over yearly on bymonthday when it should not', () => {
   startDate = {
     year: 2017,
     month: 1,
@@ -252,7 +252,7 @@ it.only('does not roll over yearly on bymonthday when it should not', () => {
   expect(toISO(nextResult)).toEqual('2017-02-02T00:00:00')
 })
 
-it.only('does not roll over monthly on byday when it should not', () => {
+it.skip('does not roll over monthly on byday when it should not', () => {
   startDate = {
     year: 2017,
     month: 1,

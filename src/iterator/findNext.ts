@@ -50,7 +50,6 @@ const advanceFreq = (
   options: GroomedOptions
 ) => {
   const atEnd = compare(advanceByruleAtUnit(current, unit, options), current)
-  console.log({ atEnd })
 
   let { freq, interval } = options
   if (freq === 'WEEKLY') {
@@ -76,8 +75,20 @@ const advanceFreq = (
   return initializeFrom(next, unit, options)
 }
 
+const minFreqUnit = (options: GroomedOptions) => {
+  if (options.freq === 'MONTHLY' && options.byday) {
+    return 'day'
+  }
+
+  if (options.freq === 'YEARLY' && options.bymonthday) {
+    return 'month'
+  }
+
+  return FREQUENCY_COUNTER[options.freq]
+}
+
 const advanceFreqUnit = (current: DateTime, options: GroomedOptions) => {
-  let unitIdx = FREQUENCY_ORDER.indexOf(FREQUENCY_COUNTER[options.freq])
+  let unitIdx = FREQUENCY_ORDER.indexOf(minFreqUnit(options))
 
   let next: DateTime = syncWithRule(current, options)
   if (compare(next, current) !== 0) {
