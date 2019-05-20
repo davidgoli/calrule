@@ -95,9 +95,13 @@ const nextByruleStep = (
 
 export const nextByrule = (
   d: DateTime,
-  unitRule: UnitRule,
+  unitRule: UnitRule | undefined,
   advance: boolean
 ) => {
+  if (!unitRule) {
+    return d
+  }
+
   const { unit, byrule } = unitRule
   switch (unit) {
     case 'byyearday':

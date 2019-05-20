@@ -31,14 +31,7 @@ const advanceByruleAtUnit = (
   d: DateTime,
   dtunit: keyof DateTime,
   options: GroomedOptions
-) => {
-  const unitRule = byRuleForUnit(dtunit, options)
-  if (!unitRule) {
-    return d
-  }
-
-  return nextByrule(d, unitRule, true)
-}
+) => nextByrule(d, byRuleForUnit(dtunit, options), true)
 
 const advanceToNextWkst = (d: DateTime, options: GroomedOptions) => {
   if (options.byday) {
@@ -56,14 +49,6 @@ const advanceFreq = (
   let { freq, interval } = options
   if (freq === 'WEEKLY') {
     return advanceToNextWkst(initial, options)
-  }
-
-  if (freq === 'MONTHLY' && options.byday) {
-    unit = 'day'
-  }
-
-  if (freq === 'YEARLY' && options.bymonthday) {
-    unit = 'month'
   }
 
   const next = add(initial, {
@@ -120,6 +105,7 @@ export const findNext = (initial: DateTime, options: GroomedOptions) => {
 
     const unit = FREQUENCY_ORDER[unitIdx]
     next = advanceByruleAtUnit(initial, unit, options)
+    next = syncWithRule(next, options)
   } while (compare(next, initial) === 0 && --unitIdx >= 0)
 
   return next
