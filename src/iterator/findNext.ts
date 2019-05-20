@@ -49,13 +49,13 @@ const advanceToNextWkst = (d: DateTime, options: GroomedOptions) => {
 }
 
 const advanceFreq = (
-  current: DateTime,
+  initial: DateTime,
   unit: keyof DateTime,
   options: GroomedOptions
 ) => {
   let { freq, interval } = options
   if (freq === 'WEEKLY') {
-    return advanceToNextWkst(current, options)
+    return advanceToNextWkst(initial, options)
   }
 
   if (freq === 'MONTHLY' && options.byday) {
@@ -66,7 +66,7 @@ const advanceFreq = (
     unit = 'month'
   }
 
-  const next = add(current, {
+  const next = add(initial, {
     [unit]: interval || 1
   })
 
@@ -85,42 +85,42 @@ const minFreqUnit = (options: GroomedOptions) => {
   return FREQUENCY_COUNTER[options.freq]
 }
 
-const advanceFreqUnit = (current: DateTime, options: GroomedOptions) => {
+const advanceFreqUnit = (initial: DateTime, options: GroomedOptions) => {
   let unitIdx = FREQUENCY_ORDER.indexOf(minFreqUnit(options))
 
-  let next: DateTime = syncWithRule(current, options)
-  if (compare(next, current) !== 0) {
+  let next: DateTime = syncWithRule(initial, options)
+  if (compare(next, initial) !== 0) {
     return next
   }
 
   do {
     const unit = FREQUENCY_ORDER[unitIdx]
 
-    next = advanceFreq(current, unit, options)
+    next = advanceFreq(initial, unit, options)
     next = advanceByruleAtUnit(next, unit, options)
 
     next = syncWithRule(next, options)
-  } while (compare(next, current) === 0 && --unitIdx >= 0)
+  } while (compare(next, initial) === 0 && --unitIdx >= 0)
 
   return next
 }
 
-export const findNext = (current: DateTime, options: GroomedOptions) => {
+export const findNext = (initial: DateTime, options: GroomedOptions) => {
   const freqIdx = FREQUENCY_ORDER.indexOf(FREQUENCY_COUNTER[options.freq])
 
   let unitIdx = FREQUENCY_ORDER.indexOf(smallestTickUnit(options))
 
-  let next: DateTime = current
+  let next: DateTime = initial
 
   do {
     if (unitIdx === freqIdx) {
-      next = advanceFreqUnit(current, options)
+      next = advanceFreqUnit(initial, options)
       continue
     }
 
     const unit = FREQUENCY_ORDER[unitIdx]
-    next = advanceByruleAtUnit(current, unit, options)
-  } while (compare(next, current) === 0 && --unitIdx >= 0)
+    next = advanceByruleAtUnit(initial, unit, options)
+  } while (compare(next, initial) === 0 && --unitIdx >= 0)
 
   return next
 }

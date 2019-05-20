@@ -11,8 +11,8 @@ import {
   smallestTickUnit
 } from './units'
 
-export const syncWithRule = (current: DateTime, options: GroomedOptions) => {
-  let next = current
+export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
+  let next = initial
   FREQUENCY_ORDER.forEach(unit => {
     const byrule = byRuleForUnit(unit, options)
     if (!byrule) {

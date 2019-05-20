@@ -13,49 +13,49 @@ import { Weekday } from '../types'
 import { UnitRule } from './types'
 import { unitForByrule } from './units'
 
-const nextYearday = (current: DateTime, steps: number[], advance: boolean) => {
-  const currentDayOfYear = dayOfYear(current)
+const nextYearday = (initial: DateTime, steps: number[], advance: boolean) => {
+  const currentDayOfYear = dayOfYear(initial)
 
   for (let i = 0; i < steps.length; i++) {
     if (advance ? currentDayOfYear < steps[i] : currentDayOfYear <= steps[i]) {
-      const newCurrent = copy(current)
+      const newCurrent = copy(initial)
       newCurrent.month = 1
       newCurrent.day = 1
       return add(newCurrent, { day: steps[i] - 1 })
     }
   }
 
-  return current
+  return initial
 }
 
-const nextMonthday = (current: DateTime, steps: number[], advance = true) => {
-  const currentMonthday = dayOfMonth(current)
+const nextMonthday = (initial: DateTime, steps: number[], advance = true) => {
+  const currentMonthday = dayOfMonth(initial)
   for (let i = 0; i < steps.length; i++) {
     const daydiff = steps[i] - currentMonthday
     console.log({ daydiff })
     if (advance ? daydiff > 0 : daydiff >= 0) {
-      return add(current, { day: daydiff })
+      return add(initial, { day: daydiff })
     }
   }
 
-  return current
+  return initial
 }
 
-const nextDayStep = (current: DateTime, steps: Weekday[], advance = true) => {
-  const currentDayOfWeekIdx = dayOrdinalOfWeek(current)
+const nextDayStep = (initial: DateTime, steps: Weekday[], advance = true) => {
+  const currentDayOfWeekIdx = dayOrdinalOfWeek(initial)
 
   for (let i = 0; i < steps.length; i++) {
     const daydiff = WEEKDAYS.indexOf(steps[i]) - currentDayOfWeekIdx
     if (advance ? daydiff > 0 : daydiff >= 0) {
-      return add(current, { day: daydiff })
+      return add(initial, { day: daydiff })
     }
   }
 
-  return current
+  return initial
 }
 
-const shouldTickFreqStepForByday = (current: DateTime, steps: Weekday[]) => {
-  const currentDayOfWeekIdx = dayOrdinalOfWeek(current)
+const shouldTickFreqStepForByday = (initial: DateTime, steps: Weekday[]) => {
+  const currentDayOfWeekIdx = dayOrdinalOfWeek(initial)
   return WEEKDAYS.indexOf(steps[steps.length - 1]) - currentDayOfWeekIdx < 0
 }
 
@@ -73,24 +73,24 @@ const nextWeekday = (next: DateTime, byrule: Weekday[], advance: boolean) => {
 }
 
 const nextByruleStep = (
-  current: DateTime,
+  initial: DateTime,
   unitRule: UnitRule,
   advance = true
 ) => {
   const { byrule } = unitRule
   if (!byrule) {
-    return current
+    return initial
   }
   const steps = byrule as number[]
   const unit = unitForByrule(unitRule.unit)
 
   for (let i = 0; i < steps.length; i++) {
-    if (advance ? current[unit] < steps[i] : current[unit] <= steps[i]) {
-      return set(current, unit, steps[i])
+    if (advance ? initial[unit] < steps[i] : initial[unit] <= steps[i]) {
+      return set(initial, unit, steps[i])
     }
   }
 
-  return set(current, unit, steps[steps.length - 1])
+  return set(initial, unit, steps[steps.length - 1])
 }
 
 export const nextByrule = (
