@@ -4,7 +4,12 @@ import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
 import { initializeFrom } from './initializeFrom'
 import { nextByrule } from './nextByruleStep'
-import { byRuleForUnit, FREQUENCY_COUNTER, FREQUENCY_ORDER } from './units'
+import {
+  byRuleForUnit,
+  FREQUENCY_COUNTER,
+  FREQUENCY_ORDER,
+  minFreqUnit
+} from './units'
 
 export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
   let next = initial
@@ -22,6 +27,7 @@ export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
       const biggerUnit = FREQUENCY_ORDER[FREQUENCY_ORDER.indexOf(unit) - 1]
       const interval =
         biggerUnit === FREQUENCY_COUNTER[options.freq] ? options.interval : 1
+
       nextUnit = syncWithRule(
         add(nextUnit, { [biggerUnit]: interval }),
         options
@@ -39,15 +45,15 @@ const syncWithFreqInterval = (
   after: DateTime,
   options: GroomedOptions
 ) => {
-  const { freq, interval } = options
-  const freqDiff =
-    after[FREQUENCY_COUNTER[freq]] - before[FREQUENCY_COUNTER[freq]]
+  const { interval } = options
+  const freqUnit = minFreqUnit(options)
+  const freqDiff = after[freqUnit] - before[freqUnit]
 
   if (freqDiff <= 0 || freqDiff === interval) {
     return after
   }
 
-  let adjusted = add(before, { [FREQUENCY_COUNTER[freq]]: interval })
+  let adjusted = add(before, { [freqUnit]: interval })
 
-  return initializeFrom(adjusted, FREQUENCY_COUNTER[freq], options)
+  return initializeFrom(adjusted, freqUnit, options)
 }

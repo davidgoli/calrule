@@ -102,3 +102,15 @@ export const smallestTickUnit = ({
 
   return 'year'
 }
+
+export const minFreqUnit = (options: GroomedOptions) => {
+  if (options.freq === 'MONTHLY' && options.byday) {
+    return 'day'
+  }
+
+  if (options.freq === 'YEARLY' && options.bymonthday) {
+    return 'month'
+  }
+
+  return FREQUENCY_COUNTER[options.freq]
+}

@@ -9,6 +9,7 @@ import {
   byRuleForUnit,
   FREQUENCY_COUNTER,
   FREQUENCY_ORDER,
+  minFreqUnit,
   smallestTickUnit
 } from './units'
 
@@ -58,18 +59,6 @@ const advanceFreq = (
   return initializeFrom(next, unit, options)
 }
 
-const minFreqUnit = (options: GroomedOptions) => {
-  if (options.freq === 'MONTHLY' && options.byday) {
-    return 'day'
-  }
-
-  if (options.freq === 'YEARLY' && options.bymonthday) {
-    return 'month'
-  }
-
-  return FREQUENCY_COUNTER[options.freq]
-}
-
 const advanceFreqUnit = (initial: DateTime, options: GroomedOptions) => {
   let unitIdx = FREQUENCY_ORDER.indexOf(minFreqUnit(options))
 
@@ -82,8 +71,8 @@ const advanceFreqUnit = (initial: DateTime, options: GroomedOptions) => {
     const unit = FREQUENCY_ORDER[unitIdx]
 
     next = advanceFreq(initial, unit, options)
-    next = advanceByruleAtUnit(next, unit, options)
 
+    next = advanceByruleAtUnit(next, unit, options)
     next = syncWithRule(next, options)
   } while (compare(next, initial) === 0 && --unitIdx >= 0)
 
