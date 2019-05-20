@@ -1,6 +1,5 @@
 import { add } from '../DateTime/add'
 import { compare } from '../DateTime/compare'
-import { dayOfMonth } from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
 import { initializeFrom } from './initializeFrom'
@@ -13,6 +12,21 @@ import {
   smallestTickUnit
 } from './units'
 
+// advance:
+// 1. Find smallest unit based on byX + freq
+// 2a. if unit == freq: increment by interval
+// 2b. else: increment by 1
+// 3. sync with rule options
+
+// sync:
+// 1. for each second, minute, hour, day, month, year starting from smallest unit:
+//   a. if it is < byX:
+//     i. increase to byX
+//     ii. done
+//   b. else:
+//     i. set to byX[0]
+//     ii. move to the next bigger unit
+
 const advanceByruleAtUnit = (
   d: DateTime,
   dtunit: keyof DateTime,
@@ -23,7 +37,7 @@ const advanceByruleAtUnit = (
     return d
   }
 
-  return nextByrule(d, unitRule)
+  return nextByrule(d, unitRule, true)
 }
 
 const advanceToNextWkst = (d: DateTime, options: GroomedOptions) => {
@@ -44,16 +58,12 @@ const advanceFreq = (
     return advanceToNextWkst(current, options)
   }
 
-  if (
-    freq === 'YEARLY' &&
-    options.bymonthday &&
-    dayOfMonth(current) === options.bymonthday[options.bymonthday.length - 1]
-  ) {
-    unit = 'month'
-  }
-
   if (freq === 'MONTHLY' && options.byday) {
     unit = 'day'
+  }
+
+  if (freq === 'YEARLY' && options.bymonthday) {
+    unit = 'month'
   }
 
   const next = add(current, {
@@ -85,7 +95,6 @@ const advanceFreqUnit = (current: DateTime, options: GroomedOptions) => {
 
   do {
     const unit = FREQUENCY_ORDER[unitIdx]
-    next = add(next, { [unit]: 1 })
 
     next = advanceFreq(current, unit, options)
     next = advanceByruleAtUnit(next, unit, options)
