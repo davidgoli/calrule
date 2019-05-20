@@ -30,6 +30,7 @@ const nextMonthday = (current: DateTime, steps: number[], advance = true) => {
   const currentMonthday = dayOfMonth(current)
   for (let i = 0; i < steps.length; i++) {
     const daydiff = steps[i] - currentMonthday
+    console.log({ daydiff })
     if (advance ? daydiff > 0 : daydiff >= 0) {
       return add(current, { day: daydiff })
     }

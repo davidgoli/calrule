@@ -1,6 +1,8 @@
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
 import { syncWithRule } from './syncWithRule'
+import { parseISO } from '../DateTime/parseISO'
+import { toISO } from '../DateTime/toISO'
 
 it('moves each unit forward to its equivalent matching the rule', () => {
   const current: DateTime = {
@@ -132,4 +134,39 @@ it('does not move forwards unnecessarily', () => {
     minute: 0,
     second: 0
   })
+})
+
+it('rolls over intervals correctly', () => {
+  const options: GroomedOptions = {
+    dtstart: {
+      year: 2016,
+      month: 2 as 2,
+      day: 1,
+      hour: 0,
+      minute: 0,
+      second: 0
+    },
+    byday: ['WE'],
+    freq: 'MONTHLY',
+    interval: 2
+  }
+
+  const startDate = parseISO('2017-01-26T00:00:00')!
+
+  const result = syncWithRule(startDate, options)
+  expect(toISO(result)).toEqual('2017-03-01T00:00:00')
+})
+
+it('rolls over byday correctly', () => {
+  const startDate = parseISO('2017-01-12T00:00:00')!
+  const options: GroomedOptions = {
+    dtstart: parseISO('2017-01-01')!,
+    freq: 'YEARLY',
+    interval: 1,
+    count: 5,
+    bymonthday: [2, 11]
+  }
+
+  const result = syncWithRule(startDate, options)
+  expect(toISO(result)).toEqual('2017-02-02T00:00:00')
 })

@@ -2,6 +2,7 @@ import { DateTime } from '../DateTime/index'
 import { toISO } from '../DateTime/toISO'
 import { GroomedOptions } from '../groomOptions'
 import { findNext } from './findNext'
+import { parseISO } from '../DateTime/parseISO'
 
 let options: GroomedOptions
 let startDate: DateTime
@@ -252,7 +253,7 @@ it('does not roll over yearly on bymonthday when it should not', () => {
   expect(toISO(nextResult)).toEqual('2017-02-02T00:00:00')
 })
 
-it.skip('does not roll over monthly on byday when it should not', () => {
+it('does not roll over monthly on byday when it should not', () => {
   startDate = {
     year: 2017,
     month: 1,
@@ -277,7 +278,15 @@ it.skip('does not roll over monthly on byday when it should not', () => {
 
   result = findNext(result, options)
   expect(toISO(result)).toEqual('2017-01-25T00:00:00')
+})
 
-  result = findNext(result, options)
-  expect(toISO(result)).toEqual('2017-03-02T00:00:00')
+it('rolls over intervals correctly', () => {
+  startDate = parseISO('2017-01-25T00:00:00')!
+
+  options.freq = 'MONTHLY'
+  options.byday = ['WE']
+  options.interval = 2
+
+  const result = findNext(startDate, options)
+  expect(toISO(result)).toEqual('2017-03-01T00:00:00')
 })

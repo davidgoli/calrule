@@ -95,12 +95,12 @@ const advanceFreqUnit = (current: DateTime, options: GroomedOptions) => {
 
   do {
     const unit = FREQUENCY_ORDER[unitIdx]
+    next = add(next, { [unit]: 1 })
 
     next = advanceFreq(current, unit, options)
     next = advanceByruleAtUnit(next, unit, options)
 
     next = syncWithRule(next, options)
-    next = initializeFrom(next, unit, options)
   } while (compare(next, current) === 0 && --unitIdx >= 0)
 
   return next
