@@ -4,8 +4,7 @@ import { dayOfMonth } from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
 import { initializeFrom } from './initializeFrom'
-import { nextByday } from './nextByday'
-import { nextByruleStep } from './nextByruleStep'
+import { nextByrule } from './nextByruleStep'
 import { syncWithRule } from './syncWithRule'
 import {
   byRuleForUnit,
@@ -24,16 +23,7 @@ const advanceByruleAtUnit = (
     return d
   }
 
-  const { unit, byrule } = unitRule
-  if (!(byrule && byrule.length)) {
-    return d
-  }
-
-  if (unit === 'byday' || unit === 'byyearday' || unit === 'bymonthday') {
-    return nextByday(d, unitRule)
-  }
-
-  return nextByruleStep(d, unitRule)
+  return nextByrule(d, unitRule)
 }
 
 const advanceToNextWkst = (d: DateTime, options: GroomedOptions) => {
