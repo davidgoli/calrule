@@ -11,7 +11,13 @@ export const advanceByruleAtUnit = (
   d: DateTime,
   dtunit: keyof DateTime,
   options: GroomedOptions
-) => nextByrule(d, byRuleForUnit(dtunit, options), true)
+) => {
+  const unitRule = byRuleForUnit(dtunit, options)
+  if (unitRule && unitRule.unit !== 'byday') {
+    d = add(d, { [dtunit]: 1 })
+  }
+  return nextByrule(d, unitRule)
+}
 
 const advanceToNextWkst = (d: DateTime, options: GroomedOptions) => {
   if (options.byday) {

@@ -79,11 +79,7 @@ const nextByruleStep = (initial: DateTime, unitRule: UnitRule) => {
   return set(initial, unit, steps[steps.length - 1])
 }
 
-export const nextByrule = (
-  d: DateTime,
-  unitRule: UnitRule | undefined,
-  advance: boolean
-) => {
+export const nextByrule = (d: DateTime, unitRule: UnitRule | undefined) => {
   if (!unitRule) {
     return d
   }
@@ -92,30 +88,15 @@ export const nextByrule = (
 
   switch (unit) {
     case 'byyearday':
-      if (advance) {
-        d = advanceUnit(d, unitRule)
-      }
-
       return nextYearday(d, byrule as number[])
 
     case 'bymonthday':
-      if (advance) {
-        d = advanceUnit(d, unitRule)
-      }
-
       return nextMonthday(d, byrule as number[])
 
     case 'byday':
       return nextWeekday(d, byrule as Weekday[])
 
     default:
-      if (advance) {
-        d = advanceUnit(d, unitRule)
-      }
-
       return nextByruleStep(d, unitRule)
   }
 }
-
-const advanceUnit = (d: DateTime, unitRule: UnitRule) =>
-  add(d, { [unitForByrule(unitRule.unit)]: 1 })

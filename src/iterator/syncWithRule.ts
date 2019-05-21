@@ -19,7 +19,7 @@ export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
       return
     }
 
-    let nextUnit: DateTime = nextByrule(next, byrule, false)
+    let nextUnit: DateTime = nextByrule(next, byrule)
 
     nextUnit = syncWithFreqInterval(nextUnit, nextUnit, options)
 
