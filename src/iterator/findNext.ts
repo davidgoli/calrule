@@ -30,15 +30,17 @@ export const findNext = (initial: DateTime, options: GroomedOptions) => {
   let next: DateTime = initial
 
   do {
+    const unit = FREQUENCY_ORDER[unitIdx]
+    console.log({ unit, initial })
     if (unitIdx === freqIdx) {
       next = advanceFreqUnit(initial, options)
       continue
     }
 
-    const unit = FREQUENCY_ORDER[unitIdx]
     next = advanceByruleAtUnit(initial, unit, options)
     next = syncWithRule(next, options)
-  } while (compare(initial, next) <= 0 && --unitIdx >= 0)
+    console.log({ initial, next })
+  } while (compare(initial, next) >= 0 && --unitIdx >= 0)
 
   return next
 }

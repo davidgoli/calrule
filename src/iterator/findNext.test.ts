@@ -55,7 +55,7 @@ it('rolls over the date time to the next threshold', () => {
   })
 })
 
-it.only('rolls over the date time to the next byrule if present', () => {
+it('rolls over the date time to the next byrule if present', () => {
   startDate = parseISO('2017-03-02T02:59:59')!
 
   options.byhour = [2]

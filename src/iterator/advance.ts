@@ -48,18 +48,21 @@ export const advanceFreqUnit = (initial: DateTime, options: GroomedOptions) => {
   let unitIdx = FREQUENCY_ORDER.indexOf(minFreqUnit(options))
 
   let next: DateTime = syncWithRule(initial, options)
-  if (compare(next, initial) !== 0) {
+  if (compare(initial, next) > 0) {
     return next
   }
 
   do {
     const unit = FREQUENCY_ORDER[unitIdx]
 
+    console.log({ unit })
     next = advanceFreq(initial, unit, options)
+    console.log({ next })
 
     next = advanceByruleAtUnit(next, unit, options)
     next = syncWithRule(next, options)
-  } while (compare(initial, next) <= 0 && --unitIdx >= 0)
+    console.log({ initial, next, compare: compare(initial, next) })
+  } while (compare(initial, next) >= 0 && --unitIdx >= 0)
 
   return next
 }
