@@ -1,8 +1,8 @@
 import { DateTime } from '../DateTime/index'
-import { GroomedOptions } from '../groomOptions'
-import { syncWithRule } from './syncWithRule'
 import { parseISO } from '../DateTime/parseISO'
 import { toISO } from '../DateTime/toISO'
+import { GroomedOptions } from '../groomOptions'
+import { syncWithRule } from './syncWithRule'
 
 it('moves each unit forward to its equivalent matching the rule', () => {
   const current: DateTime = {
@@ -68,40 +68,6 @@ it("doesn't go too far", () => {
   })
 })
 
-it('does not go backwards', () => {
-  const options: GroomedOptions = {
-    dtstart: {
-      year: 2016,
-      month: 2 as 2,
-      day: 1,
-      hour: 0,
-      minute: 0,
-      second: 0
-    },
-    freq: 'SECONDLY',
-    interval: 1,
-    byhour: [2]
-  }
-
-  const date: DateTime = {
-    year: 2017,
-    month: 3,
-    day: 2,
-    hour: 3,
-    minute: 0,
-    second: 0
-  }
-
-  expect(syncWithRule(date, options)).toEqual({
-    year: 2017,
-    month: 3 as 3,
-    day: 3,
-    hour: 2,
-    minute: 0,
-    second: 0
-  })
-})
-
 it('does not move forwards unnecessarily', () => {
   const options: GroomedOptions = {
     dtstart: {
@@ -136,37 +102,15 @@ it('does not move forwards unnecessarily', () => {
   })
 })
 
-it('rolls over intervals correctly', () => {
-  const options: GroomedOptions = {
-    dtstart: {
-      year: 2016,
-      month: 2 as 2,
-      day: 1,
-      hour: 0,
-      minute: 0,
-      second: 0
-    },
-    byday: ['WE'],
-    freq: 'MONTHLY',
-    interval: 2
-  }
-
-  const startDate = parseISO('2017-01-26T00:00:00')!
-
-  const result = syncWithRule(startDate, options)
-  expect(toISO(result)).toEqual('2017-03-01T00:00:00')
-})
-
-it('rolls over byday correctly', () => {
-  const startDate = parseISO('2017-01-12T00:00:00')!
+it('rolls back byyearday', () => {
+  const startDate = parseISO('2017-02-12T00:00:00')!
   const options: GroomedOptions = {
     dtstart: parseISO('2017-01-01')!,
     freq: 'YEARLY',
     interval: 1,
-    count: 5,
-    bymonthday: [2, 11]
+    byyearday: [2, 11]
   }
 
   const result = syncWithRule(startDate, options)
-  expect(toISO(result)).toEqual('2017-02-02T00:00:00')
+  expect(toISO(result)).toEqual('2017-01-11T00:00:00')
 })

@@ -59,7 +59,7 @@ export const advanceFreqUnit = (initial: DateTime, options: GroomedOptions) => {
 
     next = advanceByruleAtUnit(next, unit, options)
     next = syncWithRule(next, options)
-  } while (compare(next, initial) === 0 && --unitIdx >= 0)
+  } while (compare(initial, next) <= 0 && --unitIdx >= 0)
 
   return next
 }

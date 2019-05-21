@@ -123,6 +123,15 @@ describe('BYYEARDAY', () => {
 
     expect(toISO(result)).toEqual('1980-02-09T00:00:00')
   })
+
+  it('clamps the date back to the last if it is ahead', () => {
+    const result = syncByrule(parseISO('2017-02-12')!, {
+      unit: 'byyearday',
+      byrule: [2, 11]
+    })
+
+    expect(toISO(result)).toEqual('2017-01-11T00:00:00')
+  })
 })
 
 describe('BYMONTHDAY', () => {

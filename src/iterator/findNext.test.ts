@@ -1,8 +1,8 @@
 import { DateTime } from '../DateTime/index'
+import { parseISO } from '../DateTime/parseISO'
 import { toISO } from '../DateTime/toISO'
 import { GroomedOptions } from '../groomOptions'
 import { findNext } from './findNext'
-import { parseISO } from '../DateTime/parseISO'
 
 let options: GroomedOptions
 let startDate: DateTime
@@ -55,19 +55,12 @@ it('rolls over the date time to the next threshold', () => {
   })
 })
 
-it('rolls over the date time to the next byrule if present', () => {
-  startDate.second = 59
-  startDate.hour = 2
+it.only('rolls over the date time to the next byrule if present', () => {
+  startDate = parseISO('2017-03-02T02:59:59')!
+
   options.byhour = [2]
 
-  expect(findNext(startDate, options)).toEqual({
-    year: 2017,
-    month: 3 as 3,
-    day: 3,
-    hour: 2,
-    minute: 0,
-    second: 0
-  })
+  expect(toISO(findNext(startDate, options))).toEqual('2017-03-03T02:00:00')
 })
 
 it('rolls over the date time to the next smaller byrule if present', () => {

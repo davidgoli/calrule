@@ -38,7 +38,7 @@ export const findNext = (initial: DateTime, options: GroomedOptions) => {
     const unit = FREQUENCY_ORDER[unitIdx]
     next = advanceByruleAtUnit(initial, unit, options)
     next = syncWithRule(next, options)
-  } while (compare(next, initial) === 0 && --unitIdx >= 0)
+  } while (compare(initial, next) <= 0 && --unitIdx >= 0)
 
   return next
 }
