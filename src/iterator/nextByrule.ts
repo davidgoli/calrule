@@ -19,11 +19,11 @@ const setYearday = (initial: DateTime, value: number) => {
   return add(next, { day: value - 1 })
 }
 
-const nextYearday = (initial: DateTime, steps: number[], advance: boolean) => {
+const nextYearday = (initial: DateTime, steps: number[]) => {
   const currentDayOfYear = dayOfYear(initial)
 
   for (let i = 0; i < steps.length; i++) {
-    if (advance ? currentDayOfYear < steps[i] : currentDayOfYear <= steps[i]) {
+    if (currentDayOfYear <= steps[i]) {
       return setYearday(initial, steps[i])
     }
   }
@@ -31,11 +31,11 @@ const nextYearday = (initial: DateTime, steps: number[], advance: boolean) => {
   return setYearday(initial, steps[steps.length - 1])
 }
 
-const nextMonthday = (initial: DateTime, steps: number[], advance = true) => {
+const nextMonthday = (initial: DateTime, steps: number[]) => {
   const currentMonthday = dayOfMonth(initial)
   for (let i = 0; i < steps.length; i++) {
     const daydiff = steps[i] - currentMonthday
-    if (advance ? daydiff > 0 : daydiff >= 0) {
+    if (daydiff >= 0) {
       return add(initial, { day: daydiff })
     }
   }
@@ -92,18 +92,30 @@ export const nextByrule = (
 
   switch (unit) {
     case 'byyearday':
-      return nextYearday(d, byrule as number[], advance)
+      if (advance) {
+        d = advanceUnit(d, unitRule)
+      }
+
+      return nextYearday(d, byrule as number[])
 
     case 'bymonthday':
-      return nextMonthday(d, byrule as number[], advance)
+      if (advance) {
+        d = advanceUnit(d, unitRule)
+      }
+
+      return nextMonthday(d, byrule as number[])
 
     case 'byday':
       return nextWeekday(d, byrule as Weekday[])
 
     default:
       if (advance) {
-        d = add(d, { [unitForByrule(unitRule.unit)]: 1 })
+        d = advanceUnit(d, unitRule)
       }
+
       return nextByruleStep(d, unitRule)
   }
 }
+
+const advanceUnit = (d: DateTime, unitRule: UnitRule) =>
+  add(d, { [unitForByrule(unitRule.unit)]: 1 })

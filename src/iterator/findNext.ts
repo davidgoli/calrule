@@ -13,11 +13,14 @@ import {
   smallestTickUnit
 } from './units'
 
+// 2 main operations: advance and sync
+
 // advance:
 // 1. Find smallest unit based on byX + freq
 // 2a. if unit == freq: increment by interval
 // 2b. else: increment by 1
-// 3. sync with rule options
+// 3. initialize all smaller units to 1 or 0
+// 4. sync with rule options
 
 // sync:
 // 1. for each second, minute, hour, day, month, year starting from smallest unit:
