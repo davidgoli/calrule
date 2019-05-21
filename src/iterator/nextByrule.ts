@@ -5,6 +5,7 @@ import {
   dayOfWeek,
   dayOfYear,
   dayOrdinalOfWeek,
+  lengthOfMonth,
   WEEKDAYS
 } from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
@@ -53,22 +54,24 @@ const nextDayStep = (initial: DateTime, steps: Weekday[]) => {
   return initial
 }
 
-const shouldTickFreqStepForByday = (initial: DateTime, steps: Weekday[]) => {
-  const currentDayOfWeekIdx = dayOrdinalOfWeek(initial)
-  return WEEKDAYS.indexOf(steps[steps.length - 1]) - currentDayOfWeekIdx < 0
+const weekdaysInMonthByRule = (d: DateTime, byday: Weekday[]) => {
+  const len = lengthOfMonth(d)
+  const days: number[] = []
+
+  for (let i = 1; i <= len; i++) {
+    const date = set(d, 'day', i)
+    if (byday.indexOf(dayOfWeek(date)) !== -1) {
+      days.push(i)
+    }
+  }
+
+  return days
 }
 
 const nextWeekday = (next: DateTime, byrule: Weekday[]) => {
   next = nextDayStep(next, byrule)
-  if (shouldTickFreqStepForByday(next, byrule)) {
-    next = add(next, {
-      day: 7 - WEEKDAYS.indexOf(dayOfWeek(next))
-    })
-
-    return nextDayStep(next, byrule)
-  }
-
-  return next
+  const weekdaysInMonth = weekdaysInMonthByRule(next, byrule)
+  return nextByruleStep(next, { unit: 'byday', byrule: weekdaysInMonth })
 }
 
 const nextByruleStep = (initial: DateTime, unitRule: UnitRule) => {

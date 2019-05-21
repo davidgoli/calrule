@@ -17,7 +17,7 @@ export const dayOfMonth = (d: DateTime) => {
 }
 
 export const lengthOfMonth = (d: DateTime) => {
-  return new Date(Date.UTC(d.year, d.month, 0)).getDate()
+  return new Date(Date.UTC(d.year, d.month, 0)).getDate() + 1
 }
 
 export const firstWeekdayOfMonth = (d: DateTime, day: Weekday) => {
