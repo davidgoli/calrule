@@ -4,9 +4,7 @@ import {
   dayOfMonth,
   dayOfWeek,
   dayOfYear,
-  dayOrdinalOfWeek,
-  lengthOfMonth,
-  WEEKDAYS
+  lengthOfMonth
 } from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
 import { set } from '../DateTime/set'
@@ -14,19 +12,23 @@ import { Weekday } from '../types'
 import { UnitRule } from './types'
 import { unitForByrule } from './units'
 
+const setYearday = (initial: DateTime, value: number) => {
+  const next = copy(initial)
+  next.month = 1
+  next.day = 1
+  return add(next, { day: value - 1 })
+}
+
 const nextYearday = (initial: DateTime, steps: number[], advance: boolean) => {
   const currentDayOfYear = dayOfYear(initial)
 
   for (let i = 0; i < steps.length; i++) {
     if (advance ? currentDayOfYear < steps[i] : currentDayOfYear <= steps[i]) {
-      const newCurrent = copy(initial)
-      newCurrent.month = 1
-      newCurrent.day = 1
-      return add(newCurrent, { day: steps[i] - 1 })
+      return setYearday(initial, steps[i])
     }
   }
 
-  return initial
+  return setYearday(initial, steps[steps.length - 1])
 }
 
 const nextMonthday = (initial: DateTime, steps: number[], advance = true) => {
@@ -38,20 +40,7 @@ const nextMonthday = (initial: DateTime, steps: number[], advance = true) => {
     }
   }
 
-  return initial
-}
-
-const nextDayStep = (initial: DateTime, steps: Weekday[]) => {
-  const currentDayOfWeekIdx = dayOrdinalOfWeek(initial)
-
-  for (let i = 0; i < steps.length; i++) {
-    const daydiff = WEEKDAYS.indexOf(steps[i]) - currentDayOfWeekIdx
-    if (daydiff >= 0) {
-      return add(initial, { day: daydiff })
-    }
-  }
-
-  return initial
+  return set(initial, 'day', steps[steps.length - 1])
 }
 
 const weekdaysInMonthByRule = (d: DateTime, byday: Weekday[]) => {
@@ -69,7 +58,6 @@ const weekdaysInMonthByRule = (d: DateTime, byday: Weekday[]) => {
 }
 
 const nextWeekday = (next: DateTime, byrule: Weekday[]) => {
-  next = nextDayStep(next, byrule)
   const weekdaysInMonth = weekdaysInMonthByRule(next, byrule)
   return nextByruleStep(next, { unit: 'byday', byrule: weekdaysInMonth })
 }

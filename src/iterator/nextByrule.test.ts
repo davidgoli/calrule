@@ -118,3 +118,137 @@ describe('BYHOUR', () => {
     expect(toISO(nextResult)).toEqual('1980-01-01T20:00:00')
   })
 })
+
+describe('BYYEARDAY', () => {
+  it('moves the date forward if it is behind', () => {
+    const result = nextByrule(
+      parseISO('1980-01-01')!,
+      {
+        unit: 'byyearday',
+        byrule: [20]
+      },
+      false
+    )
+
+    expect(toISO(result)).toEqual('1980-01-20T00:00:00')
+  })
+
+  it('moves the date forward into the next month if it is behind', () => {
+    const result = nextByrule(
+      parseISO('1980-01-01')!,
+      {
+        unit: 'byyearday',
+        byrule: [40]
+      },
+      false
+    )
+
+    expect(toISO(result)).toEqual('1980-02-09T00:00:00')
+  })
+
+  it('does not move the day if it matches', () => {
+    const result = nextByrule(
+      parseISO('1980-02-09')!,
+      {
+        unit: 'byyearday',
+        byrule: [40, 50]
+      },
+      false
+    )
+
+    expect(toISO(result)).toEqual('1980-02-09T00:00:00')
+  })
+
+  it('moves the day with "advance" if it matches', () => {
+    const result = nextByrule(
+      parseISO('1980-02-09')!,
+      {
+        unit: 'byyearday',
+        byrule: [40, 50]
+      },
+      true
+    )
+
+    expect(toISO(result)).toEqual('1980-02-19T00:00:00')
+  })
+
+  it('clamps the date back to the last if it is ahead', () => {
+    const result = nextByrule(
+      parseISO('1980-03-01')!,
+      {
+        unit: 'byyearday',
+        byrule: [40]
+      },
+      false
+    )
+
+    expect(toISO(result)).toEqual('1980-02-09T00:00:00')
+  })
+})
+
+describe('BYMONTHDAY', () => {
+  it('moves the date forward if it is behind', () => {
+    const result = nextByrule(
+      parseISO('1980-01-01')!,
+      {
+        unit: 'bymonthday',
+        byrule: [20]
+      },
+      false
+    )
+
+    expect(toISO(result)).toEqual('1980-01-20T00:00:00')
+  })
+
+  it('moves the date forward into the next month if it is behind', () => {
+    const result = nextByrule(
+      parseISO('1980-01-01')!,
+      {
+        unit: 'bymonthday',
+        byrule: [40]
+      },
+      false
+    )
+
+    expect(toISO(result)).toEqual('1980-02-09T00:00:00')
+  })
+
+  it('does not move the day if it matches', () => {
+    const result = nextByrule(
+      parseISO('1980-02-09')!,
+      {
+        unit: 'bymonthday',
+        byrule: [9, 19]
+      },
+      false
+    )
+
+    expect(toISO(result)).toEqual('1980-02-09T00:00:00')
+  })
+
+  it('moves the day with "advance" if it matches', () => {
+    const result = nextByrule(
+      parseISO('1980-02-09')!,
+      {
+        unit: 'bymonthday',
+        byrule: [9, 19]
+      },
+      true
+    )
+
+    expect(toISO(result)).toEqual('1980-02-19T00:00:00')
+  })
+
+  it('clamps the date back to the last if it is ahead', () => {
+    const result = nextByrule(
+      parseISO('1980-03-05')!,
+      {
+        unit: 'bymonthday',
+        byrule: [4]
+      },
+      false
+    )
+
+    expect(toISO(result)).toEqual('1980-03-04T00:00:00')
+  })
+})
