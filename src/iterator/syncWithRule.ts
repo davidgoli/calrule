@@ -2,14 +2,8 @@ import { add } from '../DateTime/add'
 import { compare } from '../DateTime/compare'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
-import { initializeFrom } from './initializeFrom'
 import { syncByrule } from './syncByrule'
-import {
-  byRuleForUnit,
-  FREQUENCY_COUNTER,
-  FREQUENCY_ORDER,
-  minFreqUnit
-} from './units'
+import { byRuleForUnit, FREQUENCY_COUNTER, FREQUENCY_ORDER } from './units'
 
 export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
   let next = initial
@@ -20,8 +14,6 @@ export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
     }
 
     let nextUnit: DateTime = syncByrule(next, byrule)
-
-    nextUnit = syncWithFreqInterval(nextUnit, nextUnit, options)
 
     if (compare(nextUnit, next) < 0) {
       const biggerUnit = FREQUENCY_ORDER[FREQUENCY_ORDER.indexOf(unit) - 1]
@@ -38,22 +30,4 @@ export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
   })
 
   return next
-}
-
-const syncWithFreqInterval = (
-  before: DateTime,
-  after: DateTime,
-  options: GroomedOptions
-) => {
-  const { interval } = options
-  const freqUnit = minFreqUnit(options)
-  const freqDiff = after[freqUnit] - before[freqUnit]
-
-  if (freqDiff <= 0 || freqDiff === interval) {
-    return after
-  }
-
-  let adjusted = add(before, { [freqUnit]: interval })
-
-  return initializeFrom(adjusted, freqUnit, options)
 }
