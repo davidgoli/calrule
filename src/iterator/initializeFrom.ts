@@ -1,25 +1,9 @@
-import { firstWeekdayOfMonth } from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
 import { set } from '../DateTime/set'
 import { GroomedOptions } from '../groomOptions'
-import { Weekday } from '../types'
-import { UnitRule } from './types'
-import { byRuleForUnit, FREQUENCY_ORDER, smallestTickUnit } from './units'
+import { FREQUENCY_ORDER, smallestTickUnit } from './units'
 
-const initialValueForUnit = (
-  unit: keyof DateTime,
-  unitRule: UnitRule | undefined,
-  newCurrent: DateTime
-) => {
-  const byrule = unitRule ? unitRule.byrule : undefined
-  if (unit === 'day' && byrule && typeof byrule[0] === 'string') {
-    return firstWeekdayOfMonth(newCurrent, (byrule as Weekday[])[0])
-  }
-
-  if (byrule) {
-    return (byrule as number[])[0]
-  }
-
+const initialValueForUnit = (unit: keyof DateTime) => {
   if (unit === 'month' || unit === 'day') {
     return 1
   }
@@ -36,7 +20,7 @@ export const initializeFrom = (
   const smallestUnitIdx = FREQUENCY_ORDER.indexOf(smallestTickUnit(options))
 
   FREQUENCY_ORDER.slice(unitIdx + 1, smallestUnitIdx + 1).forEach(unit => {
-    const value = initialValueForUnit(unit, byRuleForUnit(unit, options), next)
+    const value = initialValueForUnit(unit)
     next = set(next, unit, value)
   })
 

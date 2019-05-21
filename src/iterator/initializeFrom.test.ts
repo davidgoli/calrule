@@ -52,16 +52,3 @@ it('initializes smaller units from year', () => {
     second: 0
   })
 })
-
-it('initializes when there are byrules', () => {
-  options.byday = ['WE']
-  const initialized = initializeFrom(startDate, 'year', options)
-  expect(initialized).toEqual({
-    year: 2017,
-    month: 1,
-    day: 4,
-    hour: 0,
-    minute: 0,
-    second: 0
-  })
-})
