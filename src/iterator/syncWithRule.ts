@@ -3,7 +3,7 @@ import { compare } from '../DateTime/compare'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
 import { initializeFrom } from './initializeFrom'
-import { nextByrule } from './nextByruleStep'
+import { nextByrule } from './nextByrule'
 import {
   byRuleForUnit,
   FREQUENCY_COUNTER,

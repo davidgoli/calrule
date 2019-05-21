@@ -32,7 +32,6 @@ const nextMonthday = (initial: DateTime, steps: number[], advance = true) => {
   const currentMonthday = dayOfMonth(initial)
   for (let i = 0; i < steps.length; i++) {
     const daydiff = steps[i] - currentMonthday
-    console.log({ daydiff })
     if (advance ? daydiff > 0 : daydiff >= 0) {
       return add(initial, { day: daydiff })
     }
@@ -41,12 +40,12 @@ const nextMonthday = (initial: DateTime, steps: number[], advance = true) => {
   return initial
 }
 
-const nextDayStep = (initial: DateTime, steps: Weekday[], advance = true) => {
+const nextDayStep = (initial: DateTime, steps: Weekday[]) => {
   const currentDayOfWeekIdx = dayOrdinalOfWeek(initial)
 
   for (let i = 0; i < steps.length; i++) {
     const daydiff = WEEKDAYS.indexOf(steps[i]) - currentDayOfWeekIdx
-    if (advance ? daydiff > 0 : daydiff >= 0) {
+    if (daydiff >= 0) {
       return add(initial, { day: daydiff })
     }
   }
@@ -59,24 +58,20 @@ const shouldTickFreqStepForByday = (initial: DateTime, steps: Weekday[]) => {
   return WEEKDAYS.indexOf(steps[steps.length - 1]) - currentDayOfWeekIdx < 0
 }
 
-const nextWeekday = (next: DateTime, byrule: Weekday[], advance: boolean) => {
-  next = nextDayStep(next, byrule, advance)
+const nextWeekday = (next: DateTime, byrule: Weekday[]) => {
+  next = nextDayStep(next, byrule)
   if (shouldTickFreqStepForByday(next, byrule)) {
     next = add(next, {
       day: 7 - WEEKDAYS.indexOf(dayOfWeek(next))
     })
 
-    return nextDayStep(next, byrule, advance)
+    return nextDayStep(next, byrule)
   }
 
   return next
 }
 
-const nextByruleStep = (
-  initial: DateTime,
-  unitRule: UnitRule,
-  advance = true
-) => {
+const nextByruleStep = (initial: DateTime, unitRule: UnitRule) => {
   const { byrule } = unitRule
   if (!byrule) {
     return initial
@@ -85,7 +80,7 @@ const nextByruleStep = (
   const unit = unitForByrule(unitRule.unit)
 
   for (let i = 0; i < steps.length; i++) {
-    if (advance ? initial[unit] < steps[i] : initial[unit] <= steps[i]) {
+    if (initial[unit] <= steps[i]) {
       return set(initial, unit, steps[i])
     }
   }
@@ -103,6 +98,7 @@ export const nextByrule = (
   }
 
   const { unit, byrule } = unitRule
+
   switch (unit) {
     case 'byyearday':
       return nextYearday(d, byrule as number[], advance)
@@ -111,9 +107,12 @@ export const nextByrule = (
       return nextMonthday(d, byrule as number[], advance)
 
     case 'byday':
-      return nextWeekday(d, byrule as Weekday[], advance)
+      return nextWeekday(d, byrule as Weekday[])
 
     default:
-      return nextByruleStep(d, unitRule, advance)
+      if (advance) {
+        d = add(d, { [unitForByrule(unitRule.unit)]: 1 })
+      }
+      return nextByruleStep(d, unitRule)
   }
 }
