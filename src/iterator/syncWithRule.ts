@@ -3,7 +3,7 @@ import { compare } from '../DateTime/compare'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
 import { initializeFrom } from './initializeFrom'
-import { nextByrule } from './nextByrule'
+import { syncByrule } from './syncByrule'
 import {
   byRuleForUnit,
   FREQUENCY_COUNTER,
@@ -19,7 +19,7 @@ export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
       return
     }
 
-    let nextUnit: DateTime = nextByrule(next, byrule)
+    let nextUnit: DateTime = syncByrule(next, byrule)
 
     nextUnit = syncWithFreqInterval(nextUnit, nextUnit, options)
 

@@ -79,7 +79,7 @@ const nextByruleStep = (initial: DateTime, unitRule: UnitRule) => {
   return set(initial, unit, steps[steps.length - 1])
 }
 
-export const nextByrule = (d: DateTime, unitRule: UnitRule | undefined) => {
+export const syncByrule = (d: DateTime, unitRule: UnitRule | undefined) => {
   if (!unitRule) {
     return d
   }
