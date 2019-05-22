@@ -51,7 +51,7 @@ export const daysInMonth = (m: MONTHS, y: number) =>
 
 export interface DateTime {
   year: number
-  month: MONTHS
+  month: MONTHS | 0
   day: number
   hour: number
   minute: number

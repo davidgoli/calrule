@@ -1,5 +1,6 @@
 import { Weekday } from '../types'
 import { DateTime } from './index'
+import { set } from './set'
 import { toMillis } from './toMillis'
 
 export const WEEKDAYS: Weekday[] = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']
@@ -51,3 +52,17 @@ export const dayOfYear = (d: DateTime) =>
     })) /
     (60 * 60 * 24 * 1000) +
   1
+
+export const weekdaysInMonthByRule = (d: DateTime, byday: Weekday[]) => {
+  const len = lengthOfMonth(d)
+  const days: number[] = []
+
+  for (let i = 1; i <= len; i++) {
+    const date = set(d, 'day', i)
+    if (byday.indexOf(dayOfWeek(date)) !== -1) {
+      days.push(i)
+    }
+  }
+
+  return days
+}

@@ -1,9 +1,9 @@
+import { add } from '../DateTime/add'
 import { compare } from '../DateTime/compare'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
-import { advanceByruleAtUnit, advanceFreqUnit } from './advance'
 import { syncWithRule } from './syncWithRule'
-import { FREQUENCY_COUNTER, FREQUENCY_ORDER, smallestTickUnit } from './units'
+import { FREQUENCY_ORDER } from './units'
 
 // 2 main operations: advance and sync
 
@@ -23,24 +23,28 @@ import { FREQUENCY_COUNTER, FREQUENCY_ORDER, smallestTickUnit } from './units'
 //     i. set to byX[0]
 //     ii. move to the next bigger unit
 export const findNext = (initial: DateTime, options: GroomedOptions) => {
-  const freqIdx = FREQUENCY_ORDER.indexOf(FREQUENCY_COUNTER[options.freq])
+  // const freqIdx = FREQUENCY_ORDER.indexOf(FREQUENCY_COUNTER[options.freq])
 
-  let unitIdx = FREQUENCY_ORDER.indexOf(smallestTickUnit(options))
+  let unitIdx = FREQUENCY_ORDER.length - 1
 
-  let next: DateTime = initial
+  let next: DateTime = syncWithRule(initial, options)
+  if (compare(initial, next) < 0) {
+    return next
+  }
 
-  do {
-    const unit = FREQUENCY_ORDER[unitIdx]
-    console.log({ unit, initial })
-    if (unitIdx === freqIdx) {
-      next = advanceFreqUnit(initial, options)
-      continue
-    }
+  // do {
+  // if (unitIdx === freqIdx) {
+  //   next = advanceFreqUnit(initial, options)
+  //   continue
+  // }
 
-    next = advanceByruleAtUnit(initial, unit, options)
-    next = syncWithRule(next, options)
-    console.log({ initial, next })
-  } while (compare(initial, next) >= 0 && --unitIdx >= 0)
+  const unit = FREQUENCY_ORDER[unitIdx]
+  // if (compare(initial, next) >= 0) {
+  next = add(next, { [unit]: 1 })
+  // }
+
+  next = syncWithRule(next, options)
+  // } while (compare(initial, next) >= 0 && --unitIdx >= 0)
 
   return next
 }

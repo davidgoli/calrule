@@ -174,34 +174,13 @@ it('rolls over hourly with a synced byday', () => {
 })
 
 it('rolls over yearly with a byyearday rule', () => {
-  startDate = {
-    year: 2017,
-    month: 2,
-    day: 12,
-    hour: 0,
-    minute: 0,
-    second: 0
-  }
+  startDate = parseISO('2017-03-12T00:00:00')!
 
-  options.dtstart = {
-    year: 2017,
-    month: 2,
-    day: 10,
-    hour: 0,
-    minute: 0,
-    second: 0
-  }
+  options.dtstart = startDate
   options.freq = 'YEARLY'
   options.byyearday = [2, 41]
 
-  expect(findNext(startDate, options)).toEqual({
-    year: 2018,
-    month: 1,
-    day: 2,
-    hour: 0,
-    minute: 0,
-    second: 0
-  })
+  expect(toISO(findNext(startDate, options))).toEqual('2018-01-02T00:00:00')
 })
 
 it('does not roll over yearly on byyearday when it should not', () => {

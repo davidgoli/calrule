@@ -3,7 +3,6 @@ import { compare } from '../DateTime/compare'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
 import { initializeFrom } from './initializeFrom'
-import { syncByrule } from './syncByrule'
 import { syncWithRule } from './syncWithRule'
 import { byRuleForUnit, FREQUENCY_ORDER, minFreqUnit } from './units'
 
@@ -16,7 +15,8 @@ export const advanceByruleAtUnit = (
   if (unitRule && unitRule.unit !== 'byday') {
     d = add(d, { [dtunit]: 1 })
   }
-  return syncByrule(d, unitRule)
+
+  return syncWithRule(d, options)
 }
 
 const advanceToNextWkst = (d: DateTime, options: GroomedOptions) => {
@@ -41,7 +41,7 @@ const advanceFreq = (
     [unit]: interval || 1
   })
 
-  return initializeFrom(next, unit, options)
+  return initializeFrom(next, unit)
 }
 
 export const advanceFreqUnit = (initial: DateTime, options: GroomedOptions) => {
@@ -55,13 +55,8 @@ export const advanceFreqUnit = (initial: DateTime, options: GroomedOptions) => {
   do {
     const unit = FREQUENCY_ORDER[unitIdx]
 
-    console.log({ unit })
     next = advanceFreq(initial, unit, options)
-    console.log({ next })
-
-    next = advanceByruleAtUnit(next, unit, options)
     next = syncWithRule(next, options)
-    console.log({ initial, next, compare: compare(initial, next) })
   } while (compare(initial, next) >= 0 && --unitIdx >= 0)
 
   return next

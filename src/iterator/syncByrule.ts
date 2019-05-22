@@ -1,12 +1,11 @@
 import { copy } from '../copy'
-import { add } from '../DateTime/add'
 import {
   dayOfMonth,
   dayOfWeek,
   dayOfYear,
   lengthOfMonth
 } from '../DateTime/dayOfWeek'
-import { DateTime } from '../DateTime/index'
+import { DateTime, MONTHS } from '../DateTime/index'
 import { set } from '../DateTime/set'
 import { Weekday } from '../types'
 import { UnitRule } from './types'
@@ -16,7 +15,11 @@ const setYearday = (initial: DateTime, value: number) => {
   const next = copy(initial)
   next.month = 1
   next.day = 1
-  return add(next, { day: value - 1 })
+  // return add(next, { day: value - 1 })
+  return {
+    month: (1 - initial.month) as MONTHS,
+    day: 1 - initial.day + (value - 1)
+  }
 }
 
 const nextYearday = (initial: DateTime, steps: number[]) => {
@@ -35,12 +38,20 @@ const nextMonthday = (initial: DateTime, steps: number[]) => {
   const currentMonthday = dayOfMonth(initial)
   for (let i = 0; i < steps.length; i++) {
     const daydiff = steps[i] - currentMonthday
-    if (daydiff >= 0) {
-      return add(initial, { day: daydiff })
+    if (daydiff > 0) {
+      return { day: daydiff }
+    }
+
+    if (daydiff === 0) {
+      return {}
     }
   }
 
-  return set(initial, 'day', steps[steps.length - 1])
+  const interval = steps[steps.length - 1] - initial.day
+  if (interval === 0) {
+    return {}
+  }
+  return { day: interval }
 }
 
 const weekdaysInMonthByRule = (d: DateTime, byday: Weekday[]) => {
@@ -72,16 +83,28 @@ const nextByruleStep = (initial: DateTime, unitRule: UnitRule) => {
 
   for (let i = 0; i < steps.length; i++) {
     if (initial[unit] <= steps[i]) {
-      return set(initial, unit, steps[i])
+      const interval = steps[i] - initial[unit]
+      if (interval === 0) {
+        return {}
+      }
+      return { [unit]: steps[i] - initial[unit] }
     }
   }
 
-  return set(initial, unit, steps[steps.length - 1])
+  const interval = steps[steps.length - 1] - initial[unit]
+  if (interval === 0) {
+    return {}
+  }
+
+  return { [unit]: interval }
 }
 
-export const syncByrule = (d: DateTime, unitRule: UnitRule | undefined) => {
+export const syncByrule = (
+  d: DateTime,
+  unitRule: UnitRule | undefined
+): Partial<DateTime> => {
   if (!unitRule) {
-    return d
+    return {}
   }
 
   const { unit, byrule } = unitRule
