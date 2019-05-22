@@ -2,7 +2,7 @@ import { DateTime } from '../DateTime/index'
 import { set } from '../DateTime/set'
 import { FREQUENCY_ORDER } from './units'
 
-const initialValueForUnit = (unit: keyof DateTime) => {
+export const initialValueForUnit = (unit: keyof DateTime) => {
   if (unit === 'month' || unit === 'day') {
     return 1
   }

@@ -23,8 +23,6 @@ import { FREQUENCY_ORDER } from './units'
 //     i. set to byX[0]
 //     ii. move to the next bigger unit
 export const findNext = (initial: DateTime, options: GroomedOptions) => {
-  // const freqIdx = FREQUENCY_ORDER.indexOf(FREQUENCY_COUNTER[options.freq])
-
   let unitIdx = FREQUENCY_ORDER.length - 1
 
   let next: DateTime = syncWithRule(initial, options)
@@ -32,19 +30,11 @@ export const findNext = (initial: DateTime, options: GroomedOptions) => {
     return next
   }
 
-  // do {
-  // if (unitIdx === freqIdx) {
-  //   next = advanceFreqUnit(initial, options)
-  //   continue
-  // }
-
-  const unit = FREQUENCY_ORDER[unitIdx]
-  // if (compare(initial, next) >= 0) {
-  next = add(next, { [unit]: 1 })
-  // }
-
-  next = syncWithRule(next, options)
-  // } while (compare(initial, next) >= 0 && --unitIdx >= 0)
+  do {
+    const unit = FREQUENCY_ORDER[unitIdx]
+    next = add(next, { [unit]: 1 })
+    next = syncWithRule(next, options)
+  } while (compare(initial, next) >= 0 && --unitIdx >= 0)
 
   return next
 }

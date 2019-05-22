@@ -306,3 +306,16 @@ it('increments byminute', () => {
   result = syncWithRule(add(result, { second: 1 }), options)
   expect(toISO(result)).toEqual('2017-01-01T00:13:00')
 })
+
+it('returns only the days given', () => {
+  const options: GroomedOptions = {
+    dtstart: parseISO('2017-01-01T02:59:00')!,
+    freq: 'MINUTELY',
+    interval: 1,
+    count: 5,
+    byhour: [2, 13]
+  }
+
+  let result = syncWithRule(add(options.dtstart, { second: 1 }), options)
+  expect(toISO(result)).toEqual('2017-01-01T13:00:00')
+})

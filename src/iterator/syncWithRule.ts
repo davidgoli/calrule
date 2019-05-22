@@ -22,7 +22,7 @@ export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
 
       next = add(next, { [nextUnit]: interval })
       next = initializeFrom(next, nextUnit)
-      i = FREQUENCY_ORDER.indexOf(nextUnit) - 1
+      i = FREQUENCY_ORDER.indexOf(nextUnit) - 2
     }
   }
 
