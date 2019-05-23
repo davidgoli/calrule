@@ -14,11 +14,14 @@ export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
 
     const byrule = byRuleForUnit(unit, options)
     const diff = syncByrule(next, byrule)
+    console.log({ unit, byrule, diff })
     const unitDiff = diff[unit]
     next = add(next, diff)
+    console.log({ initial, next })
 
     if (byrule && typeof unitDiff === 'number' && unitDiff < 0) {
       const { nextUnit, interval } = nextUnitToCarry(byrule, options)
+      console.log({ nextUnit, interval })
 
       next = add(next, { [nextUnit]: interval })
       next = initializeFrom(next, nextUnit)
@@ -34,11 +37,13 @@ const nextUnitToCarry = (
   options: GroomedOptions
 ): { nextUnit: keyof DateTime; interval: number } => {
   const freqIdx = FREQUENCY_ORDER.indexOf(FREQUENCY_COUNTER[options.freq])
-  const nextByrule = nextUnitForByrule(byrule)
-  const nextByruleIdx = FREQUENCY_ORDER.indexOf(nextByrule)
+  const nextByruleUnit = nextUnitForByrule(byrule)
+  const nextByrule = byRuleForUnit(nextByruleUnit, options)
+  const nextByruleIdx = FREQUENCY_ORDER.indexOf(nextByruleUnit)
 
   if (freqIdx === nextByruleIdx) {
-    if (options.freq === 'WEEKLY' && nextByrule === 'day') {
+    if (options.freq === 'WEEKLY' && nextByruleUnit === 'day' && !nextByrule) {
+      console.log('HIIIIII', byrule, nextByrule)
       return { nextUnit: 'day', interval: options.interval * 7 }
     }
 
@@ -48,7 +53,7 @@ const nextUnitToCarry = (
     }
   }
 
-  return { nextUnit: nextByrule, interval: 1 }
+  return { nextUnit: nextByruleUnit, interval: 1 }
 }
 
 const nextUnitForByrule = (byrule: UnitRule): keyof DateTime => {

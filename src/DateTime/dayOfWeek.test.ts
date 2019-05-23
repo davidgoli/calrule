@@ -1,6 +1,7 @@
 import {
   dayOfWeek,
   dayOfYear,
+  diffInDays,
   firstWeekdayOfMonth,
   lengthOfMonth
 } from './dayOfWeek'
@@ -81,5 +82,25 @@ describe('lengthOfMonth', () => {
 
   it('gets December right', () => {
     expect(lengthOfMonth(parseISO('1980-12-01')!)).toEqual(31)
+  })
+})
+
+describe('diffInDays', () => {
+  it('returns 0 for no difference', () => {
+    expect(
+      diffInDays(parseISO('2017-01-01')!, parseISO('2017-01-01')!)
+    ).toEqual(0)
+  })
+
+  it('returns a simple day subtraction', () => {
+    expect(
+      diffInDays(parseISO('2017-01-31')!, parseISO('2017-01-01')!)
+    ).toEqual(30)
+  })
+
+  it('returns a day subtraction involving months', () => {
+    expect(
+      diffInDays(parseISO('2017-02-28')!, parseISO('2017-01-01')!)
+    ).toEqual(58)
   })
 })

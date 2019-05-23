@@ -205,7 +205,35 @@ it('rolls over with MONTHLY', () => {
   )
 })
 
-it('rolls over with YEARLY', () => {
+it('works with bymonth', () => {
+  const startDate = parseISO('2017-01-01')!
+
+  const options: GroomedOptions = {
+    dtstart: startDate,
+    freq: 'MONTHLY',
+    interval: 1,
+    bymonth: [2, 11]
+  }
+
+  let result = syncWithRule(startDate, options)
+
+  expect(toISO(result)).toEqual('2017-02-01T00:00:00')
+
+  result = syncWithRule(add(result, { second: 1 }), options)
+  expect(toISO(result)).toEqual('2017-11-01T00:00:00')
+
+  // result = syncWithRule(add(result, { second: 1 }), options)
+  // expect(toISO(result)).toEqual('2018-02-01T00:00:00')
+  // expect(result).toEqual([
+  //   '2017-02-01T00:00:00',
+  //   '2017-11-01T00:00:00',
+  //   '2018-02-01T00:00:00',
+  //   '2018-11-01T00:00:00',
+  //   '2019-02-01T00:00:00'
+  // ])
+})
+
+it.only('rolls over with YEARLY', () => {
   const startDate = parseISO('2017-03-02T02:59:59')!
 
   const options: GroomedOptions = {

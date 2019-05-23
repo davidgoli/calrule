@@ -1,25 +1,22 @@
-import { copy } from '../copy'
 import {
   dayOfMonth,
   dayOfWeek,
   dayOfYear,
   lengthOfMonth
 } from '../DateTime/dayOfWeek'
-import { DateTime, MONTHS } from '../DateTime/index'
+import { DateTime, DateTimeDiff } from '../DateTime/index'
 import { set } from '../DateTime/set'
 import { Weekday } from '../types'
 import { UnitRule } from './types'
 import { unitForByrule } from './units'
 
 const setYearday = (initial: DateTime, value: number) => {
-  const next = copy(initial)
-  next.month = 1
-  next.day = 1
-  // return add(next, { day: value - 1 })
-  return {
-    month: (1 - initial.month) as MONTHS,
-    day: 1 - initial.day + (value - 1)
-  }
+  const interval = 1 - dayOfYear(initial) + (value - 1)
+  return interval === 0
+    ? {}
+    : {
+        day: interval
+      }
 }
 
 const nextYearday = (initial: DateTime, steps: number[]) => {
@@ -37,21 +34,15 @@ const nextYearday = (initial: DateTime, steps: number[]) => {
 const nextMonthday = (initial: DateTime, steps: number[]) => {
   const currentMonthday = dayOfMonth(initial)
   for (let i = 0; i < steps.length; i++) {
-    const daydiff = steps[i] - currentMonthday
-    if (daydiff > 0) {
-      return { day: daydiff }
-    }
-
-    if (daydiff === 0) {
-      return {}
+    const interval = steps[i] - currentMonthday
+    if (interval >= 0) {
+      return interval === 0 ? {} : { day: interval }
     }
   }
 
   const interval = steps[steps.length - 1] - initial.day
-  if (interval === 0) {
-    return {}
-  }
-  return { day: interval }
+
+  return interval === 0 ? {} : { day: interval }
 }
 
 const weekdaysInMonthByRule = (d: DateTime, byday: Weekday[]) => {
@@ -102,7 +93,7 @@ const nextByruleStep = (initial: DateTime, unitRule: UnitRule) => {
 export const syncByrule = (
   d: DateTime,
   unitRule: UnitRule | undefined
-): Partial<DateTime> => {
+): DateTimeDiff => {
   if (!unitRule) {
     return {}
   }

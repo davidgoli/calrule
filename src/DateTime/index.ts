@@ -49,9 +49,18 @@ const isLeapYear = (y: number) => {
 export const daysInMonth = (m: MONTHS, y: number) =>
   (isLeapYear(y) ? MONTH_LENGTHS_LEAP : MONTH_LENGTHS)[m]
 
+export interface DateTimeDiff {
+  year?: number
+  month?: number
+  day?: number
+  hour?: number
+  minute?: number
+  second?: number
+}
+
 export interface DateTime {
   year: number
-  month: MONTHS | 0
+  month: MONTHS
   day: number
   hour: number
   minute: number

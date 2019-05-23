@@ -92,7 +92,7 @@ describe('BYYEARDAY', () => {
       byrule: [20]
     })
 
-    expect(result).toEqual({ month: 0, day: 19 })
+    expect(result).toEqual({ day: 19 })
   })
 
   it('moves the date forward into the next month if it is behind', () => {
@@ -101,7 +101,7 @@ describe('BYYEARDAY', () => {
       byrule: [40]
     })
 
-    expect(result).toEqual({ month: 0, day: 39 })
+    expect(result).toEqual({ day: 39 })
   })
 
   it('does not move the day if it matches', () => {
@@ -110,7 +110,7 @@ describe('BYYEARDAY', () => {
       byrule: [40, 50]
     })
 
-    expect(result).toEqual({ month: -1, day: 31 })
+    expect(result).toEqual({})
   })
 
   it('clamps the date back to the last if it is ahead', () => {
@@ -119,7 +119,7 @@ describe('BYYEARDAY', () => {
       byrule: [40]
     })
 
-    expect(result).toEqual({ day: 39, month: -2 })
+    expect(result).toEqual({ day: -21 })
   })
 
   it('clamps the date back to the last if it is ahead', () => {
@@ -128,7 +128,7 @@ describe('BYYEARDAY', () => {
       byrule: [2, 11]
     })
 
-    expect(result).toEqual({ day: -1, month: -1 })
+    expect(result).toEqual({ day: -32 })
   })
 })
 

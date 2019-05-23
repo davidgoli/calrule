@@ -66,3 +66,7 @@ export const weekdaysInMonthByRule = (d: DateTime, byday: Weekday[]) => {
 
   return days
 }
+
+export const diffInDays = (a: DateTime, b: DateTime) => {
+  return dayOfYear(a) - dayOfYear(b)
+}
