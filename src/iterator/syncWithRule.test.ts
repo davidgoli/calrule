@@ -6,14 +6,7 @@ import { GroomedOptions } from '../groomOptions'
 import { syncWithRule } from './syncWithRule'
 
 it('moves each unit forward to its equivalent matching the rule', () => {
-  const current: DateTime = {
-    year: 2017,
-    month: 1,
-    day: 1,
-    hour: 0,
-    minute: 0,
-    second: 0
-  }
+  const current: DateTime = parseISO('2017-01-01T00:00:00')!
 
   const options: GroomedOptions = {
     dtstart: current,
@@ -27,14 +20,7 @@ it('moves each unit forward to its equivalent matching the rule', () => {
   }
 
   const synced = syncWithRule(current, options)
-  expect(synced).toEqual({
-    year: 2017,
-    month: 2,
-    day: 7,
-    hour: 2,
-    minute: 34,
-    second: 19
-  })
+  expect(toISO(synced)).toEqual('2017-02-07T02:34:19')
 })
 
 it("doesn't go too far", () => {
@@ -233,7 +219,7 @@ it('works with bymonth', () => {
   // ])
 })
 
-it.only('rolls over with YEARLY', () => {
+it('rolls over with YEARLY', () => {
   const startDate = parseISO('2017-03-02T02:59:59')!
 
   const options: GroomedOptions = {
