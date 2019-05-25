@@ -24,11 +24,11 @@ it('moves each unit forward to its equivalent matching the rule', () => {
 })
 
 it("doesn't go too far", () => {
-  const current: DateTime = parseISO('2017-01-01T00:34:00')!
+  const current: DateTime = parseISO('2017-01-01T00:00:00')!
 
   const options: GroomedOptions = {
     dtstart: current,
-    freq: 'WEEKLY',
+    freq: 'DAILY',
     interval: 1,
     bymonth: [2, 4],
     byday: ['TU'],

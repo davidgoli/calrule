@@ -1,22 +1,24 @@
 import { copy } from '../copy'
 import { add } from '../DateTime/add'
 import { compare } from '../DateTime/compare'
-import { dayOfWeek } from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
-import { Weekday } from '../types'
+import { initializeFrom } from './initializeFrom'
+import { shouldRollOver } from './shouldRollOver'
 import { syncByrule } from './syncByrule'
-import { byRuleForUnit, FREQUENCY_COUNTER, FREQUENCY_ORDER } from './units'
+import { byRuleForUnit, FREQUENCY_COUNTER } from './units'
 
-let safety = 0
 export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
+  let safety = 0
   let next = copy(initial)
+  let toRollOver: keyof DateTime | 'freq' | undefined
 
   do {
     if (safety++ > 100) {
-      break
+      throw new Error('INFINITE LOOP')
     }
-    const toRollOver = shouldRollOver(next, initial, options)
+
+    toRollOver = shouldRollOver(next, initial, options)
     if (!toRollOver) {
       break
     }
@@ -24,20 +26,20 @@ export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
     if (toRollOver === 'freq') {
       console.log({ freq: options.freq })
       next = add(next, { [FREQUENCY_COUNTER[options.freq]]: options.interval })
+      next = initializeFrom(next, FREQUENCY_COUNTER[options.freq])
       continue
     }
 
     console.log({ next })
+    next = add(next, { [toRollOver]: 1 })
     const byrule = byRuleForUnit(toRollOver, options)
     const diff = syncByrule(next, byrule)
+    next = initializeFrom(next, toRollOver)
     console.log({ toRollOver, byrule, diff })
     // const unitDiff = diff[toRollOver]
     next = add(next, diff)
     console.log({ initial, next })
-  } while (
-    compare(initial, next) >= 0 ||
-    shouldRollOver(next, initial, options)
-  )
+  } while (compare(initial, next) >= 0 || toRollOver)
   // for (let i = 0; i < FREQUENCY_ORDER.length; i++) {
   //   const unit = FREQUENCY_ORDER[i]
 
@@ -66,46 +68,6 @@ export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
   // console.log('compare', compare(next, initial))
 
   return next
-}
-
-const shouldRollOver = (
-  next: DateTime,
-  initial: DateTime,
-  options: GroomedOptions
-) => {
-  for (let i = FREQUENCY_ORDER.length - 1; i > 0; i--) {
-    const unit = FREQUENCY_ORDER[i]
-    const unitRule = byRuleForUnit(unit, options)
-    if (!unitRule || !unitRule.byrule) {
-      continue
-    }
-
-    const { unit: byruleUnit, byrule } = unitRule
-    const last = byrule[byrule.length - 1]
-    if (next[unit] < last) {
-      return unit
-    }
-
-    if (
-      byruleUnit !== 'byday' &&
-      (byrule as number[]).indexOf(next[unit]) === -1
-    ) {
-      return unit
-    }
-
-    if (
-      byruleUnit === 'byday' &&
-      (byrule as Weekday[]).indexOf(dayOfWeek(next)) === -1
-    ) {
-      return unit
-    }
-  }
-
-  if (compare(initial, next) >= 0) {
-    return 'freq'
-  }
-
-  return undefined
 }
 
 // const nextUnitToCarry = (
