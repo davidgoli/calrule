@@ -18,7 +18,6 @@ export const shouldRollOver = (
     }
 
     const { unit: byruleUnit, byrule } = unitRule
-    // const last = byrule[byrule.length - 1]
     console.log({ unit, n: next[unit], byrule })
     if (
       byruleUnit !== 'byday' &&

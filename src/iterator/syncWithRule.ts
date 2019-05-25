@@ -1,12 +1,12 @@
 import { copy } from '../copy'
 import { add } from '../DateTime/add'
 import { compare } from '../DateTime/compare'
-import { DateTime } from '../DateTime/index'
+import { DateTime, DateTimeDiff } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
 import { initializeFrom } from './initializeFrom'
 import { shouldRollOver } from './shouldRollOver'
 import { syncByrule } from './syncByrule'
-import { byRuleForUnit, FREQUENCY_COUNTER } from './units'
+import { byRuleForUnit, FREQUENCY_COUNTER, FREQUENCY_ORDER } from './units'
 
 export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
   let safety = 0
@@ -23,21 +23,34 @@ export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
       break
     }
 
+    console.log({ toRollOver })
     if (toRollOver === 'freq') {
-      console.log({ freq: options.freq })
       next = add(next, { [FREQUENCY_COUNTER[options.freq]]: options.interval })
       next = initializeFrom(next, FREQUENCY_COUNTER[options.freq])
+      console.log({ freq: options.freq, next })
       continue
     }
 
     console.log({ next })
-    next = add(next, { [toRollOver]: 1 })
-    const byrule = byRuleForUnit(toRollOver, options)
-    const diff = syncByrule(next, byrule)
-    next = initializeFrom(next, toRollOver)
-    console.log({ toRollOver, byrule, diff })
-    // const unitDiff = diff[toRollOver]
-    next = add(next, diff)
+    let diff: DateTimeDiff
+    let diffValue: number | undefined = 0
+    do {
+      if (safety++ > 100) {
+        throw new Error('INFINITE LOOP')
+      }
+
+      next = add(next, { [toRollOver]: 1 })
+      const byrule = byRuleForUnit(toRollOver, options)
+      diff = syncByrule(next, byrule)
+      next = initializeFrom(next, toRollOver)
+      console.log({ toRollOver, byrule, diff })
+      next = add(next, diff)
+      diffValue = diff[toRollOver]
+      if (typeof diffValue === 'number' && diffValue < 0) {
+        toRollOver = FREQUENCY_ORDER[FREQUENCY_ORDER.indexOf(toRollOver) - 1]
+      }
+    } while (typeof diffValue === 'number' && diffValue < 0)
+
     console.log({ initial, next })
   } while (compare(initial, next) >= 0 || toRollOver)
   // for (let i = 0; i < FREQUENCY_ORDER.length; i++) {
