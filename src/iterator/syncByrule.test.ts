@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { parseISO } from '../DateTime/parseISO'
 import { syncByrule } from './syncByrule'
 
@@ -113,7 +114,7 @@ describe('BYYEARDAY', () => {
     expect(result).toEqual({})
   })
 
-  it('clamps the date back to the last if it is ahead', () => {
+  it('returns a negative interval if it is ahead', () => {
     const result = syncByrule(parseISO('1980-03-01')!, {
       unit: 'byyearday',
       byrule: [40]

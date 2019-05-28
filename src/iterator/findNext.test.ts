@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { DateTime } from '../DateTime/index'
 import { parseISO } from '../DateTime/parseISO'
 import { toISO } from '../DateTime/toISO'

@@ -26,8 +26,47 @@ const unitRule = <T>(unit: ByProperty, byrule: T[] | undefined, def?: T) =>
   byrule
     ? { unit, byrule }
     : typeof def !== 'undefined'
-    ? { unit, byrule: [def] }
-    : undefined
+      ? { unit, byrule: [def] }
+      : undefined
+
+const smallestTickUnit = ({
+  freq,
+  bysecond,
+  byminute,
+  byhour,
+  byday,
+  bymonth,
+  bymonthday,
+  byyearday
+}: GroomedOptions): keyof DateTime => {
+  if (freq === 'SECONDLY' || bysecond) {
+    return 'second'
+  }
+
+  if (freq === 'MINUTELY' || byminute) {
+    return 'minute'
+  }
+
+  if (freq === 'HOURLY' || byhour) {
+    return 'hour'
+  }
+
+  if (
+    freq === 'DAILY' ||
+    freq === 'WEEKLY' ||
+    byday ||
+    byyearday ||
+    bymonthday
+  ) {
+    return 'day'
+  }
+
+  if (freq === 'MONTHLY' || bymonth) {
+    return 'month'
+  }
+
+  return 'year'
+}
 
 export const byRuleForUnit = (
   unit: keyof DateTime,
@@ -93,45 +132,6 @@ export const unitForByrule = (byruleUnit: ByProperty): keyof DateTime => {
     byyearday: 'day'
   }
   return mappings[byruleUnit]
-}
-
-export const smallestTickUnit = ({
-  freq,
-  bysecond,
-  byminute,
-  byhour,
-  byday,
-  bymonth,
-  bymonthday,
-  byyearday
-}: GroomedOptions): keyof DateTime => {
-  if (freq === 'SECONDLY' || bysecond) {
-    return 'second'
-  }
-
-  if (freq === 'MINUTELY' || byminute) {
-    return 'minute'
-  }
-
-  if (freq === 'HOURLY' || byhour) {
-    return 'hour'
-  }
-
-  if (
-    freq === 'DAILY' ||
-    freq === 'WEEKLY' ||
-    byday ||
-    byyearday ||
-    bymonthday
-  ) {
-    return 'day'
-  }
-
-  if (freq === 'MONTHLY' || bymonth) {
-    return 'month'
-  }
-
-  return 'year'
 }
 
 export const minFreqUnit = (options: GroomedOptions) => {
