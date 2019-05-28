@@ -3,8 +3,7 @@ import {
   dayOfWeek,
   dayOfYear,
   diffInDays,
-  firstWeekdayOfMonth,
-  lengthOfMonth
+  firstWeekdayOfMonth
 } from './dayOfWeek'
 import { parseISO } from './parseISO'
 
@@ -66,24 +65,6 @@ it('returns the correct first day of the month', () => {
       'SU'
     )
   ).toEqual(1)
-})
-
-describe('lengthOfMonth', () => {
-  it('gets January right', () => {
-    expect(lengthOfMonth(parseISO('1980-01-01')!)).toEqual(31)
-  })
-
-  it('gets February right in a leap year', () => {
-    expect(lengthOfMonth(parseISO('1980-02-01')!)).toEqual(29)
-  })
-
-  it('gets February right in a non-leap year', () => {
-    expect(lengthOfMonth(parseISO('1981-02-01')!)).toEqual(28)
-  })
-
-  it('gets December right', () => {
-    expect(lengthOfMonth(parseISO('1980-12-01')!)).toEqual(31)
-  })
 })
 
 describe('diffInDays', () => {

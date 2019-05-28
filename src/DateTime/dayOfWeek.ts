@@ -1,5 +1,5 @@
 import { Weekday } from '../types'
-import { DateTime } from './index'
+import { DateTime, daysInMonth } from './index'
 import { set } from './set'
 import { toMillis } from './toMillis'
 
@@ -15,10 +15,6 @@ export const dayOfWeek = (d: DateTime) => {
 
 export const dayOfMonth = (d: DateTime) => {
   return new Date(Date.UTC(d.year, d.month - 1, d.day)).getUTCDate()
-}
-
-export const lengthOfMonth = (d: DateTime) => {
-  return new Date(Date.UTC(d.year, d.month, 0)).getDate() + 1
 }
 
 export const firstWeekdayOfMonth = (d: DateTime, day: Weekday) => {
@@ -54,7 +50,7 @@ export const dayOfYear = (d: DateTime) =>
   1
 
 export const weekdaysInMonthByRule = (d: DateTime, byday: Weekday[]) => {
-  const len = lengthOfMonth(d)
+  const len = daysInMonth(d.month, d.year)
   const days: number[] = []
 
   for (let i = 1; i <= len; i++) {
