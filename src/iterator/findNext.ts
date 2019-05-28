@@ -13,14 +13,12 @@ export const findNext = (initial: DateTime, options: GroomedOptions) => {
     return next
   }
 
-  do {
-    const unit = FREQUENCY_ORDER[unitIdx]
-    const interval =
-      unit === FREQUENCY_COUNTER[options.freq] ? options.interval : 1
+  const unit = FREQUENCY_ORDER[unitIdx]
+  const interval =
+    unit === FREQUENCY_COUNTER[options.freq] ? options.interval : 1
 
-    next = add(next, { [unit]: interval })
-    next = syncWithRule(next, options)
-  } while (compare(initial, next) >= 0 && --unitIdx >= 0)
+  next = add(next, { [unit]: interval })
+  next = syncWithRule(next, options)
 
   return next
 }
