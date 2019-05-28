@@ -26,8 +26,8 @@ const unitRule = <T>(unit: ByProperty, byrule: T[] | undefined, def?: T) =>
   byrule
     ? { unit, byrule }
     : typeof def !== 'undefined'
-      ? { unit, byrule: [def] }
-      : undefined
+    ? { unit, byrule: [def] }
+    : undefined
 
 const smallestTickUnit = ({
   freq,
@@ -132,16 +132,4 @@ export const unitForByrule = (byruleUnit: ByProperty): keyof DateTime => {
     byyearday: 'day'
   }
   return mappings[byruleUnit]
-}
-
-export const minFreqUnit = (options: GroomedOptions) => {
-  if (options.freq === 'MONTHLY' && options.byday) {
-    return 'day'
-  }
-
-  if (options.freq === 'YEARLY' && options.bymonthday) {
-    return 'month'
-  }
-
-  return FREQUENCY_COUNTER[options.freq]
 }
