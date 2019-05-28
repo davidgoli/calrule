@@ -27,8 +27,8 @@ const unitRule = <T>(unit: ByProperty, byrule: T[] | undefined, def?: T) =>
   byrule
     ? { unit, byrule }
     : typeof def !== 'undefined'
-      ? { unit, byrule: [def] }
-      : undefined
+    ? { unit, byrule: [def] }
+    : undefined
 
 const smallestTickUnit = ({
   freq,
@@ -139,3 +139,6 @@ export const unitForByrule = (byruleUnit: ByProperty): keyof DateTime => {
   }
   return mappings[byruleUnit]
 }
+
+export const nextLargerUnit = (unit: keyof DateTime) =>
+  FREQUENCY_ORDER[FREQUENCY_ORDER.indexOf(unit) - 1]
