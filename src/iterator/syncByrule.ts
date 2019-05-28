@@ -15,8 +15,8 @@ const setYearday = (initial: DateTime, value: number) => {
   return interval === 0
     ? {}
     : {
-      day: interval
-    }
+        day: interval
+      }
 }
 
 const nextYearday = (initial: DateTime, steps: number[]) => {
@@ -61,9 +61,6 @@ const weekdaysInMonthByRule = (d: DateTime, byday: Weekday[]) => {
 
 const nextByruleStep = (initial: DateTime, unitRule: UnitRule) => {
   const { byrule } = unitRule
-  if (!byrule) {
-    return initial
-  }
   const steps = byrule as number[]
   const unit = unitForByrule(unitRule.unit)
 
@@ -90,14 +87,7 @@ const nextWeekday = (next: DateTime, byrule: Weekday[]) => {
   return nextByruleStep(next, { unit: 'byday', byrule: weekdaysInMonth })
 }
 
-export const syncByrule = (
-  d: DateTime,
-  unitRule: UnitRule | undefined
-): DateTimeDiff => {
-  if (!unitRule) {
-    return {}
-  }
-
+export const syncByrule = (d: DateTime, unitRule: UnitRule): DateTimeDiff => {
   const { unit, byrule } = unitRule
 
   switch (unit) {

@@ -4,11 +4,6 @@ import { syncByrule } from './syncByrule'
 
 const d = parseISO('1980-01-01T00:00:00')!
 
-it('returns the original if no unitRule', () => {
-  const result = syncByrule(d, undefined)
-  expect(result).toEqual({})
-})
-
 describe('BYDAY', () => {
   it('moves the day forward if it is behind', () => {
     const result = syncByrule(d, {

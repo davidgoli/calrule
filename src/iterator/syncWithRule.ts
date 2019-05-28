@@ -30,7 +30,7 @@ export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
 
       next = add(next, { [toRollOver]: base * interval })
       const byrule = byRuleForUnit(toRollOver, options)
-      diff = syncByrule(next, byrule)
+      diff = byrule ? syncByrule(next, byrule) : {}
       next = initializeFrom(next, toRollOver)
       next = add(next, diff)
       diffValue = diff[toRollOver]

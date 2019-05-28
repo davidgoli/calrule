@@ -3,5 +3,5 @@ import { Weekday } from '../types'
 
 export interface UnitRule {
   unit: ByProperty
-  byrule: number[] | Weekday[] | undefined
+  byrule: number[] | Weekday[]
 }
