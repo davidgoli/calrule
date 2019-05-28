@@ -1,4 +1,5 @@
-import { DateTime, daysInMonth, MONTHS } from './index'
+import { DateTime, DateTimeDiff, MONTHS } from './index'
+import { daysInMonth } from './units'
 
 const divmod = (n: number, base: number = 60) => {
   const bigHand = Math.floor(n / base)
@@ -19,7 +20,7 @@ const divmodMonths = (d: number, m: MONTHS, y: number) => {
   return [monthRemainder, d]
 }
 
-export const add = (base: DateTime, addend: Partial<DateTime>): DateTime => {
+export const add = (base: DateTime, addend: DateTimeDiff): DateTime => {
   const [minuteRemainder, second] = divmod(base.second + (addend.second || 0))
 
   const [hourRemainder, minute] = divmod(

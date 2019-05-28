@@ -1,4 +1,6 @@
-import { DateTime } from '../DateTime/index'
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import { DateTime } from '../DateTime'
+import { parseISO } from '../DateTime/parseISO'
 import { toISO } from '../DateTime/toISO'
 import { GroomedOptions } from '../groomOptions'
 import { findNext } from './findNext'
@@ -55,18 +57,11 @@ it('rolls over the date time to the next threshold', () => {
 })
 
 it('rolls over the date time to the next byrule if present', () => {
-  startDate.second = 59
-  startDate.hour = 2
+  startDate = parseISO('2017-03-02T02:59:59')!
+
   options.byhour = [2]
 
-  expect(findNext(startDate, options)).toEqual({
-    year: 2017,
-    month: 3 as 3,
-    day: 3,
-    hour: 2,
-    minute: 0,
-    second: 0
-  })
+  expect(toISO(findNext(startDate, options))).toEqual('2017-03-03T02:00:00')
 })
 
 it('rolls over the date time to the next smaller byrule if present', () => {
@@ -180,34 +175,13 @@ it('rolls over hourly with a synced byday', () => {
 })
 
 it('rolls over yearly with a byyearday rule', () => {
-  startDate = {
-    year: 2017,
-    month: 2,
-    day: 12,
-    hour: 0,
-    minute: 0,
-    second: 0
-  }
+  startDate = parseISO('2017-03-12T00:00:00')!
 
-  options.dtstart = {
-    year: 2017,
-    month: 2,
-    day: 10,
-    hour: 0,
-    minute: 0,
-    second: 0
-  }
+  options.dtstart = startDate
   options.freq = 'YEARLY'
   options.byyearday = [2, 41]
 
-  expect(findNext(startDate, options)).toEqual({
-    year: 2018,
-    month: 1,
-    day: 2,
-    hour: 0,
-    minute: 0,
-    second: 0
-  })
+  expect(toISO(findNext(startDate, options))).toEqual('2018-01-02T00:00:00')
 })
 
 it('does not roll over yearly on byyearday when it should not', () => {
@@ -252,7 +226,7 @@ it('does not roll over yearly on bymonthday when it should not', () => {
   expect(toISO(nextResult)).toEqual('2017-02-02T00:00:00')
 })
 
-it.skip('does not roll over monthly on byday when it should not', () => {
+it('does not roll over monthly on byday when it should not', () => {
   startDate = {
     year: 2017,
     month: 1,
@@ -277,7 +251,15 @@ it.skip('does not roll over monthly on byday when it should not', () => {
 
   result = findNext(result, options)
   expect(toISO(result)).toEqual('2017-01-25T00:00:00')
+})
 
-  result = findNext(result, options)
-  expect(toISO(result)).toEqual('2017-03-02T00:00:00')
+it('rolls over intervals correctly', () => {
+  startDate = parseISO('2017-01-25T00:00:00')!
+
+  options.freq = 'MONTHLY'
+  options.byday = ['WE']
+  options.interval = 2
+
+  const result = findNext(startDate, options)
+  expect(toISO(result)).toEqual('2017-03-01T00:00:00')
 })

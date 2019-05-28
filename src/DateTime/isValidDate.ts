@@ -1,4 +1,5 @@
-import { DateTime, daysInMonth } from './index'
+import { daysInMonth } from './units'
+import { DateTime } from './index'
 import { inRange } from './inRange'
 
 export const isValidDate = (iso8601: string | undefined): iso8601 is string =>

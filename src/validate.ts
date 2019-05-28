@@ -1,4 +1,4 @@
-import { WEEKDAYS } from './DateTime/dayOfWeek'
+import { WEEKDAYS } from './DateTime/units'
 import { inRange } from './DateTime/inRange'
 import { isValidDate } from './DateTime/isValidDate'
 import { Frequency, RuleOptions } from './types'
@@ -14,7 +14,7 @@ export const FREQValues: Frequency[] = [
 ]
 
 const isPositiveNumber = (value: unknown) =>
-  // tslint-ignore-next-line
+  // eslint-disable-next-line
   parseInt((value as Record<string, unknown>).toString(), 10) >= 0
 
 const arrayInRange = (value: unknown, min: number, max: number) =>
