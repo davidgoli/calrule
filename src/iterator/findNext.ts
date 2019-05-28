@@ -3,7 +3,7 @@ import { compare } from '../DateTime/compare'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
 import { syncWithRule } from './syncWithRule'
-import { FREQUENCY_ORDER } from './units'
+import { FREQUENCY_ORDER, FREQUENCY_COUNTER } from './units'
 
 // 2 main operations: advance and sync
 
@@ -32,7 +32,10 @@ export const findNext = (initial: DateTime, options: GroomedOptions) => {
 
   do {
     const unit = FREQUENCY_ORDER[unitIdx]
-    next = add(next, { [unit]: 1 })
+    const interval =
+      unit === FREQUENCY_COUNTER[options.freq] ? options.interval : 1
+
+    next = add(next, { [unit]: interval })
     next = syncWithRule(next, options)
   } while (compare(initial, next) >= 0 && --unitIdx >= 0)
 
