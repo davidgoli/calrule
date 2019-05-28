@@ -23,15 +23,12 @@ export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
       break
     }
 
-    console.log({ toRollOver })
     if (toRollOver === 'freq') {
       next = add(next, { [FREQUENCY_COUNTER[options.freq]]: options.interval })
       next = initializeFrom(next, FREQUENCY_COUNTER[options.freq])
-      console.log({ freq: options.freq, next })
       continue
     }
 
-    console.log({ next })
     let diff: DateTimeDiff
     let diffValue: number | undefined = 0
     do {
@@ -49,15 +46,13 @@ export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
       const byrule = byRuleForUnit(toRollOver, options)
       diff = syncByrule(next, byrule)
       next = initializeFrom(next, toRollOver)
-      console.log({ toRollOver, byrule, diff })
       next = add(next, diff)
       diffValue = diff[toRollOver]
       if (typeof diffValue === 'number' && diffValue < 0) {
         toRollOver = FREQUENCY_ORDER[FREQUENCY_ORDER.indexOf(toRollOver) - 1]
       }
     } while (typeof diffValue === 'number' && diffValue < 0)
-
-    console.log({ initial, next })
+    toRollOver = shouldRollOver(next, initial, options)
   } while (compare(initial, next) >= 0 || toRollOver)
 
   return next

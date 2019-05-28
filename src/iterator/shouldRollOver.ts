@@ -1,5 +1,5 @@
 import { compare } from '../DateTime/compare'
-import { dayOfWeek } from '../DateTime/dayOfWeek'
+import { dayOfWeek, dayOfYear } from '../DateTime/dayOfWeek'
 import { DateTime } from '../DateTime/index'
 import { GroomedOptions } from '../groomOptions'
 import { Weekday } from '../types'
@@ -18,7 +18,14 @@ export const shouldRollOver = (
     }
 
     const { unit: byruleUnit, byrule } = unitRule
-    console.log({ unit, n: next[unit], byrule })
+
+    if (
+      byruleUnit === 'byyearday' &&
+      (byrule as number[]).indexOf(dayOfYear(next)) !== -1
+    ) {
+      return undefined
+    }
+
     if (
       byruleUnit !== 'byday' &&
       (byrule as number[]).indexOf(next[unit]) === -1
