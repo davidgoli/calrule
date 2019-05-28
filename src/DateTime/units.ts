@@ -1,7 +1,6 @@
 import { Weekday } from '../types'
 import { MONTHS } from './index'
 import { DateTime } from './index'
-import { set } from './set'
 import { toMillis } from './toMillis'
 
 export const WEEKDAYS: Weekday[] = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']
@@ -80,10 +79,7 @@ export const firstWeekdayOfMonth = (d: DateTime, day: Weekday) => {
   })
 
   const dayOrdinalDesired = WEEKDAYS.indexOf(day)
-  let diff = dayOrdinalDesired - firstOfMonthOrdinal
-  while (diff < d.day - 1) {
-    diff += 7
-  }
+  const diff = dayOrdinalDesired - firstOfMonthOrdinal
 
   return diff + 1
 }
@@ -100,20 +96,6 @@ export const dayOfYear = (d: DateTime) =>
     })) /
     (60 * 60 * 24 * 1000) +
   1
-
-export const weekdaysInMonthByRule = (d: DateTime, byday: Weekday[]) => {
-  const len = daysInMonth(d.month, d.year)
-  const days: number[] = []
-
-  for (let i = 1; i <= len; i++) {
-    const date = set(d, 'day', i)
-    if (byday.indexOf(dayOfWeek(date)) !== -1) {
-      days.push(i)
-    }
-  }
-
-  return days
-}
 
 export const diffInDays = (a: DateTime, b: DateTime) => {
   return dayOfYear(a) - dayOfYear(b)
