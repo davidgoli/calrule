@@ -1,7 +1,6 @@
 import { copy } from '../copy'
 import { DateTime } from '../DateTime'
 import { add } from '../DateTime/add'
-import { compare } from '../DateTime/compare'
 import { GroomedOptions } from '../groomOptions'
 import { advanceUnit } from './advance'
 import { initializeSmallerUnits } from './initializeSmallerUnits'
@@ -36,10 +35,6 @@ export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
 
       unit = nextLargerUnit(unit)
     } while (unitDiff && unitDiff < 0)
-
-    if (compare(initial, next) >= 0) {
-      break
-    }
   }
 
   return next
