@@ -1,5 +1,5 @@
-import { WEEKDAYS } from './DateTime/dayOfWeek'
-import { DateTime } from './DateTime/index'
+import { WEEKDAYS } from './DateTime/units'
+import { DateTime } from './DateTime'
 import { parseISO } from './DateTime/parseISO'
 import { Frequency, RuleOptions, Weekday } from './types'
 import { validate } from './validate'

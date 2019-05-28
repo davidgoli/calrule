@@ -1,5 +1,10 @@
-import { dayOfMonth, dayOfWeek, dayOfYear } from '../DateTime/dayOfWeek'
-import { DateTime, DateTimeDiff, daysInMonth } from '../DateTime/index'
+import {
+  dayOfMonth,
+  dayOfWeek,
+  daysInMonth,
+  dayOfYear
+} from '../DateTime/units'
+import { DateTime, DateTimeDiff } from '../DateTime'
 import { set } from '../DateTime/set'
 import { Weekday } from '../types'
 import { UnitRule } from './types'
@@ -10,8 +15,8 @@ const setYearday = (initial: DateTime, value: number) => {
   return interval === 0
     ? {}
     : {
-        day: interval
-      }
+      day: interval
+    }
 }
 
 const nextYearday = (initial: DateTime, steps: number[]) => {

@@ -1,7 +1,7 @@
 import { copy } from '../copy'
 import { add } from '../DateTime/add'
 import { compare } from '../DateTime/compare'
-import { DateTime, DateTimeDiff } from '../DateTime/index'
+import { DateTime, DateTimeDiff } from '../DateTime'
 import { GroomedOptions } from '../groomOptions'
 import { initializeFrom } from './initializeFrom'
 import { shouldRollOver } from './shouldRollOver'

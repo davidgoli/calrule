@@ -1,4 +1,4 @@
-import { DateTime } from '../DateTime/index'
+import { DateTime } from '../DateTime'
 import { set } from '../DateTime/set'
 import { FREQUENCY_ORDER } from './units'
 

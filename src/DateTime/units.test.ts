@@ -4,7 +4,7 @@ import {
   dayOfYear,
   diffInDays,
   firstWeekdayOfMonth
-} from './dayOfWeek'
+} from './units'
 import { parseISO } from './parseISO'
 
 it('returns the weekday of the DateTime', () => {

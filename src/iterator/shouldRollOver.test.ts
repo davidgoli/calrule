@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { DateTime } from '../DateTime/index'
+import { DateTime } from '../DateTime'
 import { parseISO } from '../DateTime/parseISO'
 import { GroomedOptions } from '../groomOptions'
 import { shouldRollOver } from './shouldRollOver'

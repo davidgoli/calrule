@@ -1,4 +1,5 @@
-import { DateTime, DateTimeDiff, daysInMonth, MONTHS } from './index'
+import { DateTime, DateTimeDiff, MONTHS } from './index'
+import { daysInMonth } from './units'
 
 const divmod = (n: number, base: number = 60) => {
   const bigHand = Math.floor(n / base)

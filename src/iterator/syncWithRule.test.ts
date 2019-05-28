@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { add } from '../DateTime/add'
-import { DateTime } from '../DateTime/index'
+import { DateTime } from '../DateTime'
 import { parseISO } from '../DateTime/parseISO'
 import { toISO } from '../DateTime/toISO'
 import { GroomedOptions } from '../groomOptions'

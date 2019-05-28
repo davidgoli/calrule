@@ -1,4 +1,4 @@
-import { DateTime } from '../DateTime/index'
+import { DateTime } from '../DateTime'
 import { ByProperty, GroomedOptions } from '../groomOptions'
 import { Frequency } from '../types'
 import { UnitRule } from './types'

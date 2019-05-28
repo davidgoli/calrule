@@ -1,6 +1,6 @@
 import { add } from '../DateTime/add'
 import { compare } from '../DateTime/compare'
-import { DateTime } from '../DateTime/index'
+import { DateTime } from '../DateTime'
 import { GroomedOptions } from '../groomOptions'
 import { syncWithRule } from './syncWithRule'
 import { FREQUENCY_ORDER, FREQUENCY_COUNTER } from './units'

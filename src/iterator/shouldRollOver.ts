@@ -1,6 +1,6 @@
 import { compare } from '../DateTime/compare'
-import { dayOfWeek, dayOfYear } from '../DateTime/dayOfWeek'
-import { DateTime } from '../DateTime/index'
+import { dayOfWeek, dayOfYear } from '../DateTime/units'
+import { DateTime } from '../DateTime'
 import { GroomedOptions } from '../groomOptions'
 import { Weekday } from '../types'
 import { byRuleForUnit, FREQUENCY_ORDER } from './units'

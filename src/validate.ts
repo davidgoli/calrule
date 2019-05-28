@@ -1,4 +1,4 @@
-import { WEEKDAYS } from './DateTime/dayOfWeek'
+import { WEEKDAYS } from './DateTime/units'
 import { inRange } from './DateTime/inRange'
 import { isValidDate } from './DateTime/isValidDate'
 import { Frequency, RuleOptions } from './types'

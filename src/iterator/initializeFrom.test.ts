@@ -1,4 +1,4 @@
-import { DateTime } from '../DateTime/index'
+import { DateTime } from '../DateTime'
 import { initializeFrom } from './initializeFrom'
 
 let startDate: DateTime
