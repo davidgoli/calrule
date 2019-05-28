@@ -1,15 +1,10 @@
-import { compare } from '../DateTime/compare'
 import { dayOfWeek, dayOfYear } from '../DateTime/units'
 import { DateTime } from '../DateTime'
 import { GroomedOptions } from '../groomOptions'
 import { Weekday } from '../types'
 import { byRuleForUnit, FREQUENCY_ORDER } from './units'
 
-export const shouldRollOver = (
-  next: DateTime,
-  initial: DateTime,
-  options: GroomedOptions
-) => {
+export const shouldRollOver = (next: DateTime, options: GroomedOptions) => {
   for (let i = FREQUENCY_ORDER.length - 1; i > 0; i--) {
     const unit = FREQUENCY_ORDER[i]
     const unitRule = byRuleForUnit(unit, options)
@@ -39,10 +34,6 @@ export const shouldRollOver = (
     ) {
       return unit
     }
-  }
-
-  if (compare(initial, next) > 0) {
-    return 'freq'
   }
 
   return undefined

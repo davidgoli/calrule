@@ -18,28 +18,28 @@ it('rolls over when the unit has not reached its limit', () => {
   }
 
   let next = parseISO('2017-01-01T01:02:02')!
-  expect(shouldRollOver(next, initial, options)).toEqual('second')
+  expect(shouldRollOver(next, options)).toEqual('second')
 
   next = parseISO('2017-01-01T01:02:03')!
-  expect(shouldRollOver(next, initial, options)).toEqual('minute')
+  expect(shouldRollOver(next, options)).toEqual('minute')
 
   next = parseISO('2017-01-01T01:02:15')!
-  expect(shouldRollOver(next, initial, options)).toEqual('minute')
+  expect(shouldRollOver(next, options)).toEqual('minute')
 
   next = parseISO('2017-01-01T01:07:15')!
-  expect(shouldRollOver(next, initial, options)).toEqual('hour')
+  expect(shouldRollOver(next, options)).toEqual('hour')
 
   next = parseISO('2017-01-01T09:07:15')!
-  expect(shouldRollOver(next, initial, options)).toEqual('day')
+  expect(shouldRollOver(next, options)).toEqual('day')
 
   next = parseISO('2017-01-05T09:07:15')!
-  expect(shouldRollOver(next, initial, options)).toEqual('month')
+  expect(shouldRollOver(next, options)).toEqual('month')
 
   next = parseISO('2017-06-29T09:07:15')!
-  expect(shouldRollOver(next, initial, options)).toBeUndefined()
+  expect(shouldRollOver(next, options)).toBeUndefined()
 
   next = parseISO('2017-06-01T09:07:15')!
-  expect(shouldRollOver(next, initial, options)).toBeUndefined()
+  expect(shouldRollOver(next, options)).toBeUndefined()
 })
 
 it('returns undefined when the date matches', () => {
@@ -70,5 +70,5 @@ it('returns undefined when the date matches', () => {
     bysecond: [19, 23]
   }
 
-  expect(shouldRollOver(next, initial, options)).toBeUndefined()
+  expect(shouldRollOver(next, options)).toBeUndefined()
 })
