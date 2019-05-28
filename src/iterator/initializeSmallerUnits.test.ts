@@ -1,5 +1,5 @@
 import { DateTime } from '../DateTime'
-import { initializeFrom } from './initializeFrom'
+import { initializeSmallerUnits } from './initializeSmallerUnits'
 
 let startDate: DateTime
 
@@ -15,7 +15,7 @@ beforeEach(() => {
 })
 
 it('initializes smaller units from hour', () => {
-  const initialized = initializeFrom(startDate, 'hour')
+  const initialized = initializeSmallerUnits(startDate, 'hour')
   expect(initialized).toEqual({
     year: 2017,
     month: 3,
@@ -27,7 +27,7 @@ it('initializes smaller units from hour', () => {
 })
 
 it('initializes smaller units from year', () => {
-  const initialized = initializeFrom(startDate, 'year')
+  const initialized = initializeSmallerUnits(startDate, 'year')
   expect(initialized).toEqual({
     year: 2017,
     month: 1,
