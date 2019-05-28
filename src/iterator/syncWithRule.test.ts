@@ -208,15 +208,8 @@ it('works with bymonth', () => {
   result = syncWithRule(add(result, { second: 1 }), options)
   expect(toISO(result)).toEqual('2017-11-01T00:00:00')
 
-  // result = syncWithRule(add(result, { second: 1 }), options)
-  // expect(toISO(result)).toEqual('2018-02-01T00:00:00')
-  // expect(result).toEqual([
-  //   '2017-02-01T00:00:00',
-  //   '2017-11-01T00:00:00',
-  //   '2018-02-01T00:00:00',
-  //   '2018-11-01T00:00:00',
-  //   '2019-02-01T00:00:00'
-  // ])
+  result = syncWithRule(add(result, { second: 1 }), options)
+  expect(toISO(result)).toEqual('2018-02-01T00:00:00')
 })
 
 it('rolls over with YEARLY', () => {
@@ -265,31 +258,31 @@ it('rolls forward every byrule', () => {
   }
 
   let r = syncWithRule(startDate, options)
+  expect(toISO(r)).toEqual('2017-03-01T02:20:10')
+
+  r = syncWithRule(add(r, { second: 1 }), options)
+  expect(toISO(r)).toEqual('2017-03-01T02:20:50')
+
+  r = syncWithRule(add(r, { second: 1 }), options)
+  expect(toISO(r)).toEqual('2017-03-01T02:30:10')
+
+  r = syncWithRule(add(r, { second: 1 }), options)
+  expect(toISO(r)).toEqual('2017-03-01T02:30:50')
+
+  r = syncWithRule(add(r, { second: 1 }), options)
+  expect(toISO(r)).toEqual('2017-03-01T21:20:10')
+
+  r = syncWithRule(add(r, { second: 1 }), options)
+  expect(toISO(r)).toEqual('2017-03-01T21:20:50')
+
+  r = syncWithRule(add(r, { second: 1 }), options)
+  expect(toISO(r)).toEqual('2017-03-01T21:30:10')
+
+  r = syncWithRule(add(r, { second: 1 }), options)
+  expect(toISO(r)).toEqual('2017-03-01T21:30:50')
+
+  r = syncWithRule(add(r, { second: 1 }), options)
   expect(toISO(r)).toEqual('2017-03-08T02:20:10')
-
-  r = syncWithRule(add(r, { second: 1 }), options)
-  expect(toISO(r)).toEqual('2017-03-08T02:20:50')
-
-  r = syncWithRule(add(r, { second: 1 }), options)
-  expect(toISO(r)).toEqual('2017-03-08T02:30:10')
-
-  r = syncWithRule(add(r, { second: 1 }), options)
-  expect(toISO(r)).toEqual('2017-03-08T02:30:50')
-
-  r = syncWithRule(add(r, { second: 1 }), options)
-  expect(toISO(r)).toEqual('2017-03-08T21:20:10')
-
-  r = syncWithRule(add(r, { second: 1 }), options)
-  expect(toISO(r)).toEqual('2017-03-08T21:20:50')
-
-  r = syncWithRule(add(r, { second: 1 }), options)
-  expect(toISO(r)).toEqual('2017-03-08T21:30:10')
-
-  r = syncWithRule(add(r, { second: 1 }), options)
-  expect(toISO(r)).toEqual('2017-03-08T21:30:50')
-
-  r = syncWithRule(add(r, { second: 1 }), options)
-  expect(toISO(r)).toEqual('2017-03-15T02:20:10')
 })
 
 it('supports interval with no time given', () => {
