@@ -1,4 +1,5 @@
 import { DateTime } from '../DateTime'
+import { dayOfWeek } from '../DateTime/units'
 import { ByProperty, GroomedOptions } from '../groomOptions'
 import { Frequency } from '../types'
 import { UnitRule } from './types'
@@ -78,6 +79,7 @@ export const byRuleForUnit = (
   const defaultMinute = smallestUnitIdx < FREQUENCY_ORDER.indexOf('minute')
   const defaultHour = smallestUnitIdx < FREQUENCY_ORDER.indexOf('hour')
   const defaultDay = smallestUnitIdx < FREQUENCY_ORDER.indexOf('day')
+  const defaultWeekday = options.freq === 'WEEKLY'
   const defaultMonth = smallestUnitIdx < FREQUENCY_ORDER.indexOf('month')
 
   switch (unit) {
@@ -96,7 +98,11 @@ export const byRuleForUnit = (
           options.bymonthday,
           defaultDay ? options.dtstart.day : undefined
         ) ||
-        unitRule('byday', options.byday)
+        unitRule(
+          'byday',
+          options.byday,
+          defaultWeekday ? dayOfWeek(options.dtstart) : undefined
+        )
       )
     case 'hour':
       return unitRule(

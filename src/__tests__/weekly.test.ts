@@ -56,15 +56,16 @@ it('supports interval', () => {
 it('supports interval with byday', () => {
   const result = rrule({
     dtstart: '2016-12-25',
-    count: 3,
+    count: 4,
     freq: 'WEEKLY',
-    byday: ['FR'],
+    byday: ['WE', 'FR'],
     interval: 2
   })
 
   expect(result).toEqual([
+    '2016-12-28T00:00:00',
     '2016-12-30T00:00:00',
-    '2017-01-13T00:00:00',
-    '2017-01-27T00:00:00'
+    '2017-01-11T00:00:00',
+    '2017-01-13T00:00:00'
   ])
 })

@@ -1,9 +1,9 @@
+import { DateTime } from '../DateTime'
 import { add } from '../DateTime/add'
 import { compare } from '../DateTime/compare'
-import { DateTime } from '../DateTime'
 import { GroomedOptions } from '../groomOptions'
 import { syncWithRule } from './syncWithRule'
-import { FREQUENCY_ORDER, FREQUENCY_COUNTER } from './units'
+import { FREQUENCY_COUNTER, FREQUENCY_ORDER } from './units'
 
 // 2 main operations: advance and sync
 
@@ -32,10 +32,12 @@ export const findNext = (initial: DateTime, options: GroomedOptions) => {
 
   do {
     const unit = FREQUENCY_ORDER[unitIdx]
+    const base =
+      unit === 'day' && options.freq === 'WEEKLY' && !options.byday ? 7 : 1
     const interval =
       unit === FREQUENCY_COUNTER[options.freq] ? options.interval : 1
 
-    next = add(next, { [unit]: interval })
+    next = add(next, { [unit]: base * interval })
     next = syncWithRule(next, options)
   } while (compare(initial, next) >= 0 && --unitIdx >= 0)
 
