@@ -3,9 +3,9 @@ import { DateTime } from '../DateTime'
 import { add } from '../DateTime/add'
 import { GroomedOptions } from '../groomOptions'
 import { advanceUnit } from './advance'
+import { diffToNextUnitRule } from './diffToNextUnitRule'
 import { initializeSmallerUnits } from './initializeSmallerUnits'
 import { shouldRollOver } from './shouldRollOver'
-import { syncByrule } from './syncByrule'
 import { byRuleForUnit, nextLargerUnit } from './units'
 
 const diffToNextByruleValue = (
@@ -14,7 +14,7 @@ const diffToNextByruleValue = (
   options: GroomedOptions
 ) => {
   const byrule = byRuleForUnit(unit, options)
-  return byrule ? syncByrule(next, byrule) : {}
+  return byrule ? diffToNextUnitRule(next, byrule) : {}
 }
 
 export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {

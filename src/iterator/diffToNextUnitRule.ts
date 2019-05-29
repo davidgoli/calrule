@@ -87,7 +87,10 @@ const nextWeekday = (next: DateTime, byrule: Weekday[]) => {
   return nextByruleStep(next, { unit: 'byday', byrule: weekdaysInMonth })
 }
 
-export const syncByrule = (d: DateTime, unitRule: UnitRule): DateTimeDiff => {
+export const diffToNextUnitRule = (
+  d: DateTime,
+  unitRule: UnitRule
+): DateTimeDiff => {
   const { unit, byrule } = unitRule
 
   switch (unit) {

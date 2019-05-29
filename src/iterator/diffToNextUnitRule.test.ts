@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { parseISO } from '../DateTime/parseISO'
-import { syncByrule } from './syncByrule'
+import { diffToNextUnitRule } from './diffToNextUnitRule'
 
 const d = parseISO('1980-01-01T00:00:00')!
 
 describe('BYDAY', () => {
   it('moves the day forward if it is behind', () => {
-    const result = syncByrule(d, {
+    const result = diffToNextUnitRule(d, {
       unit: 'byday',
       byrule: ['WE']
     })
@@ -15,7 +15,7 @@ describe('BYDAY', () => {
   })
 
   it('moves the day into the next week if necessary', () => {
-    const result = syncByrule(d, {
+    const result = diffToNextUnitRule(d, {
       unit: 'byday',
       byrule: ['MO']
     })
@@ -24,7 +24,7 @@ describe('BYDAY', () => {
   })
 
   it('does not move the day forward if it already matches', () => {
-    const result = syncByrule(parseISO('1980-01-07T00:00:00')!, {
+    const result = diffToNextUnitRule(parseISO('1980-01-07T00:00:00')!, {
       unit: 'byday',
       byrule: ['MO']
     })
@@ -33,7 +33,7 @@ describe('BYDAY', () => {
   })
 
   it('does not move the day forward if it is the last of the month', () => {
-    const result = syncByrule(parseISO('1980-01-31T00:00:00')!, {
+    const result = diffToNextUnitRule(parseISO('1980-01-31T00:00:00')!, {
       unit: 'byday',
       byrule: ['TH']
     })
@@ -42,7 +42,7 @@ describe('BYDAY', () => {
   })
 
   it('moves the day back to the last match if it is over', () => {
-    const result = syncByrule(parseISO('1980-01-29T00:00:00')!, {
+    const result = diffToNextUnitRule(parseISO('1980-01-29T00:00:00')!, {
       unit: 'byday',
       byrule: ['MO']
     })
@@ -53,7 +53,7 @@ describe('BYDAY', () => {
 
 describe('BYHOUR', () => {
   it('moves the hour forward if it is behind', () => {
-    const result = syncByrule(d, {
+    const result = diffToNextUnitRule(d, {
       unit: 'byhour',
       byrule: [20]
     })
@@ -63,7 +63,7 @@ describe('BYHOUR', () => {
 
   it('clamps the hour to the last byhour if it is over', () => {
     const d = parseISO('1980-01-01T21:00:00')!
-    const result = syncByrule(d, {
+    const result = diffToNextUnitRule(d, {
       unit: 'byhour',
       byrule: [2, 20]
     })
@@ -72,7 +72,7 @@ describe('BYHOUR', () => {
   })
 
   it('does not move the hour forward if it already matches', () => {
-    const result = syncByrule(parseISO('1980-01-01T20:00:00')!, {
+    const result = diffToNextUnitRule(parseISO('1980-01-01T20:00:00')!, {
       unit: 'byhour',
       byrule: [20]
     })
@@ -83,7 +83,7 @@ describe('BYHOUR', () => {
 
 describe('BYYEARDAY', () => {
   it('moves the date forward if it is behind', () => {
-    const result = syncByrule(parseISO('1980-01-01')!, {
+    const result = diffToNextUnitRule(parseISO('1980-01-01')!, {
       unit: 'byyearday',
       byrule: [20]
     })
@@ -92,7 +92,7 @@ describe('BYYEARDAY', () => {
   })
 
   it('moves the date forward into the next month if it is behind', () => {
-    const result = syncByrule(parseISO('1980-01-01')!, {
+    const result = diffToNextUnitRule(parseISO('1980-01-01')!, {
       unit: 'byyearday',
       byrule: [40]
     })
@@ -101,7 +101,7 @@ describe('BYYEARDAY', () => {
   })
 
   it('does not move the day if it matches', () => {
-    const result = syncByrule(parseISO('1980-02-09')!, {
+    const result = diffToNextUnitRule(parseISO('1980-02-09')!, {
       unit: 'byyearday',
       byrule: [40, 50]
     })
@@ -110,7 +110,7 @@ describe('BYYEARDAY', () => {
   })
 
   it('returns a negative interval if it is ahead', () => {
-    const result = syncByrule(parseISO('1980-03-01')!, {
+    const result = diffToNextUnitRule(parseISO('1980-03-01')!, {
       unit: 'byyearday',
       byrule: [40]
     })
@@ -119,7 +119,7 @@ describe('BYYEARDAY', () => {
   })
 
   it('clamps the date back to the last if it is ahead', () => {
-    const result = syncByrule(parseISO('2017-02-12')!, {
+    const result = diffToNextUnitRule(parseISO('2017-02-12')!, {
       unit: 'byyearday',
       byrule: [2, 11]
     })
@@ -130,7 +130,7 @@ describe('BYYEARDAY', () => {
 
 describe('BYMONTHDAY', () => {
   it('moves the date forward if it is behind', () => {
-    const result = syncByrule(parseISO('1980-01-01')!, {
+    const result = diffToNextUnitRule(parseISO('1980-01-01')!, {
       unit: 'bymonthday',
       byrule: [20]
     })
@@ -139,7 +139,7 @@ describe('BYMONTHDAY', () => {
   })
 
   it('moves the date forward into the next month if it is behind', () => {
-    const result = syncByrule(parseISO('1980-01-01')!, {
+    const result = diffToNextUnitRule(parseISO('1980-01-01')!, {
       unit: 'bymonthday',
       byrule: [40]
     })
@@ -148,7 +148,7 @@ describe('BYMONTHDAY', () => {
   })
 
   it('does not move the day if it matches', () => {
-    const result = syncByrule(parseISO('1980-02-09')!, {
+    const result = diffToNextUnitRule(parseISO('1980-02-09')!, {
       unit: 'bymonthday',
       byrule: [9, 19]
     })
@@ -157,7 +157,7 @@ describe('BYMONTHDAY', () => {
   })
 
   it('clamps the date back to the last if it is ahead', () => {
-    const result = syncByrule(parseISO('1980-03-05')!, {
+    const result = diffToNextUnitRule(parseISO('1980-03-05')!, {
       unit: 'bymonthday',
       byrule: [4]
     })
