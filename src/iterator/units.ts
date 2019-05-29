@@ -127,17 +127,14 @@ export const byRuleForUnit = (
   }
 }
 
-export const unitForByrule = (byruleUnit: ByProperty): keyof DateTime => {
-  const mappings: { [K in ByProperty]: keyof DateTime } = {
-    bysecond: 'second',
-    byminute: 'minute',
-    byhour: 'hour',
-    byday: 'day',
-    bymonth: 'month',
-    bymonthday: 'day',
-    byyearday: 'day'
-  }
-  return mappings[byruleUnit]
+export const unitForByrule: { [K in ByProperty]: keyof DateTime } = {
+  bysecond: 'second',
+  byminute: 'minute',
+  byhour: 'hour',
+  byday: 'day',
+  bymonth: 'month',
+  bymonthday: 'day',
+  byyearday: 'day'
 }
 
 export const nextLargerUnit = (unit: keyof DateTime) =>

@@ -1,11 +1,11 @@
+import { DateTime, DateTimeDiff } from '../DateTime'
+import { set } from '../DateTime/set'
 import {
   dayOfMonth,
   dayOfWeek,
-  daysInMonth,
-  dayOfYear
+  dayOfYear,
+  daysInMonth
 } from '../DateTime/units'
-import { DateTime, DateTimeDiff } from '../DateTime'
-import { set } from '../DateTime/set'
 import { Weekday } from '../types'
 import { UnitRule } from './types'
 import { unitForByrule } from './units'
@@ -15,8 +15,8 @@ const setYearday = (initial: DateTime, value: number) => {
   return interval === 0
     ? {}
     : {
-      day: interval
-    }
+        day: interval
+      }
 }
 
 const nextYearday = (initial: DateTime, steps: number[]) => {
@@ -62,7 +62,7 @@ const weekdaysInMonthByRule = (d: DateTime, byday: Weekday[]) => {
 const nextByruleStep = (initial: DateTime, unitRule: UnitRule) => {
   const { byrule } = unitRule
   const steps = byrule as number[]
-  const unit = unitForByrule(unitRule.unit)
+  const unit = unitForByrule[unitRule.unit]
 
   for (let i = 0; i < steps.length; i++) {
     if (initial[unit] <= steps[i]) {
