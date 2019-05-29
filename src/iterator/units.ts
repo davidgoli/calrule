@@ -2,7 +2,7 @@ import { ByProperty } from '../groomOptions'
 import { Frequency } from '../types'
 import { Unit } from './types'
 
-export const FREQUENCY_COUNTER: { [k in Frequency]: Unit } = {
+export const FREQUENCY_UNIT: { [k in Frequency]: Unit } = {
   YEARLY: 'year',
   MONTHLY: 'month',
   WEEKLY: 'day',

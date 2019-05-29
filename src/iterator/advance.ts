@@ -3,7 +3,7 @@ import { DateTime } from '../DateTime/index'
 import { dayOfWeek, dayOrdinalOfWeek } from '../DateTime/units'
 import { GroomedOptions } from '../groomOptions'
 import { Unit } from './types'
-import { FREQUENCY_COUNTER } from './units'
+import { FREQUENCY_UNIT } from './units'
 
 const strideToRollover = (
   next: DateTime,
@@ -19,8 +19,7 @@ const strideToRollover = (
     (!options.byday || (wday === lastByday && options.interval > 1))
 
   const base = weeklyStride ? 7 : 1
-  const interval =
-    unit === FREQUENCY_COUNTER[options.freq] ? options.interval : 1
+  const interval = unit === FREQUENCY_UNIT[options.freq] ? options.interval : 1
 
   return base * interval - (weeklyStride ? dayOrdinalOfWeek(next) : 0)
 }
