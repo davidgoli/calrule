@@ -75,15 +75,10 @@ export const byRuleForUnit = (
 ): UnitRule | undefined => {
   const smallestUnit = smallestTickUnit(options)
   const smallestUnitIdx = FREQUENCY_ORDER.indexOf(smallestUnit)
-  const defaultSecond = smallestUnitIdx < FREQUENCY_ORDER.indexOf('second')
-  const defaultMinute = smallestUnitIdx < FREQUENCY_ORDER.indexOf('minute')
-  const defaultHour = smallestUnitIdx < FREQUENCY_ORDER.indexOf('hour')
-  const defaultDay = smallestUnitIdx < FREQUENCY_ORDER.indexOf('day')
-  const defaultWeekday = options.freq === 'WEEKLY'
-  const defaultMonth = smallestUnitIdx < FREQUENCY_ORDER.indexOf('month')
 
   switch (unit) {
     case 'month':
+      const defaultMonth = smallestUnitIdx < FREQUENCY_ORDER.indexOf('month')
       return unitRule(
         'bymonth',
         options.bymonth,
@@ -91,6 +86,8 @@ export const byRuleForUnit = (
       )
 
     case 'day':
+      const defaultDay = smallestUnitIdx < FREQUENCY_ORDER.indexOf('day')
+      const defaultWeekday = options.freq === 'WEEKLY'
       return (
         unitRule('byyearday', options.byyearday) ||
         unitRule(
@@ -104,24 +101,31 @@ export const byRuleForUnit = (
           defaultWeekday ? dayOfWeek(options.dtstart) : undefined
         )
       )
+
     case 'hour':
+      const defaultHour = smallestUnitIdx < FREQUENCY_ORDER.indexOf('hour')
       return unitRule(
         'byhour',
         options.byhour,
         defaultHour ? options.dtstart.hour : undefined
       )
+
     case 'minute':
+      const defaultMinute = smallestUnitIdx < FREQUENCY_ORDER.indexOf('minute')
       return unitRule(
         'byminute',
         options.byminute,
         defaultMinute ? options.dtstart.minute : undefined
       )
+
     case 'second':
+      const defaultSecond = smallestUnitIdx < FREQUENCY_ORDER.indexOf('second')
       return unitRule(
         'bysecond',
         options.bysecond,
         defaultSecond ? options.dtstart.second : undefined
       )
+
     default:
       return undefined
   }
