@@ -1,12 +1,13 @@
-import { dayOfWeek, dayOfYear } from '../DateTime/units'
 import { DateTime } from '../DateTime'
+import { dayOfWeek, dayOfYear } from '../DateTime/units'
 import { GroomedOptions } from '../groomOptions'
 import { Weekday } from '../types'
-import { byRuleForUnit, FREQUENCY_ORDER } from './units'
+import { byRuleForUnit } from './byRuleForUnit'
+import { UNIT_ORDER } from './units'
 
 export const shouldRollOver = (next: DateTime, options: GroomedOptions) => {
-  for (let i = FREQUENCY_ORDER.length - 1; i > 0; i--) {
-    const unit = FREQUENCY_ORDER[i]
+  for (let i = UNIT_ORDER.length - 1; i > 0; i--) {
+    const unit = UNIT_ORDER[i]
     const unitRule = byRuleForUnit(unit, options)
     if (!unitRule || !unitRule.byrule) {
       continue

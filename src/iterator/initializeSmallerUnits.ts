@@ -1,8 +1,9 @@
 import { DateTime } from '../DateTime'
 import { set } from '../DateTime/set'
-import { FREQUENCY_ORDER } from './units'
+import { Unit } from './types'
+import { UNIT_ORDER } from './units'
 
-const initialValueForUnit = (unit: keyof DateTime) => {
+const initialValueForUnit = (unit: Unit) => {
   if (unit === 'month' || unit === 'day') {
     return 1
   }
@@ -10,14 +11,11 @@ const initialValueForUnit = (unit: keyof DateTime) => {
   return 0
 }
 
-export const initializeSmallerUnits = (
-  next: DateTime,
-  unit: keyof DateTime
-) => {
-  const unitIdx = FREQUENCY_ORDER.indexOf(unit)
-  const smallestUnitIdx = FREQUENCY_ORDER.length - 1
+export const initializeSmallerUnits = (next: DateTime, unit: Unit) => {
+  const unitIdx = UNIT_ORDER.indexOf(unit)
+  const smallestUnitIdx = UNIT_ORDER.length - 1
 
-  FREQUENCY_ORDER.slice(unitIdx + 1, smallestUnitIdx + 1).forEach(unit => {
+  UNIT_ORDER.slice(unitIdx + 1, smallestUnitIdx + 1).forEach(unit => {
     const value = initialValueForUnit(unit)
     next = set(next, unit, value)
   })

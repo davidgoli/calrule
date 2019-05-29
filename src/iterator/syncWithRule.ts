@@ -3,23 +3,25 @@ import { DateTime } from '../DateTime'
 import { add } from '../DateTime/add'
 import { GroomedOptions } from '../groomOptions'
 import { advanceUnit } from './advance'
+import { byRuleForUnit } from './byRuleForUnit'
+import { diffToNextUnitRule } from './diffToNextUnitRule'
 import { initializeSmallerUnits } from './initializeSmallerUnits'
 import { shouldRollOver } from './shouldRollOver'
-import { syncByrule } from './syncByrule'
-import { byRuleForUnit, nextLargerUnit } from './units'
+import { Unit } from './types'
+import { nextLargerUnit } from './units'
 
 const diffToNextByruleValue = (
   next: DateTime,
-  unit: keyof DateTime,
+  unit: Unit,
   options: GroomedOptions
 ) => {
   const byrule = byRuleForUnit(unit, options)
-  return byrule ? syncByrule(next, byrule) : {}
+  return byrule ? diffToNextUnitRule(next, byrule) : {}
 }
 
 export const syncWithRule = (initial: DateTime, options: GroomedOptions) => {
   let next = copy(initial)
-  let unit: keyof DateTime | undefined
+  let unit: Unit | undefined
 
   while ((unit = shouldRollOver(next, options))) {
     let unitDiff: number | undefined = 0
