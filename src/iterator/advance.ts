@@ -2,11 +2,12 @@ import { add } from '../DateTime/add'
 import { DateTime } from '../DateTime/index'
 import { dayOfWeek, dayOrdinalOfWeek } from '../DateTime/units'
 import { GroomedOptions } from '../groomOptions'
+import { Unit } from './types'
 import { FREQUENCY_COUNTER } from './units'
 
 const strideToRollover = (
   next: DateTime,
-  unit: keyof DateTime,
+  unit: Unit,
   options: GroomedOptions
 ) => {
   const lastByday = options.byday && options.byday[options.byday.length - 1]
@@ -26,7 +27,7 @@ const strideToRollover = (
 
 export const advanceUnit = (
   next: DateTime,
-  unit: keyof DateTime,
+  unit: Unit,
   options: GroomedOptions
 ) =>
   add(next, {
