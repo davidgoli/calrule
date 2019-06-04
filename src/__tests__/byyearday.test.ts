@@ -38,19 +38,18 @@ describe('FREQ=YEARLY', () => {
 
   it('returns negative yeardays', () => {
     const result = rrule({
-      dtstart: '2017-01-01',
+      dtstart: '2016-01-01',
       freq: 'YEARLY',
       count: 5,
       byyearday: [2, -1]
     })
 
     expect(result).toEqual([
-      // 2017-01-01 is a Sunday
+      '2016-01-02T00:00:00',
+      '2016-12-31T00:00:00',
       '2017-01-02T00:00:00',
       '2017-12-31T00:00:00',
-      '2018-01-02T00:00:00',
-      '2018-12-31T00:00:00',
-      '2019-01-02T00:00:00'
+      '2018-01-02T00:00:00'
     ])
   })
 })
