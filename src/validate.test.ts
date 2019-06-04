@@ -235,8 +235,44 @@ it('is not valid with byyearday less than -367', () => {
   ])
 })
 
+it('is not valid with byyearday and FREQ=MONTHLY', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', byyearday: [-2, 11] })
+  ).toEqual([false, { errors: ['BYYEARDAY cannot be used when FREQ=MONTHLY'] }])
+})
+
 it('is valid with valid byyearday', () => {
   expect(
     validate({ freq: 'YEARLY', dtstart: '2017-04-05', byyearday: [-2, 11] })
+  ).toEqual([true, {}])
+})
+
+it('is not valid with byweekno less than -53', () => {
+  expect(
+    validate({ freq: 'YEARLY', dtstart: '2017-04-05', byweekno: [-54] })
+  ).toEqual([false, { errors: ['Invalid value "-54" for parameter BYWEEKNO'] }])
+})
+
+it('is not valid with byweekno greater than 53', () => {
+  expect(
+    validate({ freq: 'YEARLY', dtstart: '2017-04-05', byweekno: [54] })
+  ).toEqual([false, { errors: ['Invalid value "54" for parameter BYWEEKNO'] }])
+})
+
+it('is not valid with byweekno equal to 0', () => {
+  expect(
+    validate({ freq: 'YEARLY', dtstart: '2017-04-05', byweekno: [0] })
+  ).toEqual([false, { errors: ['Invalid value "0" for parameter BYWEEKNO'] }])
+})
+
+it('is not valid with byweekno and FREQ=MONTHLY', () => {
+  expect(
+    validate({ freq: 'MONTHLY', dtstart: '2017-04-05', byweekno: [-2, 11] })
+  ).toEqual([false, { errors: ['BYWEEKNO cannot be used when FREQ=MONTHLY'] }])
+})
+
+it('is valid with valid byweekno', () => {
+  expect(
+    validate({ freq: 'YEARLY', dtstart: '2017-04-05', byweekno: [-2, 11] })
   ).toEqual([true, {}])
 })

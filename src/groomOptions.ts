@@ -1,11 +1,12 @@
-import { WEEKDAYS } from './DateTime/units'
 import { DateTime } from './DateTime'
 import { parseISO } from './DateTime/parseISO'
+import { WEEKDAYS } from './DateTime/units'
 import { Frequency, RuleOptions, Weekday } from './types'
 import { validate } from './validate'
 
 export interface GroomedOptions {
   byyearday?: number[]
+  byweekno?: number[]
   bymonth?: number[]
   bymonthday?: number[]
   byday?: Weekday[]
@@ -20,14 +21,15 @@ export interface GroomedOptions {
 }
 
 export type ByProperty = keyof Pick<
-RuleOptions,
-| 'byhour'
-| 'byminute'
-| 'bysecond'
-| 'byday'
-| 'bymonthday'
-| 'bymonth'
-| 'byyearday'
+  RuleOptions,
+  | 'byhour'
+  | 'byminute'
+  | 'bysecond'
+  | 'byday'
+  | 'bymonthday'
+  | 'bymonth'
+  | 'byweekno'
+  | 'byyearday'
 >
 
 const byProperties: ByProperty[] = [
@@ -37,6 +39,7 @@ const byProperties: ByProperty[] = [
   'byday',
   'bymonthday',
   'bymonth',
+  'byweekno',
   'byyearday'
 ]
 

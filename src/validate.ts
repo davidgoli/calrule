@@ -1,6 +1,6 @@
-import { WEEKDAYS } from './DateTime/units'
 import { inRange } from './DateTime/inRange'
 import { isValidDate } from './DateTime/isValidDate'
+import { WEEKDAYS } from './DateTime/units'
 import { Frequency, RuleOptions } from './types'
 
 export const FREQValues: Frequency[] = [
@@ -105,6 +105,16 @@ export const validate = (options: RuleOptions) => {
   }
 
   if (
+    typeof options.byweekno !== 'undefined' &&
+    !(
+      arrayInRange(options.byweekno, -53, 53) &&
+      options.byweekno.indexOf(0) === -1
+    )
+  ) {
+    errors.push(error('BYWEEKNO', options.byweekno))
+  }
+
+  if (
     typeof options.bymonth !== 'undefined' &&
     !arrayInRange(options.bymonth, 1, 12)
   ) {
@@ -119,10 +129,21 @@ export const validate = (options: RuleOptions) => {
   }
 
   if (
-    ['DAILY', 'WEEKLY', 'MONTHLY'].indexOf(options.freq) !== -1 &&
+    ['SECONDLY', 'MINUTELY', 'HOURLY', 'DAILY', 'WEEKLY', 'MONTHLY'].indexOf(
+      options.freq
+    ) !== -1 &&
     typeof options.byyearday !== 'undefined'
   ) {
     errors.push(`BYYEARDAY cannot be used when FREQ=${options.freq}`)
+  }
+
+  if (
+    ['SECONDLY', 'MINUTELY', 'HOURLY', 'DAILY', 'WEEKLY', 'MONTHLY'].indexOf(
+      options.freq
+    ) !== -1 &&
+    typeof options.byweekno !== 'undefined'
+  ) {
+    errors.push(`BYWEEKNO cannot be used when FREQ=${options.freq}`)
   }
 
   if (options.freq === 'WEEKLY' && typeof options.bymonthday !== 'undefined') {

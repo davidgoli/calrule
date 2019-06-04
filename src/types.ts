@@ -16,6 +16,7 @@ export interface RuleOptions {
   until?: string
   interval?: number
   byyearday?: number[]
+  byweekno?: number[]
   bymonth?: number[]
   bymonthday?: number[]
   byday?: Weekday[]
