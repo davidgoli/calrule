@@ -1,5 +1,7 @@
+import { DateTime } from '../DateTime/index'
 import { dayOfWeek } from '../DateTime/units'
 import { ByProperty, GroomedOptions } from '../groomOptions'
+import { monthdays } from './diffToNextUnitRule'
 import { Unit, UnitRule } from './types'
 import { UNIT_ORDER } from './units'
 
@@ -50,6 +52,7 @@ const smallestTickUnit = ({
 }
 
 export const byRuleForUnit = (
+  current: DateTime,
   unit: Unit,
   options: GroomedOptions
 ): UnitRule | undefined => {
@@ -75,7 +78,9 @@ export const byRuleForUnit = (
         unitRule('byyearday', options.byyearday) ||
         unitRule(
           'bymonthday',
-          options.bymonthday,
+          options.bymonthday
+            ? monthdays(current, options.bymonthday)
+            : undefined,
           defaultDay ? options.dtstart.day : undefined
         ) ||
         unitRule(

@@ -72,3 +72,25 @@ it('returns undefined when the date matches', () => {
 
   expect(shouldRollOver(next, options)).toBeUndefined()
 })
+
+it('handles negative bymonthday', () => {
+  const options: GroomedOptions = {
+    dtstart: parseISO('2017-01-01')!,
+    freq: 'MONTHLY',
+    interval: 1,
+    count: 5,
+    bymonthday: [-5]
+  }
+
+  const next: DateTime = {
+    year: 2017,
+    month: 1,
+    day: 1,
+    hour: 0,
+    minute: 0,
+    second: 0
+  }
+
+  const result = shouldRollOver(next, options)
+  expect(result).toEqual('day')
+})

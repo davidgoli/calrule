@@ -52,6 +52,23 @@ describe('FREQ=MONTHLY', () => {
       '2017-08-31T00:00:00'
     ])
   })
+
+  it('returns negative month days', () => {
+    const result = rrule({
+      dtstart: '2017-01-01',
+      freq: 'MONTHLY',
+      count: 5,
+      bymonthday: [-5]
+    })
+
+    expect(result).toEqual([
+      '2017-01-27T00:00:00',
+      '2017-02-24T00:00:00',
+      '2017-03-27T00:00:00',
+      '2017-04-26T00:00:00',
+      '2017-05-27T00:00:00'
+    ])
+  })
 })
 
 describe('FREQ=WEEKLY', () => {
