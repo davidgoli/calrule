@@ -164,4 +164,13 @@ describe('BYMONTHDAY', () => {
 
     expect(result).toEqual({ day: -1 })
   })
+
+  it('moves the day to a negative monthday', () => {
+    const result = diffToNextUnitRule(parseISO('1980-01-01')!, {
+      unit: 'bymonthday',
+      byrule: [-1]
+    })
+
+    expect(result).toEqual({ day: 30 })
+  })
 })

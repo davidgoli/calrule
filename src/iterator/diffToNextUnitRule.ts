@@ -15,8 +15,8 @@ const setYearday = (initial: DateTime, value: number) => {
   return interval === 0
     ? {}
     : {
-      day: interval
-    }
+        day: interval
+      }
 }
 
 const nextYearday = (initial: DateTime, steps: number[]) => {
@@ -31,16 +31,25 @@ const nextYearday = (initial: DateTime, steps: number[]) => {
   return setYearday(initial, steps[steps.length - 1])
 }
 
+export const monthdays = (initial: DateTime, steps: number[]) => {
+  const len = daysInMonth(initial.month, initial.year)
+
+  return steps
+    .map(step => (step < 0 ? len + (step + 1) : step))
+    .sort((a, b) => a - b)
+}
+
 const nextMonthday = (initial: DateTime, steps: number[]) => {
   const currentMonthday = dayOfMonth(initial)
-  for (let i = 0; i < steps.length; i++) {
-    const interval = steps[i] - currentMonthday
+  const mdays = monthdays(initial, steps)
+  for (let i = 0; i < mdays.length; i++) {
+    const interval = mdays[i] - currentMonthday
     if (interval >= 0) {
       return interval === 0 ? {} : { day: interval }
     }
   }
 
-  const interval = steps[steps.length - 1] - initial.day
+  const interval = mdays[mdays.length - 1] - initial.day
 
   return interval === 0 ? {} : { day: interval }
 }
