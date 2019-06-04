@@ -59,8 +59,8 @@ undefined
 | until      | ISO string                                                                         | No recurrences will be generated beyond this date, inclusive             |
 | bymonth    | number[] in range (1-12)                                                           | Recurrences only appear on the provided months                           |
 | byweekno   | number[] in range (1-53)                                                           | Recurrences only appear on the provided week number of the year          |
-| byyearday  | number[] in range (1-366)                                                          | Recurrences only appear on the provided days of the year                 |
-| bymonthday | number[] in range (1-31)                                                           | Recurrences only appear on the provided days of the month                |
+| byyearday  | number[] in range (1-366) or (-1 - -366)                                           | Recurrences only appear on the provided days of the year                 |
+| bymonthday | number[] in range (1-31) or (-1 - -31)                                             | Recurrences only appear on the provided days of the month                |
 | byday      | Array of [ 'SU' \| 'MO' \| 'TU' \| 'WE' \| 'TH' \| 'FR' \| 'SA' ]                  | Recurrences only appear on the provided weekdays                         |
 | byhour     | number[] in range (0-23)                                                           | Recurrences only appear on the provided hours                            |
 | byminute   | number[] in range (0-59)                                                           | Recurrences only appear on the provided minutes                          |

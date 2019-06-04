@@ -1,6 +1,5 @@
 import { Weekday } from '../types'
-import { MONTHS } from './index'
-import { DateTime } from './index'
+import { DateTime, MONTHS } from './index'
 import { toMillis } from './toMillis'
 
 export const WEEKDAYS: Weekday[] = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA']
@@ -67,6 +66,8 @@ const isLeapYear = (y: number) => {
 
 export const daysInMonth = (m: MONTHS, y: number) =>
   (isLeapYear(y) ? MONTH_LENGTHS_LEAP : MONTH_LENGTHS)[m]
+
+export const daysInYear = (y: number) => (isLeapYear(y) ? 366 : 365)
 
 export const firstWeekdayOfMonth = (d: DateTime, day: Weekday) => {
   const firstOfMonthOrdinal = dayOrdinalOfWeek({
