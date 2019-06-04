@@ -1,16 +1,23 @@
 import { DateTime } from '../DateTime/index'
-import { dayOfWeek } from '../DateTime/units'
+import { dayOfWeek, daysInMonth } from '../DateTime/units'
 import { ByProperty, GroomedOptions } from '../groomOptions'
-import { monthdays } from './diffToNextUnitRule'
 import { Unit, UnitRule } from './types'
 import { UNIT_ORDER } from './units'
+
+const monthdays = (initial: DateTime, steps: number[]) => {
+  const len = daysInMonth(initial.month, initial.year)
+
+  return steps
+    .map(step => (step < 0 ? len + (step + 1) : step))
+    .sort((a, b) => a - b)
+}
 
 const unitRule = <T>(unit: ByProperty, byrule: T[] | undefined, def?: T) =>
   byrule
     ? { unit, byrule }
     : typeof def !== 'undefined'
-      ? { unit, byrule: [def] }
-      : undefined
+    ? { unit, byrule: [def] }
+    : undefined
 
 const smallestTickUnit = ({
   freq,
