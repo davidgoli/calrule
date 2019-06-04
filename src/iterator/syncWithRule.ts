@@ -15,7 +15,7 @@ const diffToNextByruleValue = (
   unit: Unit,
   options: GroomedOptions
 ) => {
-  const byrule = byRuleForUnit(unit, options)
+  const byrule = byRuleForUnit(next, unit, options)
   return byrule ? diffToNextUnitRule(next, byrule) : {}
 }
 

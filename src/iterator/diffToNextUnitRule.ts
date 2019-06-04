@@ -15,8 +15,8 @@ const setYearday = (initial: DateTime, value: number) => {
   return interval === 0
     ? {}
     : {
-      day: interval
-    }
+        day: interval
+      }
 }
 
 const nextYearday = (initial: DateTime, steps: number[]) => {

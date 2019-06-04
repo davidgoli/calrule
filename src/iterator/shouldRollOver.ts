@@ -8,7 +8,7 @@ import { UNIT_ORDER } from './units'
 export const shouldRollOver = (next: DateTime, options: GroomedOptions) => {
   for (let i = UNIT_ORDER.length - 1; i > 0; i--) {
     const unit = UNIT_ORDER[i]
-    const unitRule = byRuleForUnit(unit, options)
+    const unitRule = byRuleForUnit(next, unit, options)
     if (!unitRule || !unitRule.byrule) {
       continue
     }

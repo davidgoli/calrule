@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { add } from '../DateTime/add'
 import { DateTime } from '../DateTime'
+import { add } from '../DateTime/add'
 import { parseISO } from '../DateTime/parseISO'
 import { toISO } from '../DateTime/toISO'
 import { GroomedOptions } from '../groomOptions'
@@ -326,4 +326,17 @@ it('returns only the days given', () => {
 
   let result = syncWithRule(add(options.dtstart, { second: 1 }), options)
   expect(toISO(result)).toEqual('2017-01-01T13:00:00')
+})
+
+it('handles negative bymonthday', () => {
+  const options: GroomedOptions = {
+    dtstart: parseISO('2017-01-01')!,
+    freq: 'MONTHLY',
+    interval: 1,
+    count: 5,
+    bymonthday: [-1]
+  }
+
+  const result = syncWithRule(add(options.dtstart, { second: 1 }), options)
+  expect(toISO(result)).toEqual('2017-01-31T00:00:00')
 })
