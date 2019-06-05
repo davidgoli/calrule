@@ -23,6 +23,13 @@ export const shouldRollOver = (next: DateTime, options: GroomedOptions) => {
     }
 
     if (
+      byruleUnit === 'byweekno' &&
+      (byrule as number[]).indexOf(Math.ceil(dayOfYear(next) / 7)) !== -1
+    ) {
+      return undefined
+    }
+
+    if (
       byruleUnit !== 'byday' &&
       (byrule as number[]).indexOf(next[unit]) === -1
     ) {

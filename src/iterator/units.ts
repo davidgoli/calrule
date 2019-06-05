@@ -28,6 +28,7 @@ export const unitForByrule: { [K in ByProperty]: Unit } = {
   byday: 'day',
   bymonth: 'month',
   bymonthday: 'day',
+  byweekno: 'day',
   byyearday: 'day'
 }
 

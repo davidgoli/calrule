@@ -1,5 +1,10 @@
 import { DateTime } from '../DateTime/index'
-import { dayOfWeek, daysInMonth, daysInYear } from '../DateTime/units'
+import {
+  dayOfWeek,
+  daysInMonth,
+  daysInYear,
+  weeksInYear
+} from '../DateTime/units'
 import { ByProperty, GroomedOptions } from '../groomOptions'
 import { Unit, UnitRule } from './types'
 import { UNIT_ORDER } from './units'
@@ -14,6 +19,14 @@ const monthdays = (initial: DateTime, steps: number[]) => {
 
 const yeardays = (initial: DateTime, steps: number[]) => {
   const len = daysInYear(initial.year)
+
+  return steps
+    .map(step => (step < 0 ? len + (step + 1) : step))
+    .sort((a, b) => a - b)
+}
+
+const weeknos = (initial: DateTime, steps: number[]) => {
+  const len = weeksInYear(initial.year)
 
   return steps
     .map(step => (step < 0 ? len + (step + 1) : step))
@@ -93,6 +106,10 @@ export const byRuleForUnit = (
         unitRule(
           'byyearday',
           options.byyearday ? yeardays(current, options.byyearday) : undefined
+        ) ||
+        unitRule(
+          'byweekno',
+          options.byweekno ? weeknos(current, options.byweekno) : undefined
         ) ||
         unitRule(
           'bymonthday',

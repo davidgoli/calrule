@@ -36,17 +36,15 @@ const MONTH_LENGTHS_LEAP: { [k in MONTHS]: MONTH_LENGTH } = {
   12: 31
 }
 
-export const dayOrdinalOfWeek = (d: DateTime) => {
-  return new Date(Date.UTC(d.year, d.month - 1, d.day)).getUTCDay()
-}
+export type DateValue = Pick<DateTime, 'year' | 'month' | 'day'>
 
-export const dayOfWeek = (d: DateTime) => {
-  return WEEKDAYS[dayOrdinalOfWeek(d)]
-}
+export const dayOrdinalOfWeek = (d: DateValue) =>
+  new Date(Date.UTC(d.year, d.month - 1, d.day)).getUTCDay()
 
-export const dayOfMonth = (d: DateTime) => {
-  return new Date(Date.UTC(d.year, d.month - 1, d.day)).getUTCDate()
-}
+export const dayOfWeek = (d: DateValue) => WEEKDAYS[dayOrdinalOfWeek(d)]
+
+export const dayOfMonth = (d: DateValue) =>
+  new Date(Date.UTC(d.year, d.month - 1, d.day)).getUTCDate()
 
 const isLeapYear = (y: number) => {
   if (y % 4 !== 0) {
@@ -69,14 +67,18 @@ export const daysInMonth = (m: MONTHS, y: number) =>
 
 export const daysInYear = (y: number) => (isLeapYear(y) ? 366 : 365)
 
-export const firstWeekdayOfMonth = (d: DateTime, day: Weekday) => {
+export const weeksInYear = (y: number) => {
+  const isLong =
+    dayOfWeek({ year: y, month: 1, day: 1 }) === 'TH' ||
+    dayOfWeek({ year: y, month: 12, day: 31 }) === 'TH'
+  return 52 + (isLong ? 1 : 0)
+}
+
+export const firstWeekdayOfMonth = (y: number, m: MONTHS, day: Weekday) => {
   const firstOfMonthOrdinal = dayOrdinalOfWeek({
-    year: d.year,
-    month: d.month,
-    day: 1,
-    hour: 0,
-    minute: 0,
-    second: 0
+    year: y,
+    month: m,
+    day: 1
   })
 
   const dayOrdinalDesired = WEEKDAYS.indexOf(day)
@@ -86,18 +88,18 @@ export const firstWeekdayOfMonth = (d: DateTime, day: Weekday) => {
 }
 
 export const dayOfYear = (d: DateTime) =>
-  (toMillis(d) -
-    toMillis({
-      year: d.year,
-      month: 1,
-      day: 1,
-      hour: 0,
-      minute: 0,
-      second: 0
-    })) /
-    (60 * 60 * 24 * 1000) +
-  1
+  Math.floor(
+    (toMillis(d) -
+      toMillis({
+        year: d.year,
+        month: 1,
+        day: 1,
+        hour: 0,
+        minute: 0,
+        second: 0
+      })) /
+      (60 * 60 * 24 * 1000)
+  ) + 1
 
-export const diffInDays = (a: DateTime, b: DateTime) => {
-  return dayOfYear(a) - dayOfYear(b)
-}
+export const diffInDays = (a: DateTime, b: DateTime) =>
+  dayOfYear(a) - dayOfYear(b)

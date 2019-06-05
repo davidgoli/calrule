@@ -70,7 +70,7 @@ const nextByruleStep = (initial: DateTime, unitRule: UnitRule) => {
       if (interval === 0) {
         return {}
       }
-      return { [unit]: steps[i] - initial[unit] }
+      return { [unit]: interval }
     }
   }
 
@@ -80,6 +80,19 @@ const nextByruleStep = (initial: DateTime, unitRule: UnitRule) => {
   }
 
   return { [unit]: interval }
+}
+
+const nextWeekno = (initial: DateTime, steps: number[]) => {
+  const currentDayOfYear = dayOfYear(initial)
+
+  for (let i = 0; i < steps.length; i++) {
+    const weekInDays = steps[i] * 7
+    if (currentDayOfYear <= weekInDays) {
+      return setYearday(initial, weekInDays)
+    }
+  }
+
+  return setYearday(initial, steps[steps.length - 1] * 7)
 }
 
 const nextWeekday = (next: DateTime, byrule: Weekday[]) => {
@@ -99,6 +112,9 @@ export const diffToNextUnitRule = (
 
     case 'bymonthday':
       return nextMonthday(d, byrule as number[])
+
+    case 'byweekno':
+      return nextWeekno(d, byrule as number[])
 
     case 'byday':
       return nextWeekday(d, byrule as Weekday[])

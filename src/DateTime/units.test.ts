@@ -1,11 +1,15 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import { dayOfWeek, dayOfYear, diffInDays, firstWeekdayOfMonth } from './units'
 import { parseISO } from './parseISO'
+import {
+  dayOfWeek,
+  dayOfYear,
+  diffInDays,
+  firstWeekdayOfMonth,
+  weeksInYear
+} from './units'
 
 it('returns the weekday of the DateTime', () => {
-  expect(
-    dayOfWeek({ year: 2017, month: 1, day: 1, hour: 0, minute: 0, second: 0 })
-  ).toEqual('SU')
+  expect(dayOfWeek({ year: 2017, month: 1, day: 1 })).toEqual('SU')
 })
 
 it('returns the current day of the year', () => {
@@ -34,33 +38,26 @@ it('returns the current day of the year', () => {
 
 describe('firstWeekdayOfMonth', () => {
   it('returns the correct first day of the month', () => {
-    expect(
-      firstWeekdayOfMonth(
-        {
-          year: 2017,
-          month: 1 as 1,
-          day: 1,
-          hour: 23,
-          minute: 59,
-          second: 58
-        },
-        'WE'
-      )
-    ).toEqual(4)
+    expect(firstWeekdayOfMonth(2017, 1, 'WE')).toEqual(4)
 
-    expect(
-      firstWeekdayOfMonth(
-        {
-          year: 2017,
-          month: 1 as 1,
-          day: 1,
-          hour: 23,
-          minute: 59,
-          second: 58
-        },
-        'SU'
-      )
-    ).toEqual(1)
+    expect(firstWeekdayOfMonth(2017, 1, 'SU')).toEqual(1)
+  })
+})
+
+describe('weeksInYear', () => {
+  it('returns the correct number of weeks', () => {
+    expect(weeksInYear(2009)).toEqual(53)
+    expect(weeksInYear(2010)).toEqual(52)
+    expect(weeksInYear(2011)).toEqual(52)
+    expect(weeksInYear(2012)).toEqual(52)
+    expect(weeksInYear(2013)).toEqual(52)
+    expect(weeksInYear(2014)).toEqual(52)
+    expect(weeksInYear(2015)).toEqual(53)
+    expect(weeksInYear(2016)).toEqual(52)
+    expect(weeksInYear(2017)).toEqual(52)
+    expect(weeksInYear(2018)).toEqual(52)
+    expect(weeksInYear(2019)).toEqual(52)
+    expect(weeksInYear(2020)).toEqual(53)
   })
 })
 
