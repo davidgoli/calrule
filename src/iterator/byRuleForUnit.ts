@@ -79,26 +79,36 @@ const smallestTickUnit = ({
   return 'year'
 }
 
+const defaultForUnit = (
+  unit: Unit,
+  options: GroomedOptions
+): number | undefined => {
+  const smallestUnit = smallestTickUnit(options)
+  const smallestUnitIdx = UNIT_ORDER.indexOf(smallestUnit)
+
+  switch (unit) {
+    default:
+      return smallestUnitIdx < UNIT_ORDER.indexOf(unit)
+        ? options.dtstart[unit]
+        : undefined
+  }
+}
+
+const defaultWeekday = (options: GroomedOptions) => {
+  return options.freq === 'WEEKLY' ? dayOfWeek(options.dtstart) : undefined
+}
+
 export const byRuleForUnit = (
   current: DateTime,
   unit: Unit,
   options: GroomedOptions
 ): UnitRule | undefined => {
-  const smallestUnit = smallestTickUnit(options)
-  const smallestUnitIdx = UNIT_ORDER.indexOf(smallestUnit)
-  const defaultMonth = smallestUnitIdx < UNIT_ORDER.indexOf('month')
-  const defaultDay = smallestUnitIdx < UNIT_ORDER.indexOf('day')
-  const defaultWeekday = options.freq === 'WEEKLY'
-  const defaultHour = smallestUnitIdx < UNIT_ORDER.indexOf('hour')
-  const defaultMinute = smallestUnitIdx < UNIT_ORDER.indexOf('minute')
-  const defaultSecond = smallestUnitIdx < UNIT_ORDER.indexOf('second')
-
   switch (unit) {
     case 'month':
       return unitRule(
         'bymonth',
         options.bymonth,
-        defaultMonth ? options.dtstart.month : undefined
+        defaultForUnit('month', options)
       )
 
     case 'day':
@@ -116,34 +126,26 @@ export const byRuleForUnit = (
           options.bymonthday
             ? monthdays(current, options.bymonthday)
             : undefined,
-          defaultDay ? options.dtstart.day : undefined
+          defaultForUnit('day', options)
         ) ||
-        unitRule(
-          'byday',
-          options.byday,
-          defaultWeekday ? dayOfWeek(options.dtstart) : undefined
-        )
+        unitRule('byday', options.byday, defaultWeekday(options))
       )
 
     case 'hour':
-      return unitRule(
-        'byhour',
-        options.byhour,
-        defaultHour ? options.dtstart.hour : undefined
-      )
+      return unitRule('byhour', options.byhour, defaultForUnit('hour', options))
 
     case 'minute':
       return unitRule(
         'byminute',
         options.byminute,
-        defaultMinute ? options.dtstart.minute : undefined
+        defaultForUnit('minute', options)
       )
 
     case 'second':
       return unitRule(
         'bysecond',
         options.bysecond,
-        defaultSecond ? options.dtstart.second : undefined
+        defaultForUnit('second', options)
       )
 
     default:
