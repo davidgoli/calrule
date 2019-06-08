@@ -100,48 +100,50 @@ const defaultWeekday = (options: GroomedOptions) => {
 
 export const byRuleForUnit = (
   current: DateTime,
-  unit: Unit,
+  byprop: ByProperty,
   options: GroomedOptions
 ): UnitRule | undefined => {
-  switch (unit) {
-    case 'month':
+  switch (byprop) {
+    case 'bymonth':
       return unitRule(
         'bymonth',
         options.bymonth,
         defaultForUnit('month', options)
       )
 
-    case 'day':
-      return (
-        unitRule(
-          'byyearday',
-          options.byyearday ? yeardays(current, options.byyearday) : undefined
-        ) ||
-        unitRule(
-          'byweekno',
-          options.byweekno ? weeknos(current, options.byweekno) : undefined
-        ) ||
-        unitRule(
-          'bymonthday',
-          options.bymonthday
-            ? monthdays(current, options.bymonthday)
-            : undefined,
-          defaultForUnit('day', options)
-        ) ||
-        unitRule('byday', options.byday, defaultWeekday(options))
+    case 'byyearday':
+      return unitRule(
+        'byyearday',
+        options.byyearday ? yeardays(current, options.byyearday) : undefined
       )
 
-    case 'hour':
+    case 'byweekno':
+      return unitRule(
+        'byweekno',
+        options.byweekno ? weeknos(current, options.byweekno) : undefined
+      )
+
+    case 'bymonthday':
+      return unitRule(
+        'bymonthday',
+        options.bymonthday ? monthdays(current, options.bymonthday) : undefined,
+        defaultForUnit('day', options)
+      )
+
+    case 'byday':
+      return unitRule('byday', options.byday, defaultWeekday(options))
+
+    case 'byhour':
       return unitRule('byhour', options.byhour, defaultForUnit('hour', options))
 
-    case 'minute':
+    case 'byminute':
       return unitRule(
         'byminute',
         options.byminute,
         defaultForUnit('minute', options)
       )
 
-    case 'second':
+    case 'bysecond':
       return unitRule(
         'bysecond',
         options.bysecond,

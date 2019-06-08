@@ -21,6 +21,18 @@ export const UNIT_ORDER: (Unit)[] = [
   'second'
 ]
 
+export const BYRULE_ORDER: ByProperty[] = [
+  'bymonth',
+  'byweekno',
+  'byyearday',
+  'bymonthday',
+  'byday',
+  'byhour',
+  'byminute',
+  'bysecond'
+  // 'bysetpos'
+]
+
 export const unitForByrule: { [K in ByProperty]: Unit } = {
   bysecond: 'second',
   byminute: 'minute',

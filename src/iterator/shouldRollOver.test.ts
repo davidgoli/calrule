@@ -18,22 +18,22 @@ it('rolls over when the unit has not reached its limit', () => {
   }
 
   let next = parseISO('2017-01-01T01:02:02')!
-  expect(shouldRollOver(next, options)).toEqual('second')
+  expect(shouldRollOver(next, options)).toEqual('bysecond')
 
   next = parseISO('2017-01-01T01:02:03')!
-  expect(shouldRollOver(next, options)).toEqual('minute')
+  expect(shouldRollOver(next, options)).toEqual('byminute')
 
   next = parseISO('2017-01-01T01:02:15')!
-  expect(shouldRollOver(next, options)).toEqual('minute')
+  expect(shouldRollOver(next, options)).toEqual('byminute')
 
   next = parseISO('2017-01-01T01:07:15')!
-  expect(shouldRollOver(next, options)).toEqual('hour')
+  expect(shouldRollOver(next, options)).toEqual('byhour')
 
   next = parseISO('2017-01-01T09:07:15')!
-  expect(shouldRollOver(next, options)).toEqual('day')
+  expect(shouldRollOver(next, options)).toEqual('byday')
 
   next = parseISO('2017-01-05T09:07:15')!
-  expect(shouldRollOver(next, options)).toEqual('month')
+  expect(shouldRollOver(next, options)).toEqual('bymonth')
 
   next = parseISO('2017-06-29T09:07:15')!
   expect(shouldRollOver(next, options)).toBeUndefined()
@@ -92,5 +92,5 @@ it('handles negative bymonthday', () => {
   }
 
   const result = shouldRollOver(next, options)
-  expect(result).toEqual('day')
+  expect(result).toEqual('bymonthday')
 })

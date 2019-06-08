@@ -164,7 +164,7 @@ it('rolls over with DAILY', () => {
   )
 })
 
-it('rolls over with WEEKLY', () => {
+it.only('rolls over with WEEKLY', () => {
   const startDate = parseISO('2017-03-02T02:59:59')!
 
   const options: GroomedOptions = {

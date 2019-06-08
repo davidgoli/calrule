@@ -59,26 +59,29 @@ const weekdaysInMonthByRule = (d: DateTime, byday: Weekday[]) => {
   return days
 }
 
-const nextByruleStep = (initial: DateTime, unitRule: UnitRule) => {
+const nextByruleStep = (current: DateTime, unitRule: UnitRule) => {
   const { byrule } = unitRule
   const steps = byrule as number[]
   const unit = unitForByrule[unitRule.unit]
 
   for (let i = 0; i < steps.length; i++) {
-    if (initial[unit] <= steps[i]) {
-      const interval = steps[i] - initial[unit]
-      if (interval === 0) {
-        return {}
-      }
+    const interval = steps[i] - current[unit]
+    if (interval > 0) {
+      if (unit === 'day') console.log({ current, unit, interval, steps })
       return { [unit]: interval }
+    }
+
+    if (interval === 0) {
+      return {}
     }
   }
 
-  const interval = steps[steps.length - 1] - initial[unit]
+  const interval = steps[steps.length - 1] - current[unit]
   if (interval === 0) {
     return {}
   }
 
+  if (unit === 'day') console.log({ current, unit, interval })
   return { [unit]: interval }
 }
 

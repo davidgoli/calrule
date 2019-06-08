@@ -3,13 +3,14 @@ import { dayOfWeek, dayOfYear } from '../DateTime/units'
 import { GroomedOptions } from '../groomOptions'
 import { Weekday } from '../types'
 import { byRuleForUnit } from './byRuleForUnit'
-import { UNIT_ORDER } from './units'
+import { BYRULE_ORDER, unitForByrule } from './units'
 
 export const shouldRollOver = (next: DateTime, options: GroomedOptions) => {
-  for (let i = UNIT_ORDER.length - 1; i > 0; i--) {
-    const unit = UNIT_ORDER[i]
-    const unitRule = byRuleForUnit(next, unit, options)
+  for (let i = BYRULE_ORDER.length - 1; i >= 0; i--) {
+    const byprop = BYRULE_ORDER[i]
+    const unitRule = byRuleForUnit(next, byprop, options)
     if (!unitRule || !unitRule.byrule) {
+      console.log('continuing', byprop)
       continue
     }
 
@@ -30,17 +31,19 @@ export const shouldRollOver = (next: DateTime, options: GroomedOptions) => {
     }
 
     if (
-      byruleUnit !== 'byday' &&
-      (byrule as number[]).indexOf(next[unit]) === -1
-    ) {
-      return unit
-    }
-
-    if (
       byruleUnit === 'byday' &&
       (byrule as Weekday[]).indexOf(dayOfWeek(next)) === -1
     ) {
-      return unit
+      return byprop
+    }
+
+    const unit = unitForByrule[byprop]
+    if (
+      byruleUnit !== 'byday' &&
+      (byrule as number[]).indexOf(next[unit]) === -1
+    ) {
+      // if (unit === 'day') console.log('should roll over', byprop, unit)
+      return byprop
     }
   }
 
