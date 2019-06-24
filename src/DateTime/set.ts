@@ -1,8 +1,12 @@
 import { copy } from '../copy'
-import { DateTime } from './index'
+import { DateTime, MONTHS } from './index'
 
 export const set = (d: DateTime, unit: keyof DateTime, value: number) => {
   const newD = copy(d)
-  newD[unit] = value
+  if (unit === 'month') {
+    newD.month = value as MONTHS
+  } else {
+    newD[unit] = value
+  }
   return newD
 }

@@ -20,14 +20,14 @@ export interface GroomedOptions {
 }
 
 export type ByProperty = keyof Pick<
-RuleOptions,
-| 'byhour'
-| 'byminute'
-| 'bysecond'
-| 'byday'
-| 'bymonthday'
-| 'bymonth'
-| 'byyearday'
+  RuleOptions,
+  | 'byhour'
+  | 'byminute'
+  | 'bysecond'
+  | 'byday'
+  | 'bymonthday'
+  | 'bymonth'
+  | 'byyearday'
 >
 
 const byProperties: ByProperty[] = [
@@ -82,14 +82,16 @@ export const groomOptions = (
     groomedOptions.count = options.count
   }
 
-  byProperties
-    .filter(p => p !== 'byday')
-    .forEach(unit => {
-      const normalized = normalizeByUnit(options[unit] as number[])
-      if (normalized) {
-        groomedOptions[unit] = normalized
-      }
-    })
+  byProperties.forEach(unit => {
+    if (unit === 'byday') {
+      return
+    }
+
+    const normalized = normalizeByUnit(options[unit] as number[])
+    if (normalized) {
+      groomedOptions[unit] = normalized
+    }
+  })
 
   const byday = normalizeByUnit(
     options.byday,
