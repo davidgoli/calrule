@@ -85,14 +85,16 @@ export const groomOptions = (
     groomedOptions.count = options.count
   }
 
-  byProperties
-    .filter(p => p !== 'byday')
-    .forEach(unit => {
-      const normalized = normalizeByUnit(options[unit] as number[])
-      if (normalized) {
-        groomedOptions[unit] = normalized
-      }
-    })
+  byProperties.forEach(unit => {
+    if (unit === 'byday') {
+      return
+    }
+
+    const normalized = normalizeByUnit(options[unit] as number[])
+    if (normalized) {
+      groomedOptions[unit] = normalized
+    }
+  })
 
   const byday = normalizeByUnit(
     options.byday,
