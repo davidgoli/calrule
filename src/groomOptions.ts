@@ -20,14 +20,14 @@ export interface GroomedOptions {
 }
 
 export type ByProperty = keyof Pick<
-  RuleOptions,
-  | 'byhour'
-  | 'byminute'
-  | 'bysecond'
-  | 'byday'
-  | 'bymonthday'
-  | 'bymonth'
-  | 'byyearday'
+RuleOptions,
+| 'byhour'
+| 'byminute'
+| 'bysecond'
+| 'byday'
+| 'bymonthday'
+| 'bymonth'
+| 'byyearday'
 >
 
 const byProperties: ByProperty[] = [

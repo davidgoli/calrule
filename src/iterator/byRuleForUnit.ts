@@ -24,8 +24,8 @@ const unitRule = <T>(unit: ByProperty, byrule: T[] | undefined, def?: T) =>
   byrule
     ? { unit, byrule }
     : typeof def !== 'undefined'
-    ? { unit, byrule: [def] }
-    : undefined
+      ? { unit, byrule: [def] }
+      : undefined
 
 const smallestTickUnit = ({
   freq,
