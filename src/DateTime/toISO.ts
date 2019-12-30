@@ -1,6 +1,6 @@
 import { DateTime } from './index'
 
-const zeroPad = (n: number, length: number = 2): string => {
+const zeroPad = (n: number, length = 2): string => {
   let s = n.toString()
   while (s.length < length) {
     s = '0' + s

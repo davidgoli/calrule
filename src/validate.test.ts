@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
 import { validate } from './validate'
 
 it('is not valid if there is no freq', () => {
@@ -78,7 +79,6 @@ it('is not valid if INTERVAL is not a number', () => {
 
 it('is not valid if INTERVAL is negative', () => {
   expect(
-    // @ts-ignore
     validate({ freq: 'DAILY', dtstart: '2017-04-15', interval: -1 })
   ).toEqual([false, { errors: ['Invalid value "-1" for parameter INTERVAL'] }])
 })
@@ -176,7 +176,6 @@ it('is not valid with invalid weekdays in BYDAY', () => {
 
 it('is valid with valid weekdays in BYDAY', () => {
   expect(
-    // @ts-ignore
     validate({ freq: 'DAILY', dtstart: '2017-04-05', byday: ['FR', 'SA'] })
   ).toEqual([true, {}])
 })

@@ -4,8 +4,7 @@ it('never returns an empty array for a byrule', () => {
   const groomed = groomOptions({
     freq: 'DAILY',
     dtstart: '2017-01-01',
-    // @ts-ignore
-    byday: [undefined]
+    byday: []
   })
   expect(groomed).not.toHaveProperty('byday')
 })

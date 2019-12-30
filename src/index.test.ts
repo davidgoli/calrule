@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-ignore */
+
 import { validate } from './validate'
 import { rrule } from './index'
 

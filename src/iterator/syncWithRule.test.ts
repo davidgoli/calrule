@@ -324,7 +324,7 @@ it('returns only the days given', () => {
     byhour: [2, 13]
   }
 
-  let result = syncWithRule(add(options.dtstart, { second: 1 }), options)
+  const result = syncWithRule(add(options.dtstart, { second: 1 }), options)
   expect(toISO(result)).toEqual('2017-01-01T13:00:00')
 })
 
